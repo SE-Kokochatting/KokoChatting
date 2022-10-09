@@ -4,6 +4,7 @@ import "github.com/gin-gonic/gin"
 
 type routerGroup struct{
 	upgrade upgradeRouter
+	example exampleRouter
 }
 
 // placeholder 占位用函数，可删除
@@ -21,6 +22,7 @@ func Routers() *gin.Engine {
 	publicGroup := engine.Group("")   // 无需use中间件的routes命名为publicGroup
 	{
 		dummyCode(publicGroup)  // 占位，无用代码可删除
+		rg.example.RegisterExampleRouter(publicGroup)
 	}
 	return engine
 }
