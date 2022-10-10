@@ -1,0 +1,32 @@
+parserOptions:
+  ecmaVersion: 2021
+  sourceType: module
+
+extends:
+  - alloy
+  - alloy/typescript
+  - alloy/react
+  - plugin:import/recommended
+  - plugin:import/typescript
+
+env:
+  browser: true
+  jest: true
+
+plugins:
+  - '@typescript-eslint'
+  - promise
+
+rules:
+  import/no-unresolved: off
+
+settings:
+  import/resolver:
+    alias:
+      map:
+        - ['@/', ./src/]
+      extensions:
+        - .ts
+        - .tsx
+  react:
+    version: detect
