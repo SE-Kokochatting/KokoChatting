@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"KokoChatting/global"
 	"KokoChatting/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"go.uber.org/zap"
 	"net/http"
 )
 
@@ -17,10 +19,12 @@ func (controller *upgradeController) UpgradeProtocol(c *gin.Context){
 	conn,err := controller.upgrader.Upgrade(c.Writer,c.Request,http.Header{})
 	if err != nil{
 		// 日志打印
+		global.Logger.Error("conn upgrade error",zap.Error(err))
 	}
 	err = controller.wsservice.AddConn(conn)
 	if err != nil{
 		// 日志打印
+		global.Logger.Error("add conn to ws conn managers error",zap.Error(err))
 	}
 
 }

@@ -15,6 +15,7 @@ func (controller *ExampleController) Example(c *gin.Context){
 		c.JSON(200,gin.H{
 			"msg":"error: "+err.Error(),
 		})
+		return
 	}
 	c.JSON(200,gin.H{
 		"msg":"hello world!!",

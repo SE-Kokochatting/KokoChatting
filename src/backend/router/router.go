@@ -1,6 +1,9 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"KokoChatting/controller"
+	"github.com/gin-gonic/gin"
+)
 
 type routerGroup struct{
 	upgrade upgradeRouter
@@ -11,7 +14,9 @@ type routerGroup struct{
 func dummyCode(r gin.IRoutes){}
 
 func Routers() *gin.Engine {
-	engine := gin.Default()
+	middleware := new(controller.Middleware)
+	engine := gin.New()
+	engine.Use(middleware.ZapLogger(),gin.Recovery())  // 日志中间件使用zap替换gin原生日志库
 	rg := new(routerGroup)
 
 	privateGroup := engine.Group("").Use() // use方法的参数需得是jwt鉴权和cors等 中间件（请求拦截器）

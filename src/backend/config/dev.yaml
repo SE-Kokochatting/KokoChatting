@@ -1,0 +1,20 @@
+mysql:
+  host: localhost
+  username: zad
+  password: 123456
+  database: dbname
+
+jwt:
+  secret: sadadfgs&*^dfkasI*&(*  # 密钥需要修改
+
+logger:
+  level: debug
+  ginlog: ./logs/gin.log
+  serverlog: ./logs/server.log
+
+
+server:
+  port: 8080
+  MaxWSConnNum: 200
+  websocket:
+    health-check-duration: 3000      # 单位为s

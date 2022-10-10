@@ -1,6 +1,10 @@
 package service
 
-import "KokoChatting/provider"
+import (
+	"KokoChatting/global"
+	"KokoChatting/provider"
+	"go.uber.org/zap"
+)
 
 
 type ExampleService struct{
@@ -8,7 +12,10 @@ type ExampleService struct{
 }
 
 func (srv *ExampleService) Example(args ...interface{}) error {
-	srv.exampleProvider.ExampleCRUD(args)
+	err := srv.exampleProvider.ExampleCRUD(args)
+	if err != nil{
+		global.Logger.Error("some error msg",zap.Error(err))
+	}
 	return nil
 }
 
