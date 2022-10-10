@@ -22,8 +22,13 @@ func init(){
 		panic("config logger.serverlog get error: "+err.Error())
 	}
 
+	if _,err := os.Stat("logs");err != nil{
+		if os.IsExist(err){} else{
+			err := os.Mkdir("logs",os.ModePerm)
+			panic(err)
+		}
+	}
 	file, _ := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 644)
-
 
 	fileWriteSyncer := zapcore.AddSync(file)
 	core := zapcore.NewTee(
