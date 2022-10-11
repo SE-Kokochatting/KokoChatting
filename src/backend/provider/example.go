@@ -15,7 +15,7 @@ func (prd *ExampleProvider) ExampleCRUD(args ...interface{}) error {
 		// log
 		global.Logger.Error("some error msg",zap.Error(prd.mysqlDb.Error))
 	}
-	return prd.mysqlDb.Error
+	return global.ConfigPathError
 }
 
 func NewExampleProvider()*ExampleProvider{

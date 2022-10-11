@@ -15,10 +15,10 @@ func (srv *ExampleService) Example(args ...interface{}) error {
 	err := srv.exampleProvider.ExampleCRUD(args)
 	if err != nil{
 		global.Logger.Error("some error msg",zap.Error(err))
+		return err
 	}
 	return nil
 }
-
 
 func NewExampleService()*ExampleService{
 	return &ExampleService{
