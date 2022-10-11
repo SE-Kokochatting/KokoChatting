@@ -26,9 +26,6 @@ import { tsxTemplate, scssTemplate } from './_template.js'
     scssTemplate.replace(/\{COMP_NAME\}/g, compName).replace(/\{KEBAB_NAME\}/g, kebabName),
   )
 
-  // 创建 README.md
-  fs.writeFileSync(compName + '/README.md', '')
-
   // 创建 子文件夹
   fs.mkdirSync(compName + '/components')
   fs.mkdirSync(compName + '/hooks')
