@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Plugin } from 'vite'
 import { readFileSync, readdirSync } from 'fs'
 let idPerfix = ''

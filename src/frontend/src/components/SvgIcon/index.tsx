@@ -1,16 +1,17 @@
+import React from 'react'
 import './index.scss'
 
 interface Props {
   name: string
-  class?: string
+  style?: React.CSSProperties
 }
 
 function SvgIcon(props: Props) {
-  const iconName = `#icon-${props.name}`
-  const svgClass = props.class ? 'svg-icon ' + props.class : 'svg-icon'
+  const { name, style } = props
+  const iconName = `#icon-${name}`
 
   return (
-    <svg className={svgClass}>
+    <svg style={style}>
       <use xlinkHref={iconName} />
     </svg>
   )

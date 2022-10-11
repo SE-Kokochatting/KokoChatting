@@ -16,7 +16,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.2.2",
     "react-router-config": "^5.1.1",
-    "react-router-dom": "^6.2.2"
+    "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -24,6 +24,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@types/loadable__component": "^5.13.4",
     "@types/mocha": "^10.0.0",
+    "@types/node": "^18.8.4",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/react-router-config": "^5.0.6",
