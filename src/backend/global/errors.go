@@ -2,6 +2,22 @@ package global
 
 import "errors"
 
+type Error struct {
+	Status int
+	Err error
+}
+
+func (err Error) Error() string {
+	return err.Err.Error()
+}
+
 var (
-	ConfigPathError = errors.New("config path do not exist in config file")
+	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
 )
+
+func NewError(err error, status int) error {
+	return Error{
+		Status: status,
+		Err: err,
+	}
+}

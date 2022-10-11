@@ -1,25 +1,28 @@
 package controller
 
 import (
+	"KokoChatting/global"
 	"KokoChatting/service"
 	"github.com/gin-gonic/gin"
 )
 
 type ExampleController struct{
+	baseController
 	exampleService *service.ExampleService
 }
 
 func (controller *ExampleController) Example(c *gin.Context){
 	err := controller.exampleService.Example(1,2,3,"test","example")
 	if err != nil{
-		c.JSON(200,gin.H{
-			"msg":"error: "+err.Error(),
-		})
+
+		controller.WithErr(err, c)
+
 		return
 	}
-	c.JSON(200,gin.H{
-		"msg":"hello world!!",
-	})
+	controller.WithErr(global.Error{
+		Status: 200,
+		Err: global.ConfigPathError,
+	} ,c)
 }
 
 func NewExampleController()*ExampleController{
