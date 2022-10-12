@@ -35,7 +35,10 @@ function findSvgFile(dir): string[] {
           if (!hasViewBox.test($2)) {
             content += `viewBox="0 0 ${width} ${height}"`
           }
-          return `<symbol id="${idPerfix}-${dirent.name.replace('.svg', '')}" ${content}>`
+          return `<symbol id="${idPerfix}-${dirent.name.replace(
+            '.svg',
+            '',
+          )}" ${content}>`
         })
         .replace('</svg>', '</symbol>')
       svgRes.push(svg)
