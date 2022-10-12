@@ -32,7 +32,7 @@ function Header(/* props: HeaderProps */) {
             width: '35px',
             height: '35px',
             position: 'absolute',
-            right: '0.7rem',
+            right: '70px',
             cursor: 'pointer',
           }}
         />
@@ -43,7 +43,7 @@ function Header(/* props: HeaderProps */) {
             width: '35px',
             height: '35px',
             position: 'absolute',
-            right: '0.2rem',
+            right: '20px',
             cursor: 'pointer',
           }}
         />
