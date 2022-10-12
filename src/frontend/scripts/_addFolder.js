@@ -17,13 +17,17 @@ import { tsxTemplate, scssTemplate } from './_template.js'
   // 创建 index.tsx
   fs.writeFileSync(
     compName + '/index.tsx',
-    tsxTemplate.replace(/\{COMP_NAME\}/g, compName).replace(/\{KEBAB_NAME\}/g, kebabName),
+    tsxTemplate
+      .replace(/\{COMP_NAME\}/g, compName)
+      .replace(/\{KEBAB_NAME\}/g, kebabName),
   )
 
   // 创建 index.scss
   fs.writeFileSync(
     compName + '/index.scss',
-    scssTemplate.replace(/\{COMP_NAME\}/g, compName).replace(/\{KEBAB_NAME\}/g, kebabName),
+    scssTemplate
+      .replace(/\{COMP_NAME\}/g, compName)
+      .replace(/\{KEBAB_NAME\}/g, kebabName),
   )
 
   // 创建 子文件夹
