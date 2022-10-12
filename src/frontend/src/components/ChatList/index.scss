@@ -1,0 +1,17 @@
+.c-chat_list {
+  width: 25.7%;
+  padding: 20px;
+  box-sizing: border-box;
+  min-width: 320px;
+  overflow-y: scroll;
+  background-color: var(--bg-dark);
+  color: var(--light);
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  // 使 List 占满剩下的高度
+  position: absolute;
+  top: 100px;
+  bottom: 0px;
+  left: 0px;
+}
