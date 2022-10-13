@@ -1,12 +1,16 @@
 import Header from '@/components/Header'
 import ChatList from '@/components/ChatList'
 import './index.scss'
+import ChatWindow from '@/components/ChatWindow'
 
 function Home() {
   return (
     <div className='home'>
       <Header />
-      <ChatList />
+      <div className='home-main'>
+        <ChatList />
+        <ChatWindow />
+      </div>
     </div>
   )
 }

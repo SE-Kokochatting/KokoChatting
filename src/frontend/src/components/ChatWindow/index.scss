@@ -1,0 +1,18 @@
+.c-chat_window {
+  width: 74.3%;
+  box-sizing: border-box;
+  border-left: 1px solid var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &-chat_area {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    bottom: 60px;
+    background-color: var(--bg-dark);
+  }
+}

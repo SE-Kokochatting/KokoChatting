@@ -38,7 +38,9 @@
       "@/mobx/*": ["src/mobx/*"],
       "@/network/*": ["src/network/*"],
       "@/constants/*": ["src/constants/*"],
-      "@/plugins/*": ["src/plugins/*"]
+      "@/plugins/*": ["src/plugins/*"],
+      "@/types/*": ["src/types"],
+      "@/enums/*": ["src/enums"]
     }
   },
   "include": ["src", "tests"],
