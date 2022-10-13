@@ -1,16 +1,17 @@
-import { Direction } from '@/enums'
+import { Direction, ChatType } from '@/enums'
 import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
 interface BubbleProps {
   content: string
+  chatType: ChatType
   direction: Direction
   read?: boolean
   time: string
 }
 
 function Bubble(props: BubbleProps) {
-  const { content, direction, read, time } = props
+  const { content, chatType, direction, read, time } = props
   return (
     <div
       style={{
@@ -32,6 +33,19 @@ function Bubble(props: BubbleProps) {
             fill: 'var(--light)',
             alignSelf: 'end',
             marginRight: '10px',
+          }}
+        />
+      )}
+      {chatType === ChatType.Group && direction === Direction.Left && (
+        <img
+          src='https://p.qqan.com/up/2021-2/16137992359659254.jpg'
+          style={{
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            alignSelf: 'center',
+            marginRight: '20px',
+            cursor: 'pointer',
           }}
         />
       )}

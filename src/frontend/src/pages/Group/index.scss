@@ -1,0 +1,14 @@
+.group {
+  width: 100%;
+  height: 100vh;
+
+  &-main {
+    width: 100%;
+    display: flex;
+    // 使 List 占满剩下的高度
+    position: absolute;
+    top: 100px;
+    bottom: 0px;
+    left: 0px;
+  }
+}
