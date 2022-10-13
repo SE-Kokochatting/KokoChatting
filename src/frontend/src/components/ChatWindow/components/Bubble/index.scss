@@ -1,0 +1,55 @@
+// 方向向左的气泡
+.c-chat_window-chat_area-bubble {
+  color: var(--font);
+  background-color: var(--bg-2);
+  display: block;
+  padding: 10px 10px 30px 10px;
+  border-radius: 5px;
+  position: relative;
+  // 宽度适应文字内容
+  width: fit-content;
+
+  &-time {
+    font-size: 13px;
+    color: var(--light);
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+  }
+}
+
+.c-chat_window-chat_area-bubble::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -20px;
+  background-color: var(--bg-2);
+  clip-path: polygon(100% 0%, 100% 100%, 50% 50%);
+}
+
+// 方向向右的气泡
+.c-chat_window-chat_area-bubble.right {
+  // 由于有 .right，第一层孩子用不了 &
+  .c-chat_window-chat_area-bubble-time {
+    left: 10px;
+  }
+}
+
+.c-chat_window-chat_area-bubble.right::before {
+  display: none;
+}
+
+.c-chat_window-chat_area-bubble.right::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg-2);
+  clip-path: polygon(0% 0%, 50% 50%, 0% 100%);
+  right: -20px;
+}
