@@ -1,10 +1,17 @@
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
 import './index.scss'
-//  type HeaderProps = {
-//  };
-function Header(/* props: HeaderProps */) {
-  // const {} = props;
+
+interface HeaderProps {
+  name: string
+  online: boolean
+  // todo
+  // interval?: number
+  peopleNum?: number
+}
+
+function Header(props: HeaderProps) {
+  const { name, peopleNum } = props
   return (
     <div className='c-header'>
       <div className='c-header-left'>
@@ -21,9 +28,13 @@ function Header(/* props: HeaderProps */) {
         <Search />
       </div>
       <div className='c-header-right'>
-        <div className='c-header-user'>
-          <span className='c-header-user-name'>华小科</span>
-          <span className='c-header-user-state'>online</span>
+        <div className='c-header-right-info'>
+          <span className='c-header-right-info-name'>{name}</span>
+          {peopleNum ? (
+            <span className='c-header-right-info-num'>{peopleNum} members</span>
+          ) : (
+            <span className='c-header-right-info-state'>online</span>
+          )}
         </div>
         <SvgIcon
           name='search'
