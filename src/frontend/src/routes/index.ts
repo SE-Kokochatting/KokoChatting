@@ -3,6 +3,11 @@ import { RouteConfig } from 'react-router-config'
 
 const routesConfig: RouteConfig[] = [
   {
+    path: '/home',
+    exact: true,
+    element: loadable(() => import('@/pages/Home')),
+  },
+  {
     path: '/private',
     exact: true,
     element: loadable(() => import('@/pages/Private')),

@@ -6,9 +6,9 @@ import './index.scss'
 
 function Private() {
   return (
-    <div className='private'>
-      <Header name='华大科' online={true} />
-      <div className='private-main'>
+    <div className='home'>
+      <Header name='华小科' online={true} />
+      <div className='home-main'>
         <ChatList />
         <ChatWindow chatType={ChatType.Private} />
       </div>
