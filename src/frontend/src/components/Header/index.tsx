@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
+import LeftDropdown from './components/LeftDropdown'
 import './index.scss'
 
 interface HeaderProps {
@@ -12,6 +14,8 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
   const { name, peopleNum } = props
+  const [showLeftDropdown, setShowLeftDropdown] = useState(false)
+
   return (
     <div className='c-header'>
       <div className='c-header-left'>
@@ -24,7 +28,11 @@ function Header(props: HeaderProps) {
             marginLeft: '10px',
             cursor: 'pointer',
           }}
+          onClick={() => {
+            setShowLeftDropdown(!showLeftDropdown)
+          }}
         />
+        <LeftDropdown shown={showLeftDropdown} />
         <Search />
       </div>
       <div className='c-header-right'>
