@@ -5,7 +5,8 @@ import Switch from './components/Switch'
 import './index.scss'
 
 interface LeftDropdownProps {
-  shown: boolean
+  showLeftDropdown: boolean
+  setShowLeftDropdown: (val: boolean) => void
 }
 
 const iconStyle: React.CSSProperties = {
@@ -17,16 +18,17 @@ const iconStyle: React.CSSProperties = {
 }
 
 function LeftDropdown(props: LeftDropdownProps) {
-  const { shown } = props
+  const { showLeftDropdown, setShowLeftDropdown } = props
   const navigate = useNavigate()
   return (
     <ul
       className='c-header-left-dropdown'
-      style={{ display: shown ? 'block' : 'none' }}
+      style={{ display: showLeftDropdown ? 'block' : 'none' }}
     >
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
+          setShowLeftDropdown(false)
           navigate('/home')
         }}
       >
@@ -36,6 +38,7 @@ function LeftDropdown(props: LeftDropdownProps) {
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
+          setShowLeftDropdown(false)
           navigate('/private')
         }}
       >
@@ -45,6 +48,7 @@ function LeftDropdown(props: LeftDropdownProps) {
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
+          setShowLeftDropdown(false)
           navigate('/group')
         }}
       >
