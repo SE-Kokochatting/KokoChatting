@@ -5,7 +5,7 @@ import './App.scss'
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Navigate to='/private' replace />} />
+      <Route path='/' element={<Navigate to='/home' replace />} />
       {routes.map((item, i) => {
         return (
           <Route

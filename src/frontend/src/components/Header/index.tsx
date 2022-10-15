@@ -4,9 +4,10 @@ import Search from './components/Search'
 import LeftDropdown from './components/LeftDropdown'
 import './index.scss'
 
+// name 等属性也不是必须的，因为刚进入时聊天窗口为空白，没有指定聊天对象
 interface HeaderProps {
-  name: string
-  online: boolean
+  name?: string
+  online?: boolean
   // todo
   // interval?: number
   peopleNum?: number
