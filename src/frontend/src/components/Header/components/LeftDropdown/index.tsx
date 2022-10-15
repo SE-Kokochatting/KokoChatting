@@ -24,9 +24,14 @@ function LeftDropdown(props: LeftDropdownProps) {
       className='c-header-left-dropdown'
       style={{ display: shown ? 'block' : 'none' }}
     >
-      <li className='c-header-left-dropdown-item'>
-        <SvgIcon name='myself' style={iconStyle} />
-        个人信息
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          navigate('/home')
+        }}
+      >
+        <SvgIcon name='message' style={iconStyle} />
+        最近消息
       </li>
       <li
         className='c-header-left-dropdown-item'
@@ -37,13 +42,26 @@ function LeftDropdown(props: LeftDropdownProps) {
         <SvgIcon name='contact' style={iconStyle} />
         联系人
       </li>
-      <li className='c-header-left-dropdown-item'>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          navigate('/group')
+        }}
+      >
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
+      <li className='c-header-left-dropdown-item'>
+        <SvgIcon name='notice' style={iconStyle} />
+        通知
+      </li>
+      <li className='c-header-left-dropdown-item'>
+        <SvgIcon name='myself' style={iconStyle} />
+        个人信息
+      </li>
       <li className='c-header-left-dropdown-item' id='dark_mode'>
         <SvgIcon name='moon' style={iconStyle} />
-        暗夜模式
+        暗黑模式
         <Switch />
       </li>
     </ul>
