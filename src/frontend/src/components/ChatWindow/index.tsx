@@ -34,14 +34,14 @@ function ChatWindow(props: ChatWindowProps) {
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>
-        {chatInfo.map((item) => (
+        {chatInfo.map(({ id, content, direction, time, read }) => (
           <Bubble
-            key={item.id}
+            key={id}
             chatType={chatType}
-            content={item.content}
-            direction={item.direction}
-            read={item.read}
-            time={item.time}
+            content={content}
+            direction={direction}
+            read={read}
+            time={time}
           />
         ))}
       </div>

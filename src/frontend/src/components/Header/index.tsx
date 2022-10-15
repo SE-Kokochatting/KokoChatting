@@ -33,7 +33,10 @@ function Header(props: HeaderProps) {
             setShowLeftDropdown(!showLeftDropdown)
           }}
         />
-        <LeftDropdown shown={showLeftDropdown} />
+        <LeftDropdown
+          showLeftDropdown={showLeftDropdown}
+          setShowLeftDropdown={setShowLeftDropdown}
+        />
         <Search />
       </div>
       <div className='c-header-right'>

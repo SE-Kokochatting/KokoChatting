@@ -10,6 +10,7 @@ function Chat() {
   const location = useLocation()
   const { pathname } = location
 
+  // Todo: 窗口类型由此时打开的窗口决定，和 /group 无关
   return (
     <div className='chat'>
       {pathname !== '/group' ? (
