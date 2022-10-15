@@ -1,21 +1,21 @@
-import loadable from '@loadable/component'
 import { RouteConfig } from 'react-router-config'
+import Chat from '@/pages/Chat'
 
 const routesConfig: RouteConfig[] = [
   {
     path: '/home',
     exact: true,
-    element: loadable(() => import('@/pages/Home')),
+    element: Chat,
   },
   {
     path: '/private',
     exact: true,
-    element: loadable(() => import('@/pages/Private')),
+    element: Chat,
   },
   {
     path: '/group',
     exact: true,
-    element: loadable(() => import('@/pages/Group')),
+    element: Chat,
   },
 ]
 

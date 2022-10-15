@@ -24,16 +24,16 @@ function LeftDropdown(props: LeftDropdownProps) {
       className='c-header-left-dropdown'
       style={{ display: shown ? 'block' : 'none' }}
     >
+      <li className='c-header-left-dropdown-item'>
+        <SvgIcon name='myself' style={iconStyle} />
+        个人信息
+      </li>
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
           navigate('/private')
         }}
       >
-        <SvgIcon name='myself' style={iconStyle} />
-        个人信息
-      </li>
-      <li className='c-header-left-dropdown-item'>
         <SvgIcon name='contact' style={iconStyle} />
         联系人
       </li>
