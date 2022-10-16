@@ -45,7 +45,6 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 		latency := end.Sub(start)
 		end = end.UTC()
 
-
 		fields := []zapcore.Field{
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
@@ -65,3 +64,17 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 		}
 	}
 }
+
+//func (m *Middleware) TokenAuthMiddleware(c *gin.Context) {
+//	tokenStr := c.Request.Header.Get("Authorization")
+//	if tokenStr == "" {
+//		logger.Error("should with token")
+//	}
+//	// 取出token后需要将其存储到gin.Context中
+//	claims, err := ParseToken(tokenStr)
+//	if err != nil {
+//		c.JSON()
+//	}
+//	c.Set("Authorization", int(claims["uid"].(float64)))
+//	c.Next()
+//}
