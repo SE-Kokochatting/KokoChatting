@@ -3,6 +3,7 @@ package controller
 import (
 	"KokoChatting/global"
 	"KokoChatting/service"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,6 +28,7 @@ func (controller *ExampleController) Example(c *gin.Context){
 
 func NewExampleController()*ExampleController{
 	return &ExampleController{
+		baseController: baseController{},
 		exampleService: service.NewExampleService(),
 	}
 }
