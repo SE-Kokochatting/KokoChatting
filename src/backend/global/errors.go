@@ -13,7 +13,7 @@ func (err Error) Error() string {
 
 var (
 	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
-	RegisterError = NewError(errors.New("user regiter err"), 1000)
+	RegisterError = NewError(errors.New("user regiter err"), 1001)
 )
 
 func NewError(err error, status int) error {
