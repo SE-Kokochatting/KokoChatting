@@ -18,7 +18,7 @@ type RegisterController struct {
 // PATH: api/v1/user/register
 // Function: 实现用户的注册
 func (regCtl *RegisterController) Register(c *gin.Context) {
-	Regreq := req.UserReq{}
+	Regreq := &req.UserReq{}
 	if err := c.BindJSON(Regreq); err != nil {
 		global.Logger.Error("bind json error", zap.Error(err))
 	}
