@@ -14,9 +14,7 @@ type ExampleController struct{
 func (controller *ExampleController) Example(c *gin.Context){
 	err := controller.exampleService.Example(1,2,3,"test","example")
 	if err != nil{
-
 		controller.WithErr(err, c)
-
 		return
 	}
 	controller.WithErr(global.Error{
@@ -25,8 +23,9 @@ func (controller *ExampleController) Example(c *gin.Context){
 	} ,c)
 }
 
-func NewExampleController()*ExampleController{
+func NewExampleController() *ExampleController{
 	return &ExampleController{
+		baseController: baseController{},
 		exampleService: service.NewExampleService(),
 	}
 }

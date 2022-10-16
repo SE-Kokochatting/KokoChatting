@@ -16,6 +16,10 @@ func (b *baseController) WithErr(ApiErr error, c *gin.Context) {
 	})
 }
 
+func (b *baseController) WithData(data interface{}, c *gin.Context) {
+	c.JSON(200, data)
+}
+
 
 
 

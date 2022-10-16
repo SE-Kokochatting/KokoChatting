@@ -20,6 +20,6 @@ func (prd *ExampleProvider) ExampleCRUD(args ...interface{}) error {
 
 func NewExampleProvider()*ExampleProvider{
 	return &ExampleProvider{
-		mysqlProvider{},
+		mysqlProvider: *NewMysqlProvider(),
 	}
 }
