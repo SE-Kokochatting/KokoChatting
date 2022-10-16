@@ -2,9 +2,11 @@ package controller
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/req"
 	"KokoChatting/model/res"
 	"KokoChatting/service"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type RegisterController struct {
@@ -15,22 +17,20 @@ type RegisterController struct {
 // Register [POST]
 // PATH: api/v1/user/register
 // Function: 实现用户的注册
-func (regCtl *RegisterController) Register(c *gin.Context, req *res.UserRes) {
-	req = &res.UserRes{}
-
-	name := c.Param("name")
-	password := c.Param("password")
+func (regCtl *RegisterController) Register(c *gin.Context) {
+	Regreq := req.UserReq{}
+	if err := c.BindJSON(Regreq); err != nil {
+		global.Logger.Error("bind json error", zap.Error(err))
+	}
 	// return corresponding error
-	uid, err := regCtl.registerService.Register(name, password)
+	uid, err := regCtl.registerService.Register(Regreq.Name, Regreq.Password)
 	if err != nil {
-		regCtl.WithErr(global.Error{
-			Status: 1000,
-			Err: err,
-		}, c)
+		regCtl.WithErr(global.RegisterError, c)
 	}
 
-	req.Data.Uid = uid
-	regCtl.WithData(req, c)
+	Regres := &res.UserRes{}
+	Regres.Data.Uid = uid
+	regCtl.WithData(Regres, c)
 }
 
 func NewRegisterController() *RegisterController {
