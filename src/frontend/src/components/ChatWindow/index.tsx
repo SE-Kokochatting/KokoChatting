@@ -1,13 +1,15 @@
+import { observer } from 'mobx-react-lite'
+import { Direction, ChatType, Theme } from '@/enums'
+import ThemeStore from '@/mobx/theme'
 import Bubble from './components/Bubble'
 import Sender from './components/Sender'
-import { Direction, ChatType } from '@/enums'
 import './index.scss'
 
 interface ChatWindowProps {
   chatType: ChatType
 }
 
-function ChatWindow(props: ChatWindowProps) {
+function _ChatWindow(props: ChatWindowProps) {
   const { chatType } = props
   // 之后定义其类型
   const chatInfo = [
@@ -33,7 +35,16 @@ function ChatWindow(props: ChatWindowProps) {
   ]
   return (
     <div className='c-chat_window'>
-      <div className='c-chat_window-chat_area'>
+      <div
+        className='c-chat_window-chat_area'
+        style={{
+          backgroundImage:
+            ThemeStore.theme === Theme.Light
+              ? 'url(https://linhong.me/2019/11/02/telegram-background/bg.jpg)'
+              : 'none',
+          backgroundPosition: 'center',
+        }}
+      >
         {chatInfo.map(({ id, content, direction, time, read }) => (
           <Bubble
             key={id}
@@ -49,4 +60,7 @@ function ChatWindow(props: ChatWindowProps) {
     </div>
   )
 }
+
+const ChatWindow = observer(_ChatWindow)
+
 export default ChatWindow
