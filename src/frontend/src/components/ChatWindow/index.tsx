@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { Direction, ChatType, Theme } from '@/enums'
 import ThemeStore from '@/mobx/theme'
 import Bubble from './components/Bubble'
@@ -7,6 +8,13 @@ import './index.scss'
 
 interface ChatWindowProps {
   chatType: ChatType
+}
+
+const bgImgSrc = 'https://linhong.me/2019/11/02/telegram-background/bg.jpg'
+
+function preload() {
+  const img = new Image()
+  img.src = bgImgSrc
 }
 
 function _ChatWindow(props: ChatWindowProps) {
@@ -33,15 +41,18 @@ function _ChatWindow(props: ChatWindowProps) {
       time: '8:03',
     },
   ]
+
+  useEffect(() => {
+    preload()
+  }, [])
+
   return (
     <div className='c-chat_window'>
       <div
         className='c-chat_window-chat_area'
         style={{
           backgroundImage:
-            ThemeStore.theme === Theme.Light
-              ? 'url(https://linhong.me/2019/11/02/telegram-background/bg.jpg)'
-              : 'none',
+            ThemeStore.theme === Theme.Light ? `url(${bgImgSrc})` : 'none',
           backgroundPosition: 'center',
         }}
       >
