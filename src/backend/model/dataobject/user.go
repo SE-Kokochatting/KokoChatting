@@ -1,7 +1,7 @@
 package dataobject
 
-type UserProfile struct {
-	Uid uint64 `json:"uid"`
-	Password string `json:"password"`
-	Name string `json:"name"`
+type storeUserProfile struct {
+	Uid uint64 `gorm:"column:uid;primary_key;AUTO_INCREMENT"`
+	Name string `gorm:"column:name"`
+	Password string `gorm:"column:password"`
 }
