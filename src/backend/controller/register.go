@@ -49,7 +49,7 @@ func (regCtl *RegisterController) Register(c *gin.Context) {
 		},
 	}
 
-	config := global.Config{}
+	config := global.GetGlobalConfig()
 	mySecret := config.GetConfigByName("jwt.secret").(string)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
