@@ -2,7 +2,10 @@ package controller
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/utilstruct"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
@@ -24,7 +27,6 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 	}
 
 	file, _ := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 644)
-
 
 	fileWriteSyncer := zapcore.AddSync(file)
 	core := zapcore.NewTee(
@@ -62,5 +64,32 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 		} else {
 			logger.Info(path, fields...)
 		}
+	}
+}
+
+// JwtAuthValidate jwt身份信息验证
+func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// TODO: figure out c.GetHeader()和c.Parmm()的区别
+		tokenString := c.Param("Authorization")
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return hmacSampleSecret, nil
+		})
+		if err != nil {
+			c.JSON(1001, gin.H{
+				"err": "unexpected signing method",
+			})
+		}
+
+		if claims, ok := token.Claims.(utilstruct.Claims); ok && token.Valid {
+			c.Set("userName", claims.UserProfile.Name)
+			c.Set("userUid", claims.UserProfile.Uid)
+			c.Set("userPassword", claims.UserProfile.Password)
+		}
+		c.Next()
 	}
 }

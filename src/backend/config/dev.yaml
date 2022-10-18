@@ -5,7 +5,7 @@ mysql:
   database: dbname
 
 jwt:
-  secret: sadadfgs&*^dfkasI*&(*  # 密钥需要修改
+  secret:  NtKBdzmI06iRf6u6
 
 logger:
   level: debug

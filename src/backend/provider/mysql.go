@@ -9,7 +9,7 @@ import (
 )
 
 type storeUserProfile struct {
-	Uid uint64 `gorm:"column:uid;primary_key;AUTO_INCREMENT"`
+	Uid uint64 `gorm:"column:uid;primary_key;AUTO_INCREMENT=100000"`
 	Name string `gorm:"column:name"`
 	Password string `gorm:"column:password"`
 }

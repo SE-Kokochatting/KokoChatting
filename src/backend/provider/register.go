@@ -29,7 +29,7 @@ func (regPro *RegisterProvider) AddUser(name string, encrytedpassword string) (u
 		global.Logger.Error("add user error", zap.Error(err))
 		return 0, err
 	}
-	return userProfileEntity.Uid+100000, nil
+	return userProfileEntity.Uid, nil
 }
 
 func NewRegisterProvider() *RegisterProvider {

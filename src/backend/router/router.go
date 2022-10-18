@@ -16,10 +16,10 @@ func dummyCode(r gin.IRoutes){}
 func Routers() *gin.Engine {
 	middleware := new(controller.Middleware)
 	engine := gin.New()
-	engine.Use(middleware.ZapLogger(),gin.Recovery())  // 日志中间件使用zap替换gin原生日志库
+	engine.Use(middleware.ZapLogger(), gin.Recovery())  // 日志中间件使用zap替换gin原生日志库
 	rg := new(routerGroup)
 
-	privateGroup := engine.Group("").Use() // use方法的参数需得是jwt鉴权和cors等 中间件（请求拦截器）
+	privateGroup := engine.Group("").Use(middleware.JwtAuthValidate(), gin.Recovery()) // use方法的参数需得是jwt鉴权和cors等 中间件（请求拦截器）
 	{
 		rg.upgrade.RegisterUpgradeRouter(privateGroup)  // 需要加入登录鉴权的接口的router group注册时需要传入的routes命名为privateGroup
 	}
