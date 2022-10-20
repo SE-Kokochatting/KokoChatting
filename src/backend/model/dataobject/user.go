@@ -1,9 +1,11 @@
 package dataobject
 
-type StoreUserProfile struct {
-	Uid uint64 `gorm:"column:uid;primary_key;AUTO_INCREMENT"`
-	Name string `gorm:"column:name"`
-	Password string `gorm:"column:password"`
+// 本文件中的结构体与数据库中的结构体一一对应
+
+type UserProfile struct {
+	Uid      uint64 `json:"uid"`
+	Password string `json:"password"`
+	Name     string `json:"name"`
 }
 
 type StoreFriendProfile struct {
