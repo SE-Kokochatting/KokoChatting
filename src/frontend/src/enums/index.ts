@@ -15,3 +15,9 @@ export enum ChatType {
   Private,
   Group,
 }
+
+// 主题
+export enum Theme {
+  Light = 'light',
+  Dark = 'dark',
+}

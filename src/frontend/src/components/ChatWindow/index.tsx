@@ -1,13 +1,23 @@
+import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
+import { Direction, ChatType, Theme } from '@/enums'
+import ThemeStore from '@/mobx/theme'
 import Bubble from './components/Bubble'
 import Sender from './components/Sender'
-import { Direction, ChatType } from '@/enums'
 import './index.scss'
 
 interface ChatWindowProps {
   chatType: ChatType
 }
 
-function ChatWindow(props: ChatWindowProps) {
+const bgImgSrc = 'https://linhong.me/2019/11/02/telegram-background/bg.jpg'
+
+function preload() {
+  const img = new Image()
+  img.src = bgImgSrc
+}
+
+function _ChatWindow(props: ChatWindowProps) {
   const { chatType } = props
   // 之后定义其类型
   const chatInfo = [
@@ -31,17 +41,29 @@ function ChatWindow(props: ChatWindowProps) {
       time: '8:03',
     },
   ]
+
+  useEffect(() => {
+    preload()
+  }, [])
+
   return (
     <div className='c-chat_window'>
-      <div className='c-chat_window-chat_area'>
-        {chatInfo.map((item) => (
+      <div
+        className='c-chat_window-chat_area'
+        style={{
+          backgroundImage:
+            ThemeStore.theme === Theme.Light ? `url(${bgImgSrc})` : 'none',
+          backgroundPosition: 'center',
+        }}
+      >
+        {chatInfo.map(({ id, content, direction, time, read }) => (
           <Bubble
-            key={item.id}
+            key={id}
             chatType={chatType}
-            content={item.content}
-            direction={item.direction}
-            read={item.read}
-            time={item.time}
+            content={content}
+            direction={direction}
+            read={read}
+            time={time}
           />
         ))}
       </div>
@@ -49,4 +71,7 @@ function ChatWindow(props: ChatWindowProps) {
     </div>
   )
 }
+
+const ChatWindow = observer(_ChatWindow)
+
 export default ChatWindow

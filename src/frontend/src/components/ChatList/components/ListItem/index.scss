@@ -5,6 +5,7 @@
   align-items: center;
   margin: 5px 0;
   cursor: pointer;
+  padding: 0 20px;
 
   &-avatar {
     margin-right: 15px;
@@ -49,6 +50,10 @@
     color: var(--font);
     text-align: center;
   }
+}
+
+.c-chat_list-item:hover {
+  background-color: var(--bg);
 }
 
 .c-chat_list-item.selected {

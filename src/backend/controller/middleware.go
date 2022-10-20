@@ -45,7 +45,6 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 		latency := end.Sub(start)
 		end = end.UTC()
 
-
 		fields := []zapcore.Field{
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),

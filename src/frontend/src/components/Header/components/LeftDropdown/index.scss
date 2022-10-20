@@ -1,0 +1,33 @@
+.c-header-left-dropdown {
+  position: absolute;
+  background-color: var(--bg);
+  z-index: 1;
+  width: 25.7%;
+  height: 100vh;
+  min-width: 320px;
+  top: 100px;
+  left: 0;
+
+  &-item {
+    height: 60px;
+    line-height: 60px;
+    cursor: pointer;
+    padding: 0 35px;
+    transition: all 0.2s;
+  }
+
+  &-item:hover {
+    background-color: var(--bg-3);
+  }
+}
+
+#dark_mode {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: default;
+}
+
+#dark_mode:hover {
+  background-color: var(--bg);
+}

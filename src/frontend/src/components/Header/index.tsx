@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
+import LeftDropdown from './components/LeftDropdown'
 import './index.scss'
 
+// name 等属性也不是必须的，因为刚进入时聊天窗口为空白，没有指定聊天对象
 interface HeaderProps {
-  name: string
-  online: boolean
+  name?: string
+  online?: boolean
   // todo
   // interval?: number
   peopleNum?: number
@@ -12,18 +15,27 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
   const { name, peopleNum } = props
+  const [showLeftDropdown, setShowLeftDropdown] = useState(false)
+
   return (
     <div className='c-header'>
       <div className='c-header-left'>
         <SvgIcon
           name='menu'
           style={{
-            fill: '#fff',
+            fill: 'var(--light)',
             width: '35px',
             height: '35px',
             marginLeft: '10px',
             cursor: 'pointer',
           }}
+          onClick={() => {
+            setShowLeftDropdown(!showLeftDropdown)
+          }}
+        />
+        <LeftDropdown
+          showLeftDropdown={showLeftDropdown}
+          setShowLeftDropdown={setShowLeftDropdown}
         />
         <Search />
       </div>
@@ -39,7 +51,7 @@ function Header(props: HeaderProps) {
         <SvgIcon
           name='search'
           style={{
-            fill: '#fff',
+            fill: 'var(--light)',
             width: '35px',
             height: '35px',
             position: 'absolute',
@@ -50,7 +62,7 @@ function Header(props: HeaderProps) {
         <SvgIcon
           name='right-menu'
           style={{
-            fill: '#fff',
+            fill: 'var(--light)',
             width: '35px',
             height: '35px',
             position: 'absolute',
