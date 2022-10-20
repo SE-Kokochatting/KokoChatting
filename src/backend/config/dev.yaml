@@ -1,7 +1,8 @@
 mysql:
-  host: localhost
-  username: zad
-  password: 123456
+  host: 47.96.71.248
+  port: 3306
+  username: root
+  password: hsje$@hwqw$#
   database: dbname
 
 jwt:
@@ -19,3 +20,4 @@ server:
   websocket:
     health-check-duration: 30      # 单位为s
     filter-offline-conn-duration: 60
+    enable-compression: false
