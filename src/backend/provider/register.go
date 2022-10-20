@@ -14,7 +14,7 @@ type RegisterProvider struct {
 // AddUser 增加用户到用户表中
 func (regPro *RegisterProvider) AddUser(name string, encrytedpassword string) (uint64, error) {
 	// 查找有无重复的name用户
-	var userProfileEntity = &dataobject.StoreUserProfile{}
+	var userProfileEntity = &dataobject.UserProfile{}
 	dbClient := regPro.mysqlProvider.mysqlDb
 	if err := dbClient.Where("name = ?", name).First(userProfileEntity).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
