@@ -70,8 +70,9 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 // JwtAuthValidate jwt身份信息验证
 func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// TODO: figure out c.GetHeader()和c.Parmm()的区别
-		tokenString := c.Param("Authorization")
+		// 由于token保存在请求头中，所以需要使用c.getHeader，而不是c.Param函数
+		tokenString := c.GetHeader("Authorization")
+		// tokenString := c.Param("Authorization")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

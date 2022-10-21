@@ -207,3 +207,4 @@ func NewWsConnManager() *WsConnManager {
 		expiredConnsChan:          make(chan *Conn),
 	}
 }
+
