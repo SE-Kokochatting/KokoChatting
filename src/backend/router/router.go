@@ -9,6 +9,7 @@ type routerGroup struct{
 	upgrade upgradeRouter
 	example exampleRouter
 	user userRouter
+	manage manageRouter
 }
 
 // placeholder 占位用函数，可删除
@@ -30,6 +31,7 @@ func Routers() *gin.Engine {
 		dummyCode(publicGroup)  // 占位，无用代码可删除
 		rg.example.RegisterExampleRouter(publicGroup)
 		rg.user.RegisterRoute(publicGroup)
+		rg.manage.DeleteFriendRouter(publicGroup)
 	}
 	return engine
 }
