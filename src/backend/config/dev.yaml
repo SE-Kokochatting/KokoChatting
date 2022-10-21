@@ -3,7 +3,7 @@ mysql:
   port: 3306
   username: root
   password: hsje$@hwqw$#
-  database: dbname
+  database: KoKoChatting
 
 jwt:
   secret:  NtKBdzmI06iRf6u6

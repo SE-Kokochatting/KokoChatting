@@ -151,7 +151,7 @@ func (manager *WsConnManager) FilterOfflineConns() {
 	}
 }
 
-// HandleOfflineConns handle conns from offlineChan continously
+// HandleOfflineConns handle conns from offlineChan continuously
 func (manager *WsConnManager) HandleOfflineConns() {
 	for {
 		select {
