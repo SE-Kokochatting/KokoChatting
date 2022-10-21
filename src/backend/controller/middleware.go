@@ -81,7 +81,8 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 			return hmacSampleSecret, nil
 		})
 		if err != nil {
-			c.JSON(1001, gin.H{
+			c.JSON(404, gin.H{
+				"status": 1001,
 				"err": "unexpected signing method",
 			})
 		}
