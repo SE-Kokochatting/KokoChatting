@@ -8,8 +8,3 @@ type UserProfile struct {
 	Name     string `json:"name"`
 }
 
-type StoreFriendProfile struct {
-	Id uint64 `gorm:"column:id;primary_key;AUTO_INCREMENT"`
-	User1 uint64 `gorm:"column:user1"`
-	User2 uint64 `gorm:"column:user2"`
-}

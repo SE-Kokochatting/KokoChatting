@@ -12,10 +12,10 @@ type baseController struct{
 
 func (b *baseController) WithErr(ApiErr error, c *gin.Context) {
 	err := ApiErr.(global.Error)
-	// TODO: figure out the meaning of status code
 	c.JSON(404, gin.H{
-		"status": err.Status,
-		"Err": err.Error(),
+		"code": err.Status,
+		"msg": err.Error(),
+		"data": nil,
 	})
 }
 
