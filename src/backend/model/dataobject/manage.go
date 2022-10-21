@@ -7,8 +7,9 @@ type FriendRelation struct {
 }
 
 func (friendRelation *FriendRelation)Preprocess (){
-	var u1,u2 uint64
-	if friendRelation.User1 < friendRelation.User2 {
+	u1 := friendRelation.User1
+	u2 := friendRelation.User2
+	if friendRelation.User1 > friendRelation.User2 {
 		u1 = friendRelation.User2
 		u2 = friendRelation.User1
 	}
