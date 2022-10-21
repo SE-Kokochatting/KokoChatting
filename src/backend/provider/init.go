@@ -7,7 +7,7 @@ import (
 
 func MysqlInit() (*gorm.DB, error){
 	// use viper to read configuration
-	config := global.Config{}
+	config := global.GetGlobalConfig()
 
 	host := config.GetConfigByName("mysql.host").(string)
 	username := config.GetConfigByName("mysql.username").(string)
