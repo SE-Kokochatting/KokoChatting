@@ -2,7 +2,6 @@ package controller
 
 import (
 	"KokoChatting/global"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +19,11 @@ func (b *baseController) WithErr(ApiErr error, c *gin.Context) {
 }
 
 func (b *baseController) WithData(data interface{}, c *gin.Context) {
-	c.JSON(200, data)
+	c.JSON(200, gin.H{
+		"code": 200,
+		"msg": "successful",
+		"data": data,
+	})
 }
 
 
