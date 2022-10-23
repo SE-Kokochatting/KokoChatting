@@ -9,33 +9,32 @@ import (
 	"go.uber.org/zap"
 )
 
-type DeleteFriendController struct{
+type ManageController struct{
 	baseController
-	deleteFriendService *service.DeleteFriendService
+	ManageService *service.ManageService
 }
 
-func (delFriendCtl *DeleteFriendController) DeleteFriend (c *gin.Context) {
+func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	delFriendReq := &req.DeleteFriendReq{}
 	err := c.BindJSON(delFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
 	}
-	//用户id应由token解析出来，这里先写死用于测试功能
-	var uid uint64
-	uid = 100005
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
 
-	err = delFriendCtl.deleteFriendService.DeleteFriend(uid, delFriendReq.Fid)
+	err = manageCtl.ManageService.DeleteFriend(uid, delFriendReq.Fid)
 	if err != nil{
-		delFriendCtl.WithErr(global.DeleteFriendError, c)
+		manageCtl.WithErr(global.DeleteFriendError, c)
 		return
 	}
 
 	delFriendRes := &res.DelFriendRes{}
-	delFriendCtl.WithData(delFriendRes, c)
+	manageCtl.WithData(delFriendRes, c)
 }
 
-func NewDeleteFriendController() *DeleteFriendController {
-	return &DeleteFriendController{
-		deleteFriendService: service.NewDeleteFriendService(),
+func NewManageController() *ManageController {
+	return &ManageController{
+		ManageService: service.NewManageService(),
 	}
 }
