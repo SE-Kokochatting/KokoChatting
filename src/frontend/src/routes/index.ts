@@ -1,5 +1,6 @@
 import { RouteConfig } from 'react-router-config'
 import Chat from '@/pages/Chat'
+import Login from '@/pages/Login'
 
 const routesConfig: RouteConfig[] = [
   {
@@ -16,6 +17,16 @@ const routesConfig: RouteConfig[] = [
     path: '/group',
     exact: true,
     element: Chat,
+  },
+  {
+    path: '/login',
+    exact: true,
+    element: Login,
+  },
+  {
+    path: '/register',
+    exact: true,
+    element: Login,
   },
 ]
 
