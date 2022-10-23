@@ -19,6 +19,7 @@ jobs:
       - name: build golang backend
         run: |
           cd ./src/backend
+          chmod +x ./server.sh
           ./server.sh build
         
       - name: scp-pipeline
