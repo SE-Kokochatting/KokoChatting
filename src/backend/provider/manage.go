@@ -37,6 +37,21 @@ func (managePro *ManageProvider) DeleteFriend (uid uint64,fid uint64) error {
 	return nil
 }
 
+func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error{
+	var blockRelationEntity = &dataobject.BlockRelation{
+		User: uid,
+		Blocker: fid,
+	}
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Create(blockRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("block friend error",zap.Error(err))
+	}
+	return nil
+}
+
 func NewManageProvider() *ManageProvider {
 	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),
