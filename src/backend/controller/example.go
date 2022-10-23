@@ -18,10 +18,7 @@ func (controller *ExampleController) Example(c *gin.Context){
 		controller.WithErr(err, c)
 		return
 	}
-	controller.WithErr(global.Error{
-		Status: 200,
-		Err: global.ConfigPathError,
-	} ,c)
+	controller.WithErr(global.ConfigPathError ,c)
 }
 
 func NewExampleController() *ExampleController{

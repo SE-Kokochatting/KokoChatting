@@ -31,6 +31,7 @@ func Routers() *gin.Engine {
 		dummyCode(publicGroup)  // 占位，无用代码可删除
 		rg.example.RegisterExampleRouter(publicGroup)
 		rg.user.RegisterRoute(publicGroup)
+		rg.user.LoginRoute(publicGroup)
 		rg.manage.DeleteFriendRouter(publicGroup)
 	}
 	return engine

@@ -88,9 +88,8 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 		}
 
 		if claims, ok := token.Claims.(utilstruct.Claims); ok && token.Valid {
-			c.Set("userName", claims.UserProfile.Name)
-			c.Set("userUid", claims.UserProfile.Uid)
-			c.Set("userPassword", claims.UserProfile.Password)
+			c.Set("userUid", claims.Uid)
+			c.Set("userPassword", claims.Password)
 		}
 		c.Next()
 	}

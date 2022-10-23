@@ -7,47 +7,53 @@ import (
 	"go.uber.org/zap"
 )
 
-type RegisterProvider struct {
+type UserProvider struct {
 	mysqlProvider
 }
 
-// AddUser 增加用户到用户表中
-func (regPro *RegisterProvider) AddUser(name string, encrytedpassword string) (uint64, error) {
-	// 查找有无重复的name用户
-	var userProfileEntity = &dataobject.UserProfile{
-		Name: name,
-		Password: encrytedpassword,
+// CheckExist 检查用户是否存在，存在直接补全对应的结构体信息，不存在返回nil
+func (UserPro *UserProvider) CheckExist(userprofile *dataobject.UserProfile) error {
+	// if uid is zero, search by name; if uid is not zero, search by uid
+	dbClient := UserPro.mysqlProvider.mysqlDb
+	if 0 == userprofile.Uid {
+		err := dbClient.Where("name = ?", userprofile.Name).First(userprofile).Error
+		if err != gorm.ErrRecordNotFound {
+			global.Logger.Error("name is already used", zap.Error(err))
+			return err
+		}
+		if err != nil && err != gorm.ErrRecordNotFound {
+			global.Logger.Error("register error", zap.Error(err))
+			return err
+		}
+	} else {
+		err := dbClient.Where("uid = ?", userprofile.Uid).First(userprofile).Error
+		if err != nil{
+			global.Logger.Error("login error: user is not exist", zap.Error(err))
+			return err
+		}
 	}
+	return nil
+}
 
-	// check whether the name is useful
-	dbClient := regPro.mysqlProvider.mysqlDb
-	err := dbClient.Where("name = ?", name).First(userProfileEntity).Error
-	if err != gorm.ErrRecordNotFound {
-		global.Logger.Error("name is already used", zap.Error(err))
-		return 0, err
-	}
-	if err != nil && err != gorm.ErrRecordNotFound {
-		global.Logger.Error("register error", zap.Error(err))
-		return 0, err
-	}
-
-	if err := dbClient.Create(userProfileEntity).Error; err != nil {
+func (UserPro *UserProvider) CreateUser(userprofile *dataobject.UserProfile) (uint64, error){
+	dbClient := UserPro.mysqlProvider.mysqlDb
+	if err := dbClient.Create(userprofile).Error; err != nil {
 		global.Logger.Error("add user error", zap.Error(err))
 		return 0, err
 	}
 
 	// find the inserted user and return the uid
-	err = dbClient.Where("name = ?", name).First(userProfileEntity).Error
+	err := dbClient.Where("name = ?", userprofile.Name).First(userprofile).Error
 	if err != nil {
 		global.Logger.Error("register error when find the inserted user", zap.Error(err))
 		return 0, err
 	}
 	// dbClient.Debug().Create(userProfileEntity)
-	return userProfileEntity.Uid, nil
+	return userprofile.Uid, nil
 }
 
-func NewRegisterProvider() *RegisterProvider {
-	return &RegisterProvider{
+func NewRegisterProvider() *UserProvider {
+	return &UserProvider{
 		mysqlProvider: *NewMysqlProvider(),
 	}
 }
