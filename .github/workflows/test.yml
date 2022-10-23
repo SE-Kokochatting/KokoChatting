@@ -19,8 +19,7 @@ jobs:
       - name: build golang backend
         run: |
           cd ./src/backend
-          go mod tidy
-          go build -o ./koko main.go
+          ./server.sh build
         
       - name: scp-pipeline
         # You may pin to the exact commit or the version.
@@ -53,4 +52,4 @@ jobs:
           script: |
             cd /code/kokochatting
             chmod +x ./koko
-            ENVIRONMENT=DEVELOPMENT nohup ./koko > ./server.log 2>&1 &
+            ./server.sh restart
