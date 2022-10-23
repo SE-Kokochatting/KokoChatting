@@ -1,9 +1,13 @@
 package res
 
-type UserRes struct {
-	BaseResponse
+type UserRegisterRes struct {
 	Data struct {
 		Uid uint64 `json:"uid"`
-		Token string `json:"token"`
 	} `json:"data"`
+}
+
+type UserLoginRes struct {
+	Data struct {
+		Token string `json:"token"`
+	}
 }

@@ -1,9 +1,9 @@
 mysql:
-  host: 47.96.71.248
+  host: 49.235.71.44
   port: 3306
   username: root
   password: hsje$@hwqw$#
-  database: dbname
+  database: KoKoChatting
 
 jwt:
   secret:  NtKBdzmI06iRf6u6
@@ -16,7 +16,7 @@ logger:
 
 server:
   port: 8080
-  MaxWSConnNum: 200
+  max-wsconn-num: 200
   websocket:
     health-check-duration: 30      # 单位为s
     filter-offline-conn-duration: 60

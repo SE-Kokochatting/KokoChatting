@@ -157,6 +157,9 @@ func (manager *WsConnManager) HandleOfflineConns() {
 		select {
 		case conn := <-manager.expiredConnsChan:
 			manager.conns.Delete(conn.uid)
+			if conn == nil{
+				global.Logger.Error("conn == nil")
+			}
 			conn.Close()
 			connPool.Put(conn)
 		}
@@ -164,7 +167,7 @@ func (manager *WsConnManager) HandleOfflineConns() {
 }
 
 func NewWsConnManager() *WsConnManager {
-	connNum, err := global.GetGlobalConfig().GetConfigByPath("server.MaxWSConnNum")
+	connNum, err := global.GetGlobalConfig().GetConfigByPath("server.max-wsconn-num")
 	if err != nil {
 		global.Logger.Error("get server.MaxWSConnNum error", zap.Error(err))
 		return nil
@@ -204,3 +207,4 @@ func NewWsConnManager() *WsConnManager {
 		expiredConnsChan:          make(chan *Conn),
 	}
 }
+
