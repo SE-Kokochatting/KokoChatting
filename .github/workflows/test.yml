@@ -53,4 +53,4 @@ jobs:
           script: |
             cd /code/kokochatting
             chmod +x ./koko
-            ENVIRONMENT=DEVELOPMENT ./koko
+            ENVIRONMENT=DEVELOPMENT nohup ./koko > ./server.log 2>&1 &
