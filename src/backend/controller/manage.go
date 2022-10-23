@@ -33,6 +33,25 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	manageCtl.WithData(delFriendRes, c)
 }
 
+func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
+	blockFriendReq := &req.BlockFriendReq{}
+	err := c.BindJSON(blockFriendReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.BlockFriend(uid, blockFriendReq.Fid)
+	if err != nil{
+		manageCtl.WithErr(global.BlockFriendError, c)
+		return
+	}
+
+	blockFriendRes := &res.BlockFriendRes{}
+	manageCtl.WithData(blockFriendRes, c)
+}
+
 func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),

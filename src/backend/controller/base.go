@@ -27,7 +27,7 @@ func (b *baseController) WithData(data interface{}, c *gin.Context) {
 		"data": data,
 	})
 }
-
+// getUid 帮助有鉴权要求的接口获得鉴权
 func (b *baseController) getUid (c *gin.Context) uint64 {
 	value,exist := c.Get("userUid")
 	if exist{
