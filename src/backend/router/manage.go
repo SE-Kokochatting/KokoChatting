@@ -7,7 +7,7 @@ import (
 
 type manageRouter struct {}
 
-func(r *manageRouter) DeleteFriendRouter(_router gin.IRouter){
-	routerController := controller.NewDeleteFriendController()
+func(r *manageRouter) ManageRouter(_router gin.IRoutes){
+	routerController := controller.NewManageController()
 	_router.POST("/user/list_delete", routerController.DeleteFriend)
 }

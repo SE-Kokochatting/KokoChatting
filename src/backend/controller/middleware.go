@@ -2,7 +2,6 @@ package controller
 
 import (
 	"KokoChatting/global"
-	"KokoChatting/model/utilstruct"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -85,11 +84,14 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 				"status": 1001,
 				"err": "unexpected signing method",
 			})
+			return
 		}
-
-		if claims, ok := token.Claims.(utilstruct.Claims); ok && token.Valid {
-			c.Set("userUid", claims.Uid)
-			c.Set("userPassword", claims.Password)
+		claims,ok := token.Claims.(jwt.MapClaims)
+		//fmt.Println(claims)
+		//claims, ok := token.Claims.(utilstruct.Claims)
+		if  ok && token.Valid {
+			c.Set("userUid", claims["Uid"])
+			c.Set("userPassword", claims["Password"])
 		}
 		c.Next()
 	}
