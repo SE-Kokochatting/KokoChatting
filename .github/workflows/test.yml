@@ -20,7 +20,7 @@ jobs:
         run: |
           cd ./src/backend
           go mod tidy
-          go build main.go -o ./koko
+          go build -o ./koko main.go
         
       - name: scp-pipeline
         # You may pin to the exact commit or the version.
