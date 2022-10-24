@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "moduleResolution": "node",
     "noEmit": true,
     "noImplicitReturns": true,
@@ -26,6 +27,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
+    "types": ["@emotion/react/types/css-prop"],
     "paths": {
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],
