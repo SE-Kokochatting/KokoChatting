@@ -1,9 +1,9 @@
 .user_info {
   max-width: 400px;
   height: 100%;
-  background-color: var(--bg-dark);
-  color: var(--font);
-  border: 1px solid var(--bg);
+  background: var(--global-bg-primary);
+  color: var(--global-font-primary);
+  border: 1px solid var(--global-bg-primary);
 
   &-title {
     font-size: 20px;

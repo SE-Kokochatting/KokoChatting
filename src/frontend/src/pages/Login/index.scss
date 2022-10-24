@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   position: relative;
-  background-color: var(--bg-login);
+  background: var(--global-bg-primary_lighter);
 
   &-window {
     width: 400px;
@@ -10,9 +10,9 @@
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    background-color: var(--bg-dark);
+    background: var(--global-bg-primary_darker);
     border-radius: 20px;
-    color: var(--font);
+    color: var(--global-font-primary);
     padding: 20px 20px 50px 20px;
     box-sizing: border-box;
 
@@ -28,7 +28,7 @@
       }
 
       &-item.selected {
-        border-bottom: 3px solid var(--font);
+        border-bottom: 3px solid var(--global-font-primary);
       }
     }
 
@@ -42,28 +42,28 @@
 
       &-input {
         margin-bottom: 50px;
-        background-color: var(--bg-login);
+        background: var(--global-bg-primary_lighter);
         height: 50px;
         border-radius: 25px;
         box-sizing: border-box;
         padding: 15px;
-        color: var(--light);
+        color: var(--global-font-primary_lighter);
         font-size: 16px;
       }
 
       &-btn {
         height: 50px;
         border-radius: 25px;
-        background-color: var(--bg-login);
+        background: var(--global-bg-primary_lighter);
         font-size: 20px;
         letter-spacing: 5px;
-        color: var(--font);
+        color: var(--global-font-primary);
         cursor: pointer;
         transition: background 0.2s;
       }
 
       &-btn:hover {
-        background-color: #444;
+        background: #444;
       }
     }
   }

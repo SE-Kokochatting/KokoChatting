@@ -30,7 +30,7 @@ function Bubble(props: BubbleProps) {
           style={{
             width: '25px',
             height: '25px',
-            color: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             alignSelf: 'end',
             marginRight: '10px',
           }}

@@ -12,7 +12,7 @@ interface LeftDropdownProps {
 const iconStyle: CSSObject = {
   width: '25px',
   height: '25px',
-  color: 'var(--light)',
+  color: 'var(--global-font-primary_lighter)',
   verticalAlign: 'middle',
   marginRight: '20px',
 }
