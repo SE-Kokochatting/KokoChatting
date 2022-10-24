@@ -17,6 +17,7 @@ var (
 	PasswordError = NewError(errors.New("password is err"), 1002)
 	DeleteFriendError = NewError(errors.New("friend delete err"),2001)
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
+	CreatFriendError = NewError(errors.New("creat group err"),2003)
 )
 
 func NewError(err error, status int) error {

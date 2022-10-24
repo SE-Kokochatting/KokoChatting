@@ -11,6 +11,19 @@ type BlockRelation struct {
 	User uint64 `json:"user"`
 	Blocker uint64 `json:"blocker"`
 }
+
+type GroupProfile struct {
+	Gid uint64 `json:"gid" gorm:"primary_key"`
+	Name string `json:"name"`
+}
+
+type GroupMember struct {
+	Id uint64 `json:"id"`
+	Gid uint64 `json:"gid"`
+	Uid uint64 `json:"uid"`
+	IsAdmin bool `json:"is_admin"`
+	IsHost bool `json:"is_host"`
+}
 // Preprocess 是所有插入、或查询好友关系表时都需要使用的，其功能是使好友列表中user1的id始终小于user2的id
 func (friendRelation *FriendRelation)Preprocess (){
 	u1 := friendRelation.User1
