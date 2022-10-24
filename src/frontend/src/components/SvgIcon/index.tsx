@@ -1,9 +1,10 @@
-import React from 'react'
+// 使用 emotion.js，在 css 属性中可以支持 '&:hover' 等写法
+import { CSSObject } from '@emotion/react'
 import './index.scss'
 
 interface Props {
   name: string
-  style?: React.CSSProperties
+  style?: CSSObject
   onClick?: () => void
 }
 
@@ -12,7 +13,7 @@ function SvgIcon(props: Props) {
   const iconName = `#icon-${name}`
 
   return (
-    <svg style={style} onClick={onClick}>
+    <svg css={style} onClick={onClick}>
       <use xlinkHref={iconName} />
     </svg>
   )
