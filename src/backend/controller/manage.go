@@ -20,6 +20,7 @@ func (delFriendCtl *DeleteFriendController) DeleteFriend (c *gin.Context) {
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
 	}
+
 	//用户id应由token解析出来，这里先写死用于测试功能
 	var uid uint64
 	uid = 100005
