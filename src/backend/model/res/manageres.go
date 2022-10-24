@@ -13,3 +13,7 @@ type CreatGroupRes struct {
 		Gid uint64 `json:"gid"`
 	}`json:"data"`
 }
+
+type QuitGroupRes struct {
+	Data struct {} `json:"data"`
+}

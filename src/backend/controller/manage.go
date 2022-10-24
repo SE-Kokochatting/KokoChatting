@@ -66,13 +66,33 @@ func (manageCtl *ManageController) CreatGroup (c *gin.Context) {
 
 	gid, err1 := manageCtl.ManageService.CreatGroup(creatGroupReq.Name, uid, creatGroupReq.Administrator, creatGroupReq.Member)
 	if err1 != nil{
-		manageCtl.WithErr(global.CreatFriendError, c)
+		manageCtl.WithErr(global.CreatGroupError, c)
 		return
 	}
 
 	creatGroupRes := &res.CreatGroupRes{}
 	creatGroupRes.Data.Gid = gid
 	manageCtl.WithData(creatGroupRes, c)
+}
+
+func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
+	quitGroupQeq := &req.QuitGroupReq{}
+	err := c.BindJSON(quitGroupQeq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.QuitGroup(uid, quitGroupQeq.Gid)
+	if err != nil{
+		manageCtl.WithErr(global.QuitGroupError, c)
+		return
+	}
+
+	quitGroupRes := &res.QuitGroupRes{}
+	manageCtl.WithData(quitGroupRes, c)
 }
 
 func NewManageController() *ManageController {
