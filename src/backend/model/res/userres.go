@@ -11,3 +11,4 @@ type UserLoginRes struct {
 		Token string `json:"token"`
 	}
 }
+

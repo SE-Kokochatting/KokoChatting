@@ -19,6 +19,7 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	err := c.BindJSON(delFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		return
 	}
 	//从报文首部中获取uid
 	uid := manageCtl.getUid(c)
@@ -38,6 +39,7 @@ func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
 	err := c.BindJSON(blockFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		return
 	}
 	//从报文首部中获取uid
 	uid := manageCtl.getUid(c)
@@ -50,6 +52,27 @@ func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
 
 	blockFriendRes := &res.BlockFriendRes{}
 	manageCtl.WithData(blockFriendRes, c)
+}
+
+func (manageCtl *ManageController) CreatGroup (c *gin.Context) {
+	creatGroupReq := &req.CreatGroupReq{}
+	err := c.BindJSON(creatGroupReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	gid, err1 := manageCtl.ManageService.CreatGroup(creatGroupReq.Name, uid, creatGroupReq.Administrator, creatGroupReq.Member)
+	if err1 != nil{
+		manageCtl.WithErr(global.CreatFriendError, c)
+		return
+	}
+
+	creatGroupRes := &res.CreatGroupRes{}
+	creatGroupRes.Data.Gid = gid
+	manageCtl.WithData(creatGroupRes, c)
 }
 
 func NewManageController() *ManageController {
