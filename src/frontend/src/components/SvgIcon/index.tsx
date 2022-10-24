@@ -13,7 +13,7 @@ function SvgIcon(props: Props) {
   const iconName = `#icon-${name}`
 
   return (
-    <svg css={style} onClick={onClick}>
+    <svg css={style} onClick={onClick} className='svg-icon'>
       <use xlinkHref={iconName} />
     </svg>
   )

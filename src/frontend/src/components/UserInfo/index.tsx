@@ -10,7 +10,7 @@ function UserInfo(/* props: UserInfoProps */) {
         <SvgIcon
           name='cross'
           style={{
-            fill: '#fff',
+            color: '#fff',
             width: '20px',
             height: '20px',
             marginRight: '10px',
