@@ -7,18 +7,18 @@ import (
 	"go.uber.org/zap"
 )
 
-type DeleteFriendProvider struct {
+type ManageProvider struct {
 	mysqlProvider
 }
 
-func (delFriendPro *DeleteFriendProvider) DeleteFriend (uid uint64,fid uint64) error {
+func (managePro *ManageProvider) DeleteFriend (uid uint64,fid uint64) error {
 	var friendRelationEntity = &dataobject.FriendRelation{
 		User1: uid,
 		User2: fid,
 	}
 	friendRelationEntity.Preprocess()
 
-	dbClient := delFriendPro.mysqlProvider.mysqlDb
+	dbClient := managePro.mysqlProvider.mysqlDb
 
 	err := dbClient.Where("user1 = ? AND user2 = ?",friendRelationEntity.User1,friendRelationEntity.User2).Find(friendRelationEntity).Error
 	if err != nil && err == gorm.ErrRecordNotFound{
@@ -37,8 +37,23 @@ func (delFriendPro *DeleteFriendProvider) DeleteFriend (uid uint64,fid uint64) e
 	return nil
 }
 
-func NewDeleteFriendProvider() *DeleteFriendProvider {
-	return &DeleteFriendProvider{
+func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error{
+	var blockRelationEntity = &dataobject.BlockRelation{
+		User: uid,
+		Blocker: fid,
+	}
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Create(blockRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("block friend error",zap.Error(err))
+	}
+	return nil
+}
+
+func NewManageProvider() *ManageProvider {
+	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),
 	}
 }

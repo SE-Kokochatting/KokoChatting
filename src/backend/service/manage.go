@@ -6,12 +6,12 @@ import (
 	"go.uber.org/zap"
 )
 
-type DeleteFriendService struct{
-	deleteFriendProvider *provider.DeleteFriendProvider
+type ManageService struct{
+	ManageProvider *provider.ManageProvider
 }
 
-func(delFriendSrv *DeleteFriendService) DeleteFriend(uid uint64,fid uint64) error {
-	err := delFriendSrv.deleteFriendProvider.DeleteFriend(uid,fid)
+func(manageSrv *ManageService) DeleteFriend(uid uint64,fid uint64) error {
+	err := manageSrv.ManageProvider.DeleteFriend(uid,fid)
 	if err != nil{
 		global.Logger.Error("delete friend err",zap.Error(err))
 		return err
@@ -19,8 +19,23 @@ func(delFriendSrv *DeleteFriendService) DeleteFriend(uid uint64,fid uint64) erro
 	return err
 }
 
-func NewDeleteFriendService() *DeleteFriendService {
-	return &DeleteFriendService{
-		deleteFriendProvider: provider.NewDeleteFriendProvider(),
+func(manageSrv *ManageService) BlockFriend(uid uint64,fid uint64) error {
+	err := manageSrv.ManageProvider.DeleteFriend(uid,fid)
+	if err != nil{
+		global.Logger.Error("delete friend err",zap.Error(err))
+		return err
+	}
+
+	err = manageSrv.ManageProvider.BlockFriend(uid,fid)
+	if err != nil{
+		global.Logger.Error("block friend err",zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func NewManageService() *ManageService {
+	return &ManageService{
+		ManageProvider: provider.NewManageProvider(),
 	}
 }
