@@ -12,4 +12,5 @@ func(r *manageRouter) ManageRouter(_router gin.IRoutes){
 	_router.POST("/user/list_delete", routerController.DeleteFriend)
 	_router.POST("/user/list_block", routerController.BlockFriend)
 	_router.POST("/creat_group", routerController.CreatGroup)
+	_router.POST("/group/quit", routerController.QuitGroup)
 }

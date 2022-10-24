@@ -13,3 +13,7 @@ type CreatGroupReq struct {
 	Administrator []uint64 `json:"administrator"`
 	Member []uint64 `json:"member"`
 }
+
+type QuitGroupReq struct {
+	Gid uint64 `json:"gid"`
+}

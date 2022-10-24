@@ -88,6 +88,18 @@ func (managePro *ManageProvider) CreateMember (gid uint64, uid uint64, isAdmin b
 	return nil
 }
 
+func (managePro *ManageProvider) QuitGroup (uid uint64, gid uint64) error {
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Where("uid = ? AND gid = ?", uid, gid).Delete(dataobject.GroupMember{}).Error
+	if err != nil{
+		global.Logger.Error("quit group error",zap.Error(err))
+		return err
+	}
+	return nil
+}
+
 func NewManageProvider() *ManageProvider {
 	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),

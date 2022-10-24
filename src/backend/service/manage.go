@@ -65,6 +65,15 @@ func (manageSrv *ManageService) CreatGroup (name string, uid uint64, aid []uint6
 	return gid, err
 }
 
+func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
+	err := manageSrv.ManageProvider.QuitGroup(uid, gid)
+	if err != nil{
+		global.Logger.Error("quit group err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
 func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),
