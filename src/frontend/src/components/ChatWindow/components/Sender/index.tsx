@@ -11,7 +11,7 @@ function Sender(/* props: SenderProps */) {
         style={{
           width: '30px',
           height: '30px',
-          fill: 'var(--light)',
+          color: 'var(--global-font-primary_lighter)',
           margin: '0 15px',
           cursor: 'pointer',
         }}
@@ -27,7 +27,7 @@ function Sender(/* props: SenderProps */) {
           style={{
             width: '30px',
             height: '30px',
-            fill: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             marginRight: '20px',
             cursor: 'pointer',
           }}
@@ -37,7 +37,7 @@ function Sender(/* props: SenderProps */) {
           style={{
             width: '30px',
             height: '30px',
-            fill: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             cursor: 'pointer',
           }}
         />
