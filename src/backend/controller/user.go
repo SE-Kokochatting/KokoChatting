@@ -2,6 +2,7 @@ package controller
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/dataobject"
 	"KokoChatting/model/req"
 	"KokoChatting/model/res"
 	"KokoChatting/model/utilstruct"
@@ -30,6 +31,7 @@ func (userCtl *UserController) Register(c *gin.Context) {
 	uid, err := userCtl.userService.Register(regReq.Name, regReq.Password)
 	if err != nil {
 		userCtl.WithErr(global.RegisterError, c)
+		return
 	}
 
 	regRes := &res.UserRegisterRes{}
@@ -82,10 +84,42 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	if err != nil {
 		global.Logger.Error("generate jwt error", zap.Error(err))
 		userCtl.WithErr(global.RegisterError, c)
+		return
 	}
 	loginRes.Data.Token = tokenString
 
 	userCtl.WithData(loginRes, c)
+}
+
+// GetUserInfo [GET]
+// PATH: api/v1/user
+// Function: get detailed information of user
+func (userCtl *UserController) GetUserInfo(c *gin.Context) {
+	uid := userCtl.getUid(c)
+	userProfile := &dataobject.UserProfile{
+		Uid: uid,
+	}
+
+	err := userCtl.userService.GetUserInfo(uid, userProfile)
+	if err != nil {
+		global.Logger.Error("get user info error", zap.Error(err))
+		userCtl.WithErr(global.GetInfoError, c)
+		return
+	}
+
+	userInfoRes := &res.UserInfo{
+		Data: struct {
+			Uid uint64 `json:"uid"`
+			Name string `json:"name"`
+			AvatarUrl string `json:"avatarUrl"`
+		}{
+			Uid: userProfile.Uid,
+			Name: userProfile.Name,
+			AvatarUrl: userProfile.AvatarUrl,
+		},
+	}
+
+	userCtl.WithData(userInfoRes, c)
 }
 
 func NewUserController() *UserController {

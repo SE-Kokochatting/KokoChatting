@@ -21,6 +21,7 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 		global.Logger.Error("bind json error", zap.Error(err))
 		return
 	}
+
 	//从报文首部中获取uid
 	uid := manageCtl.getUid(c)
 

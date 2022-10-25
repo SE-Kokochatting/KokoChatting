@@ -86,6 +86,7 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 			})
 			return
 		}
+
 		claims,ok := token.Claims.(jwt.MapClaims)
 		//fmt.Println(claims)
 		//claims, ok := token.Claims.(utilstruct.Claims)

@@ -8,12 +8,13 @@ import (
 type userRouter struct{}
 
 // 注册接口路由注册
-func (r *userRouter) RegisterRoute(_router gin.IRouter) {
-	routerController := controller.NewUserController()
-	_router.POST("/user/register", routerController.Register)
+func (r *userRouter) UserRouter(_router gin.IRoutes) {
+	userController := controller.NewUserController()
+	_router.POST("/user/register", userController.Register)
+	_router.POST("/user/login", userController.Login)
 }
 
-func (r *userRouter) LoginRoute(_route gin.IRouter) {
-	loginController := controller.NewUserController()
-	_route.POST("/user/login", loginController.Login)
+func (r *userRouter) JWTUserRouter(_route gin.IRoutes) {
+	userController := controller.NewUserController()
+	_route.GET("/user", userController.GetUserInfo)
 }
