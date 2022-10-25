@@ -15,6 +15,7 @@ var (
 	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
 	RegisterError = NewError(errors.New("user register err"), 1001)
 	PasswordError = NewError(errors.New("password is err"), 1002)
+	GetInfoError = NewError(errors.New("get userinfo err"), 1003)
 	DeleteFriendError = NewError(errors.New("friend delete err"),2001)
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
 	CreatGroupError = NewError(errors.New("creat group err"),2003)

@@ -12,3 +12,11 @@ type UserLoginRes struct {
 	}
 }
 
+type UserInfo struct {
+	Data struct {
+		Uid uint64 `json:"uid"`
+		Name string `json:"name"`
+		AvatarUrl string `json:"avatarUrl"`
+	}
+}
+
