@@ -17,4 +17,5 @@ func (r *userRouter) UserRouter(_router gin.IRoutes) {
 func (r *userRouter) JWTUserRouter(_route gin.IRoutes) {
 	userController := controller.NewUserController()
 	_route.GET("/user", userController.GetUserInfo)
+	_route.POST("/user/avatar", userController.SetUserAvatar)
 }
