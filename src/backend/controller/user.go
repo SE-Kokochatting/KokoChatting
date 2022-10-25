@@ -107,7 +107,7 @@ func (userCtl *UserController) GetUserInfo(c *gin.Context) {
 		return
 	}
 
-	userInfoRes := &res.UserInfo{
+	userInfoRes := &res.UserInfoRes{
 		Data: struct {
 			Uid uint64 `json:"uid"`
 			Name string `json:"name"`
@@ -120,6 +120,32 @@ func (userCtl *UserController) GetUserInfo(c *gin.Context) {
 	}
 
 	userCtl.WithData(userInfoRes, c)
+}
+
+// SetUserAvatar [POST]
+// PATH: api/v1/user/avatar
+// Function: set avatarUrl for the user
+func (userCtl *UserController) SetUserAvatar(c *gin.Context) {
+	uid := userCtl.getUid(c)
+
+	setAvatarReq := &req.UserSetAvatarReq{}
+	if err := c.BindJSON(setAvatarReq); err != nil {
+		global.Logger.Error("set avatar bind json error", zap.Error(err))
+	}
+
+	err := userCtl.userService.SetAvatar(uid, setAvatarReq.AvatarUrl)
+	if err != nil {
+		global.Logger.Error("set avatar error", zap.Error(err))
+		userCtl.WithErr(global.Error{
+			Status: 404,
+			Err: err,
+		}, c)
+		return
+	}
+
+	setAvatarRes := &res.UserSetAvatarRes{}
+
+	userCtl.WithData(setAvatarRes, c)
 }
 
 func NewUserController() *UserController {

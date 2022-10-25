@@ -9,14 +9,18 @@ type UserRegisterRes struct {
 type UserLoginRes struct {
 	Data struct {
 		Token string `json:"token"`
-	}
+	} `json:"data"`
 }
 
-type UserInfo struct {
+type UserInfoRes struct {
 	Data struct {
 		Uid uint64 `json:"uid"`
 		Name string `json:"name"`
 		AvatarUrl string `json:"avatarUrl"`
-	}
+	} `json:"data"`
+}
+
+type UserSetAvatarRes struct {
+	Data struct {} `json:"data"`
 }
 

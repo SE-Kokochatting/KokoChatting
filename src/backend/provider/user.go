@@ -52,6 +52,31 @@ func (UserPro *UserProvider) CreateUser(userprofile *dataobject.UserProfile) (ui
 	return userprofile.Uid, nil
 }
 
+// UpdateEntry update all columns by uid
+func (UserPro *UserProvider) UpdateEntry(lastedProfile *dataobject.UserProfile) error {
+	dbClient := UserPro.mysqlProvider.mysqlDb
+
+	userprofile := &dataobject.UserProfile{}
+	err := dbClient.Where("uid = ?", lastedProfile.Uid).First(userprofile).Error
+	if err != nil{
+		global.Logger.Error("update entry error: user is not exist", zap.Error(err))
+		return err
+	}
+
+	// update the entry
+	err = dbClient.Model(&dataobject.UserProfile{}).Where("uid=?", lastedProfile.Uid).Updates(dataobject.UserProfile{
+		Password: lastedProfile.Password,
+		Name: lastedProfile.Name,
+		AvatarUrl: lastedProfile.AvatarUrl,
+	}).Error
+	if err != nil {
+		global.Logger.Error("update entry error: can not update", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func NewRegisterProvider() *UserProvider {
 	return &UserProvider{
 		mysqlProvider: *NewMysqlProvider(),
