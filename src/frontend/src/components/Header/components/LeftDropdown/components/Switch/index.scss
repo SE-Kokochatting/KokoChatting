@@ -18,7 +18,7 @@
     }
 
     &-input:checked + &-slider {
-      background-color: #2196f3;
+      background: #2196f3;
     }
 
     &-input:focus + &-slider {
@@ -36,7 +36,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
+      background: #ccc;
       -webkit-transition: 0.4s;
       transition: 0.4s;
       border-radius: 30px;
@@ -49,7 +49,7 @@
       width: 24px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
+      background: white;
       transition: 0.4s;
       border-radius: 50%;
     }

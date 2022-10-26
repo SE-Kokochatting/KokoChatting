@@ -4,8 +4,8 @@
   box-sizing: border-box;
   min-width: 320px;
   overflow-y: scroll;
-  background-color: var(--bg-dark);
-  color: var(--light);
+  background: var(--global-bg-primary);
+  color: var(--global-font-primary_lighter);
   font-size: 16px;
   display: flex;
   flex-direction: column;

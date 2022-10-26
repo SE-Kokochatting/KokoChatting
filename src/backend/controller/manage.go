@@ -9,33 +9,95 @@ import (
 	"go.uber.org/zap"
 )
 
-type DeleteFriendController struct{
+type ManageController struct{
 	baseController
-	deleteFriendService *service.DeleteFriendService
+	ManageService *service.ManageService
 }
 
-func (delFriendCtl *DeleteFriendController) DeleteFriend (c *gin.Context) {
+func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	delFriendReq := &req.DeleteFriendReq{}
 	err := c.BindJSON(delFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		return
 	}
-	//用户id应由token解析出来，这里先写死用于测试功能
-	var uid uint64
-	uid = 100005
 
-	err = delFriendCtl.deleteFriendService.DeleteFriend(uid, delFriendReq.Fid)
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.DeleteFriend(uid, delFriendReq.Fid)
 	if err != nil{
-		delFriendCtl.WithErr(global.DeleteFriendError, c)
+		manageCtl.WithErr(global.DeleteFriendError, c)
 		return
 	}
 
 	delFriendRes := &res.DelFriendRes{}
-	delFriendCtl.WithData(delFriendRes, c)
+	manageCtl.WithData(delFriendRes, c)
 }
 
-func NewDeleteFriendController() *DeleteFriendController {
-	return &DeleteFriendController{
-		deleteFriendService: service.NewDeleteFriendService(),
+func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
+	blockFriendReq := &req.BlockFriendReq{}
+	err := c.BindJSON(blockFriendReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.BlockFriend(uid, blockFriendReq.Fid)
+	if err != nil{
+		manageCtl.WithErr(global.BlockFriendError, c)
+		return
+	}
+
+	blockFriendRes := &res.BlockFriendRes{}
+	manageCtl.WithData(blockFriendRes, c)
+}
+
+func (manageCtl *ManageController) CreatGroup (c *gin.Context) {
+	creatGroupReq := &req.CreatGroupReq{}
+	err := c.BindJSON(creatGroupReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	gid, err1 := manageCtl.ManageService.CreatGroup(creatGroupReq.Name, uid, creatGroupReq.Administrator, creatGroupReq.Member)
+	if err1 != nil{
+		manageCtl.WithErr(global.CreatGroupError, c)
+		return
+	}
+
+	creatGroupRes := &res.CreatGroupRes{}
+	creatGroupRes.Data.Gid = gid
+	manageCtl.WithData(creatGroupRes, c)
+}
+
+func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
+	quitGroupQeq := &req.QuitGroupReq{}
+	err := c.BindJSON(quitGroupQeq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	//从报文首部中获取uid
+	uid := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.QuitGroup(uid, quitGroupQeq.Gid)
+	if err != nil{
+		manageCtl.WithErr(global.QuitGroupError, c)
+		return
+	}
+
+	quitGroupRes := &res.QuitGroupRes{}
+	manageCtl.WithData(quitGroupRes, c)
+}
+
+func NewManageController() *ManageController {
+	return &ManageController{
+		ManageService: service.NewManageService(),
 	}
 }
