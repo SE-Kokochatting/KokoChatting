@@ -36,6 +36,7 @@ jobs:
           # execute commands on ssh
           script: |
             cd /code/kokochatting
+            ./server.sh stop
             rm -rf *
         
       - name: scp-pipeline
