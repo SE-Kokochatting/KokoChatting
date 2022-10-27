@@ -53,6 +53,40 @@ func (userSrv *UserService) Login(uid uint64, password string) (bool, error) {
 	return true, nil
 }
 
+// GetUserInfo get detailed user information
+func (userSrv *UserService) GetUserInfo(uid uint64, userProfile *dataobject.UserProfile) error {
+
+	// check the user is existed and find the info
+	if err := userSrv.userProvider.CheckExist(userProfile); err != nil {
+		global.Logger.Error(fmt.Sprintf("user is not existed, uid: %d", uid), zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (userSrv *UserService) SetAvatar(uid uint64, avatarUrl string) error {
+	lastedProfile := &dataobject.UserProfile{
+		Uid: uid,
+	}
+
+	// check the user is existed and find the info
+	if err := userSrv.userProvider.CheckExist(lastedProfile); err != nil {
+		global.Logger.Error(fmt.Sprintf("user is not existed, uid: %d", uid), zap.Error(err))
+		return err
+	}
+
+	// make some change to lastedProfile to update
+	lastedProfile.AvatarUrl = avatarUrl
+
+	if err := userSrv.userProvider.UpdateEntry(lastedProfile); err != nil {
+		global.Logger.Error("set avatar error", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func NewRegisterService() *UserService {
 	return &UserService{
 		userProvider: provider.NewRegisterProvider(),

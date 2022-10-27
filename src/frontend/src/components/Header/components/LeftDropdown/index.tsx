@@ -1,5 +1,5 @@
+import { CSSObject } from '@emotion/react'
 import { useNavigate } from 'react-router-dom'
-import React from 'react'
 import SvgIcon from '@/components/SvgIcon'
 import Switch from './components/Switch'
 import './index.scss'
@@ -9,10 +9,10 @@ interface LeftDropdownProps {
   setShowLeftDropdown: (val: boolean) => void
 }
 
-const iconStyle: React.CSSProperties = {
+const iconStyle: CSSObject = {
   width: '25px',
   height: '25px',
-  fill: 'var(--light)',
+  color: 'var(--global-font-primary_lighter)',
   verticalAlign: 'middle',
   marginRight: '20px',
 }

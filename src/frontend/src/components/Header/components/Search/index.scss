@@ -5,14 +5,14 @@
     box-sizing: border-box;
     width: 90%;
     height: 40px;
-    background-color: #fff;
+    background: #fff;
     margin-left: 5%;
     border-radius: 5px;
     border: none;
     outline: none;
-    background-color: var(--bg-2);
+    background: var(--global-bg-primary_lighter);
     padding-left: 10px;
-    color: var(--font);
+    color: var(--global-font-primary);
     font-size: 18px;
   }
 }

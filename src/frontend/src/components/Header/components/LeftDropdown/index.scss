@@ -1,6 +1,6 @@
 .c-header-left-dropdown {
   position: absolute;
-  background-color: var(--bg);
+  background: var(--global-bg-primary);
   z-index: 1;
   width: 25.7%;
   height: 100vh;
@@ -17,7 +17,7 @@
   }
 
   &-item:hover {
-    background-color: var(--bg-3);
+    background: var(--global-bg-primary_lighter);
   }
 }
 
@@ -29,5 +29,5 @@
 }
 
 #dark_mode:hover {
-  background-color: var(--bg);
+  background: var(--global-bg-primary);
 }

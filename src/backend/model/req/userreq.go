@@ -9,3 +9,7 @@ type UserLoginReq struct {
 	Uid uint64 `json:"uid"`
 	Password string `json:"password"`
 }
+
+type UserSetAvatarReq struct {
+	AvatarUrl string `gorm:"column:avatarUrl" json:"avatarUrl"`
+}
