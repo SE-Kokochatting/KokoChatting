@@ -71,4 +71,4 @@ jobs:
             cd /code/kokochatting
             chmod +x ./koko
             chmod +x ./server.sh
-            ./server.sh restart
+            ./server.sh start
