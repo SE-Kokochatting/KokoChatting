@@ -2,13 +2,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { Theme } from '@/enums'
 import { IRegister, register as postRegisterReq } from '@/network/register'
+import { ILogin, login as postLoginReq } from '@/network/login'
 import ThemeStore from '@/mobx/theme'
 import './index.scss'
-
-interface ILogin {
-  uid: string
-  password: string
-}
 
 function Login() {
   const {
@@ -23,7 +19,9 @@ function Login() {
 
   const onSubmit = async (data: any) => {
     if (pathname === '/login') {
-      //
+      const res = await postLoginReq(data)
+      console.log(res)
+      // Todo
     } else {
       const res = await postRegisterReq(data)
       console.log(res)

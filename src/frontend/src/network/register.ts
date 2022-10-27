@@ -1,12 +1,10 @@
-import { BACKENDHOST } from '@/consts'
-
 export interface IRegister {
   name: string
   password: string
 }
 
 export async function register(data: IRegister) {
-  const url = `${BACKENDHOST}/user/register`
+  const url = '/api/user/register'
   try {
     const res = await fetch(url, {
       method: 'POST',
