@@ -3,7 +3,7 @@ export interface IRegister {
   password: string
 }
 
-export async function register(data: IRegister) {
+export async function register(data: IRegister): Promise<any> {
   const url = '/api/user/register'
   try {
     const res = await fetch(url, {

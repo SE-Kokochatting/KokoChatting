@@ -1,11 +1,15 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { useAlert } from 'react-alert'
+import { sha256 } from 'js-sha256'
 import { Theme } from '@/enums'
-import { IRegister, register as postRegisterReq } from '@/network/register'
-import { ILogin, login as postLoginReq } from '@/network/login'
+import { IRegister, register as postRegisterReq } from '@/network/user/register'
+import { ILogin, login as postLoginReq } from '@/network/user/login'
 import ThemeStore from '@/mobx/theme'
+import { setToken } from '@/utils/token'
 import './index.scss'
 
+// Todo: 如果 token 有效，重定向到 /home
 function Login() {
   const {
     register,
@@ -16,15 +20,53 @@ function Login() {
   const navigate = useNavigate()
   const location = useLocation()
   const { pathname } = location
+  const alert = useAlert()
 
   const onSubmit = async (data: any) => {
     if (pathname === '/login') {
+      // sha256 加密
+      data.password = sha256(data.password)
       const res = await postLoginReq(data)
-      console.log(res)
-      // Todo
+      const resData = res.data
+      // 登录失败
+      if (!resData) {
+        const { code } = res
+        switch (code) {
+          case 404:
+            alert.show('密码错误！', {
+              title: '登录失败',
+            })
+            break
+        }
+        return
+      }
+      const { token } = resData.data
+      setToken(token)
+      alert.show('登录成功', {
+        onClose: () => navigate('/home'),
+      })
+      navigate('/home')
     } else {
       const res = await postRegisterReq(data)
-      console.log(res)
+      const resData = res.data
+      // 注册失败
+      if (!resData) {
+        const { code } = res
+        switch (code) {
+          case 1001:
+            alert.show('该用户已注册！', {
+              title: '注册失败',
+            })
+            break
+        }
+        return
+      }
+      const { uid } = resData.data
+      alert.show(`您的 uid 为 ${uid}，请及时保存！`, {
+        timeout: 60000,
+        title: '注册成功',
+        onClose: () => navigate('/login'),
+      })
     }
   }
 
@@ -87,7 +129,7 @@ function Login() {
                 className='entrance-window-form-input'
                 {...register('password', { required: true })}
               />
-              {errors.uid?.type === 'required' && (
+              {errors.password?.type === 'required' && (
                 <span className='entrance-window-form-hint'>密码不能为空</span>
               )}
               <button className='entrance-window-form-btn'>登录</button>
@@ -100,7 +142,7 @@ function Login() {
                 className='entrance-window-form-input'
                 {...register('name', { required: true })}
               />
-              {errors.uid?.type === 'required' && (
+              {errors.name?.type === 'required' && (
                 <span className='entrance-window-form-hint'>
                   用户名不能为空
                 </span>
@@ -111,7 +153,7 @@ function Login() {
                 className='entrance-window-form-input'
                 {...register('password', { required: true })}
               />
-              {errors.uid?.type === 'required' && (
+              {errors.password?.type === 'required' && (
                 <span className='entrance-window-form-hint'>密码不能为空</span>
               )}
               <button className='entrance-window-form-btn'>注册</button>

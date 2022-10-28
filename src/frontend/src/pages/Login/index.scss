@@ -3,6 +3,7 @@
   height: 100vh;
   position: relative;
   background: var(--global-bg-primary_lighter);
+  user-select: none;
 
   &-window {
     width: 400px;

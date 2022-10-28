@@ -5,7 +5,7 @@ import Login from '@/pages/Login'
 export const router: any = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to='/home' replace />,
+    element: <Navigate to='/login' replace />,
   },
   {
     path: '/home',
