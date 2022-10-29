@@ -13,7 +13,7 @@ type baseController struct{
 
 func (b *baseController) WithErr(ApiErr error, c *gin.Context) {
 	err := ApiErr.(global.Error)
-	c.JSON(404, gin.H{
+	c.JSON(200, gin.H{
 		"code": err.Status,
 		"msg": err.Error(),
 		"data": nil,
@@ -27,10 +27,11 @@ func (b *baseController) WithData(data interface{}, c *gin.Context) {
 		"data": data,
 	})
 }
+
 // getUid 帮助有鉴权要求的接口获得鉴权
 func (b *baseController) getUid (c *gin.Context) uint64 {
 	value,exist := c.Get("userUid")
-	if exist{
+	if exist {
 		uid,ok := value.(float64)
 		if ok{
 			return uint64(uid)
@@ -39,6 +40,7 @@ func (b *baseController) getUid (c *gin.Context) uint64 {
 		return 0
 	}
 	global.Logger.Error("there is no uid",zap.Error(errors.New("there is no uid")))
+	b.WithErr(global.JwtParseError, c)
 	return 0
 }
 

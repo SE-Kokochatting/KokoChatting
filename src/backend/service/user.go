@@ -87,8 +87,8 @@ func (userSrv *UserService) SetAvatar(uid uint64, avatarUrl string) error {
 	return nil
 }
 
-func NewRegisterService() *UserService {
+func NewUserService() *UserService {
 	return &UserService{
-		userProvider: provider.NewRegisterProvider(),
+		userProvider: provider.NewUserProvider(),
 	}
 }

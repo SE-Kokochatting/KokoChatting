@@ -77,7 +77,7 @@ func (UserPro *UserProvider) UpdateEntry(lastedProfile *dataobject.UserProfile) 
 	return nil
 }
 
-func NewRegisterProvider() *UserProvider {
+func NewUserProvider() *UserProvider {
 	return &UserProvider{
 		mysqlProvider: *NewMysqlProvider(),
 	}
