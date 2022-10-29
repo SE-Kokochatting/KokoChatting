@@ -72,7 +72,10 @@ function Login() {
       alert.show(`您的 uid 为 ${uid}，请及时保存！`, {
         timeout: 60000,
         title: '注册成功',
-        onClose: () => navigate('/login'),
+        onClose: () => {
+          reset()
+          navigate('/login')
+        },
       })
     }
   }
