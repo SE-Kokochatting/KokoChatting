@@ -4,11 +4,11 @@ import "KokoChatting/wsserver/internal"
 
 type Message interface {
 	Bytes() []byte
-	// test or binary
 	MessageType() int
-	GetUids() []int64
-	FromUid() int64
+	GetUids() []uint64
+	FromUid() uint64
 }
+
 
 func convertToInternalMsgs(msg Message) []internal.Message {
 	var res []internal.Message

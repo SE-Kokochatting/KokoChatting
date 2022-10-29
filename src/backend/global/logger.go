@@ -1,9 +1,10 @@
 package global
 
 import (
+	"os"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
 )
 
 var defaultLogLevel = zapcore.ErrorLevel
@@ -35,7 +36,7 @@ func init(){
 		//zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), zapcore.DebugLevel),
 		zapcore.NewCore(encoder, fileWriteSyncer, GetLoggerLevel()),
 	)
-	Logger = zap.New(core)
+	Logger = zap.New(core,zap.AddCaller())
 }
 
 func getLoggerLevel(level string) zapcore.Level {

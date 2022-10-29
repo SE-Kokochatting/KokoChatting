@@ -1,0 +1,11 @@
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /api/v1/example           --> KokoChatting/controller.(*ExampleController).Example-fm (3 handlers)
+[GIN-debug] POST   /api/v1/user/register     --> KokoChatting/controller.(*UserController).Register-fm (3 handlers)
+[GIN-debug] POST   /api/v1/user/login        --> KokoChatting/controller.(*UserController).Login-fm (3 handlers)
+[GIN-debug] POST   /api/v1/user/list_delete  --> KokoChatting/controller.(*DeleteFriendController).DeleteFriend-fm (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on localhost:8080
