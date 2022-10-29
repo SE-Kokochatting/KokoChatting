@@ -1,0 +1,70 @@
+.entrance {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: var(--global-bg-primary_lighter);
+
+  &-window {
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background: var(--global-bg-primary_darker);
+    border-radius: 20px;
+    color: var(--global-font-primary);
+    padding: 20px 20px 50px 20px;
+    box-sizing: border-box;
+
+    &-tab {
+      display: flex;
+      padding: 0 10px;
+
+      &-item {
+        margin-right: 15px;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      &-item.selected {
+        border-bottom: 3px solid var(--global-font-primary);
+      }
+    }
+
+    &-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: 0 10px;
+      margin-top: 50px;
+
+      &-input {
+        margin-bottom: 50px;
+        background: var(--global-bg-primary_lighter);
+        height: 50px;
+        border-radius: 25px;
+        box-sizing: border-box;
+        padding: 15px;
+        color: var(--global-font-primary_lighter);
+        font-size: 16px;
+      }
+
+      &-btn {
+        height: 50px;
+        border-radius: 25px;
+        background: var(--global-bg-primary_lighter);
+        font-size: 20px;
+        letter-spacing: 5px;
+        color: var(--global-font-primary);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      &-btn:hover {
+        background: #444;
+      }
+    }
+  }
+}

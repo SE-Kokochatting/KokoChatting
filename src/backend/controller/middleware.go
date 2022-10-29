@@ -2,7 +2,6 @@ package controller
 
 import (
 	"KokoChatting/global"
-	"KokoChatting/model/utilstruct"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -70,8 +69,9 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 // JwtAuthValidate jwt身份信息验证
 func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// TODO: figure out c.GetHeader()和c.Parmm()的区别
-		tokenString := c.Param("Authorization")
+		// 由于token保存在请求头中，所以需要使用c.getHeader，而不是c.Param函数
+		tokenString := c.GetHeader("Authorization")
+		// tokenString := c.Param("Authorization")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -80,15 +80,19 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 			return hmacSampleSecret, nil
 		})
 		if err != nil {
-			c.JSON(1001, gin.H{
+			c.JSON(404, gin.H{
+				"status": 1001,
 				"err": "unexpected signing method",
 			})
+			return
 		}
 
-		if claims, ok := token.Claims.(utilstruct.Claims); ok && token.Valid {
-			c.Set("userName", claims.UserProfile.Name)
-			c.Set("userUid", claims.UserProfile.Uid)
-			c.Set("userPassword", claims.UserProfile.Password)
+		claims,ok := token.Claims.(jwt.MapClaims)
+		//fmt.Println(claims)
+		//claims, ok := token.Claims.(utilstruct.Claims)
+		if  ok && token.Valid {
+			c.Set("userUid", claims["Uid"])
+			c.Set("userPassword", claims["Password"])
 		}
 		c.Next()
 	}

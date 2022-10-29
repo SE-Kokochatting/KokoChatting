@@ -1,8 +1,8 @@
 .c-header {
   width: 100%;
   height: 100px;
-  background-color: var(--bg);
-  color: var(--light);
+  background: var(--global-bg-primary);
+  color: var(--global-font-primary_lighter);
   display: flex;
   box-sizing: border-box;
   padding: 20px;
@@ -45,14 +45,14 @@
         height: 30px;
         line-height: 30px;
         font-size: 13px;
-        color: var(--secondary);
+        color: var(--global-font-secondary);
       }
 
       &-num {
         height: 30px;
         line-height: 30px;
         font-size: 13px;
-        color: var(--font);
+        color: var(--global-font-primary);
       }
     }
   }

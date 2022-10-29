@@ -1,7 +1,7 @@
 // 方向向左的气泡
 .c-chat_window-chat_area-bubble {
-  color: var(--font);
-  background-color: var(--bg-2);
+  color: var(--global-font-primary);
+  background: var(--global-bg-primary_lighter);
   display: block;
   padding: 10px 10px 30px 10px;
   border-radius: 5px;
@@ -11,7 +11,7 @@
 
   &-time {
     font-size: 13px;
-    color: var(--light);
+    color: var(--global-font-primary_lighter);
     position: absolute;
     right: 10px;
     bottom: 5px;
@@ -26,7 +26,7 @@
   top: 50%;
   transform: translateY(-50%);
   left: -20px;
-  background-color: var(--bg-2);
+  background: var(--global-bg-primary_lighter);
   clip-path: polygon(100% 0%, 100% 100%, 50% 50%);
 }
 
@@ -49,7 +49,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--bg-2);
+  background: var(--global-bg-primary_lighter);
   clip-path: polygon(0% 0%, 50% 50%, 0% 100%);
   right: -20px;
 }

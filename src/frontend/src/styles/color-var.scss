@@ -1,19 +1,54 @@
+// --<scope>-<part>-<modifier>
+// 较为通用的颜色的 scope 定义为 global, part 可以为 bg 或 font...
+// E.g. --global-bg-primary, --global-bg-primary_darker, --header_input-font-primary
+
+// darker 是相对的，深色模式中更深，浅色模式中更浅，lighter 同理
+// 总之，lighte/darker 不绝对
+
 body {
-  --bg: #ecdcd5;
-  --bg-2: #fff;
-  --bg-3: #fff;
-  --bg-dark: #fff;
-  --font: #222;
-  --light: #000;
-  --secondary: #00c0ff;
+  --global-bg-primary: linear-gradient(
+      to bottom,
+      #d5dee7 0%,
+      #e8ebf2 50%,
+      #e2e7ed 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.02) 50%,
+      rgba(255, 255, 255, 0.02) 61%,
+      rgba(0, 0, 0, 0.02) 73%
+    ),
+    linear-gradient(33deg, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
+  --global-bg-primary_darker: linear-gradient(
+      to bottom,
+      #e1e6ec 0%,
+      #f0f4f7 100%
+    ),
+    linear-gradient(to bottom, #e1e6ec 0%, #f0f4f7 100%);
+  --global-bg-primary_lighter: radial-gradient(
+    51% 96%,
+    #e7e9e4 10%,
+    #d4d6d1 96%
+  );
+
+  --global-font-primary: #333;
+  --global-font-primary_lighter: #000;
+
+  --global-font-secondary: #00c0ff;
 }
 
 .dark {
-  --bg: #252525;
-  --bg-2: #444;
-  --bg-3: #333;
-  --bg-dark: #131313;
-  --font: #cecece;
-  --light: #fff;
-  --secondary: #b4fdff;
+  --global-bg-primary: linear-gradient(-180deg, #15140f 0%, #34312c 97%);
+  --global-bg-primary_darker: #222
+    radial-gradient(
+      at 50% -16%,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.5) 190%
+    );
+  --global-bg-primary_lighter: #333;
+
+  --global-font-primary: #cecece;
+  --global-font-primary_lighter: #fff;
+
+  --global-font-secondary: #b4fdff;
 }

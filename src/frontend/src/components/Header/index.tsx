@@ -23,7 +23,7 @@ function Header(props: HeaderProps) {
         <SvgIcon
           name='menu'
           style={{
-            fill: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             width: '35px',
             height: '35px',
             marginLeft: '10px',
@@ -51,7 +51,7 @@ function Header(props: HeaderProps) {
         <SvgIcon
           name='search'
           style={{
-            fill: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             width: '35px',
             height: '35px',
             position: 'absolute',
@@ -62,7 +62,7 @@ function Header(props: HeaderProps) {
         <SvgIcon
           name='right-menu'
           style={{
-            fill: 'var(--light)',
+            color: 'var(--global-font-primary_lighter)',
             width: '35px',
             height: '35px',
             position: 'absolute',

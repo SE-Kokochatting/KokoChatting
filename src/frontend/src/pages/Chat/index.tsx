@@ -4,6 +4,7 @@ import { ChatType, Theme } from '@/enums'
 import Header from '@/components/Header'
 import ChatList from '@/components/ChatList'
 import ChatWindow from '@/components/ChatWindow'
+import UserInfo from '@/components/UserInfo'
 import ThemeStore from '@/mobx/theme'
 import './index.scss'
 
@@ -26,6 +27,7 @@ function _Chat() {
         ) : (
           <ChatWindow chatType={ChatType.Group} />
         )}
+        <UserInfo />
       </div>
     </div>
   )
