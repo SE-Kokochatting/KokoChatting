@@ -39,7 +39,7 @@
       "@/hooks/*": ["src/hooks/*"],
       "@/mobx/*": ["src/mobx/*"],
       "@/network/*": ["src/network/*"],
-      "@/constants/*": ["src/constants/*"],
+      "@/consts/*": ["src/consts/*"],
       "@/plugins/*": ["src/plugins/*"],
       "@/types/*": ["src/types"],
       "@/enums/*": ["src/enums"]

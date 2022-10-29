@@ -1,5 +1,10 @@
+import { observer } from 'mobx-react-lite'
 import { CSSObject } from '@emotion/react'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from 'react-alert'
+import { getUserInfo } from '@/network/user/getUserInfo'
+import { getUid } from '@/utils/uid'
+import UserStore from '@/mobx/user'
 import SvgIcon from '@/components/SvgIcon'
 import Switch from './components/Switch'
 import './index.scss'
@@ -17,9 +22,18 @@ const iconStyle: CSSObject = {
   marginRight: '20px',
 }
 
-function LeftDropdown(props: LeftDropdownProps) {
+async function handleUserInfo(uid: number) {
+  const res = await getUserInfo({ uid })
+  const resData = res.data
+  const { name, avatarUrl } = resData.data
+  UserStore.setUserInfo({ uid, name, avatarUrl })
+  UserStore.setShowUserInfo(!UserStore.showUserInfo)
+}
+
+function _LeftDropdown(props: LeftDropdownProps) {
   const { showLeftDropdown, setShowLeftDropdown } = props
   const navigate = useNavigate()
+  const alert = useAlert()
   return (
     <ul
       className='c-header-left-dropdown'
@@ -59,7 +73,22 @@ function LeftDropdown(props: LeftDropdownProps) {
         <SvgIcon name='notice' style={iconStyle} />
         通知
       </li>
-      <li className='c-header-left-dropdown-item'>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          const uid = getUid()
+          if (!uid) {
+            alert.show('请尝试重新登录！', {
+              title: '操作失败',
+              onClose: () => {
+                navigate('/login')
+              },
+            })
+          } else {
+            handleUserInfo(uid)
+          }
+        }}
+      >
         <SvgIcon name='myself' style={iconStyle} />
         个人信息
       </li>
@@ -71,4 +100,7 @@ function LeftDropdown(props: LeftDropdownProps) {
     </ul>
   )
 }
+
+const LeftDropdown = observer(_LeftDropdown)
+
 export default LeftDropdown

@@ -1,3 +1,9 @@
+/**
+ * description: 主题颜色状态管理
+ * author: Yuming Cui
+ * date: 2022-10-28 23:21:28 +0800
+ */
+
 import { makeAutoObservable } from 'mobx'
 import { Theme } from '@/enums'
 

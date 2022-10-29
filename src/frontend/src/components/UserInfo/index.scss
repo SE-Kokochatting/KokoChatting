@@ -4,6 +4,8 @@
   background: var(--global-bg-primary);
   color: var(--global-font-primary);
   border: 1px solid var(--global-bg-primary);
+  transition: max-width 0.3s;
+  overflow: hidden;
 
   &-title {
     font-size: 20px;
@@ -15,5 +17,11 @@
 
   &-avatar {
     width: 100%;
+  }
+
+  &-item {
+    line-height: 30px;
+    padding-left: 10px;
+    color: var(--global-font-primary);
   }
 }

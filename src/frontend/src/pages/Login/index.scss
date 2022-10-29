@@ -3,6 +3,7 @@
   height: 100vh;
   position: relative;
   background: var(--global-bg-primary_lighter);
+  user-select: none;
 
   &-window {
     width: 400px;
@@ -41,7 +42,7 @@
       margin-top: 50px;
 
       &-input {
-        margin-bottom: 50px;
+        margin-bottom: 30px;
         background: var(--global-bg-primary_lighter);
         height: 50px;
         border-radius: 25px;
@@ -64,6 +65,11 @@
 
       &-btn:hover {
         background: #444;
+      }
+
+      &-hint {
+        margin: 0 0 30px 10px;
+        color: var(--error-font-primary);
       }
     }
   }
