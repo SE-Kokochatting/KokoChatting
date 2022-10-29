@@ -11,7 +11,9 @@ import (
 	"time"
 )
 
-type Middleware struct{}
+type Middleware struct{
+	baseController
+}
 
 func (m *Middleware) ZapLogger() gin.HandlerFunc {
 	encoderConfig := zap.NewProductionEncoderConfig()
@@ -79,21 +81,27 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 			}
 			return hmacSampleSecret, nil
 		})
-		if err != nil {
-			c.JSON(404, gin.H{
-				"status": 1001,
-				"err": "unexpected signing method",
-			})
-			return
+		if token == nil {
+			m.WithErr(global.JwtParseError, c)
 		}
 
-		claims,ok := token.Claims.(jwt.MapClaims)
-		//fmt.Println(claims)
-		//claims, ok := token.Claims.(utilstruct.Claims)
-		if  ok && token.Valid {
-			c.Set("userUid", claims["Uid"])
-			c.Set("userPassword", claims["Password"])
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if token.Valid {
+			if ok {
+				c.Set("userUid", claims["Uid"])
+				c.Set("userPassword", claims["Password"])
+			}
+		} else if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors & jwt.ValidationErrorMalformed != 0 {
+				m.WithErr(global.IncorrectToken, c)
+			} else if ve.Errors & (jwt.ValidationErrorExpired | jwt.ValidationErrorNotValidYet) != 0 {
+				m.WithErr(global.JwtExpiredError, c)
+			} else {
+				m.WithErr(global.JwtParseError, c)
+			}
+			c.Abort()
 		}
+
 		c.Next()
 	}
 }

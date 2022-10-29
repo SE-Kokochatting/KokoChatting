@@ -57,10 +57,7 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	isProper, err := userCtl.userService.Login(loginReq.Uid, loginReq.Password)
 	if false == isProper {
 		global.Logger.Error("login err", zap.Error(err))
-		userCtl.WithErr(global.Error{
-			Status: 404,
-			Err: err,
-		}, c)
+		userCtl.WithErr(global.LoginError, c)
 		return
 	}
 
@@ -83,7 +80,7 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	tokenString, err := token.SignedString([]byte(mySecret))
 	if err != nil {
 		global.Logger.Error("generate jwt error", zap.Error(err))
-		userCtl.WithErr(global.RegisterError, c)
+		userCtl.WithErr(global.LoginError, c)
 		return
 	}
 	loginRes.Data.Token = tokenString
@@ -95,12 +92,16 @@ func (userCtl *UserController) Login(c *gin.Context) {
 // PATH: api/v1/user
 // Function: get detailed information of user
 func (userCtl *UserController) GetUserInfo(c *gin.Context) {
-	uid := userCtl.getUid(c)
-	userProfile := &dataobject.UserProfile{
-		Uid: uid,
+	userInfoReq := &req.UserInfoReq{}
+	if err := c.BindJSON(userInfoReq); err != nil {
+		global.Logger.Error("get user info bind json error", zap.Error(err))
 	}
 
-	err := userCtl.userService.GetUserInfo(uid, userProfile)
+	userProfile := &dataobject.UserProfile{
+		Uid: userInfoReq.Uid,
+	}
+
+	err := userCtl.userService.GetUserInfo(userInfoReq.Uid, userProfile)
 	if err != nil {
 		global.Logger.Error("get user info error", zap.Error(err))
 		userCtl.WithErr(global.GetInfoError, c)
@@ -136,10 +137,7 @@ func (userCtl *UserController) SetUserAvatar(c *gin.Context) {
 	err := userCtl.userService.SetAvatar(uid, setAvatarReq.AvatarUrl)
 	if err != nil {
 		global.Logger.Error("set avatar error", zap.Error(err))
-		userCtl.WithErr(global.Error{
-			Status: 404,
-			Err: err,
-		}, c)
+		userCtl.WithErr(global.AvatarError, c)
 		return
 	}
 
@@ -150,6 +148,6 @@ func (userCtl *UserController) SetUserAvatar(c *gin.Context) {
 
 func NewUserController() *UserController {
 	return &UserController{
-		userService: service.NewRegisterService(),
+		userService: service.NewUserService(),
 	}
 }

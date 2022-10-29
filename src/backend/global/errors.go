@@ -15,9 +15,13 @@ var (
 	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
 
 	RegisterError = NewError(errors.New("user register err"), 1001)
-	PasswordError = NewError(errors.New("password is err"), 1002)
-	GetInfoError = NewError(errors.New("get userinfo err"), 1003)
-  
+	LoginError = NewError(errors.New("user login err"), 1002)
+	PasswordError = NewError(errors.New("password is err"), 1003)
+	GetInfoError = NewError(errors.New("get userinfo err"), 1004)
+	AvatarError     = NewError(errors.New("update avatar err"), 1005)
+	JwtParseError   = NewError(errors.New("jwt parse err"), 1006)
+	JwtExpiredError = NewError(errors.New("jwt expired err"), 1007)
+	IncorrectToken = NewError(errors.New("token incorrect err"), 1008)
 	DeleteFriendError = NewError(errors.New("friend delete err"),2001)
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
 	CreatGroupError = NewError(errors.New("creat group err"),2003)
