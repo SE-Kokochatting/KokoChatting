@@ -74,6 +74,15 @@ func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
 	return err
 }
 
+func (manageSrv *ManageService) GetFriendList (uid uint64) ([]uint64, error) {
+	friend, err := manageSrv.ManageProvider.GetFriendList(uid)
+	if err != nil{
+		global.Logger.Error("get friend err", zap.Error(err))
+		return friend, err
+	}
+	return friend, err
+}
+
 func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),

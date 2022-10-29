@@ -100,6 +100,53 @@ func (managePro *ManageProvider) QuitGroup (uid uint64, gid uint64) error {
 	return nil
 }
 
+func (managePro *ManageProvider) GetFriendList (uid uint64) ([]uint64, error) {
+	var friendRelationEntity = &[]dataobject.FriendRelation{}
+	var friend []uint64
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Where("user1 = ? OR user2 = ?", uid, uid).Find(friendRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("get friend error",zap.Error(err))
+		return friend, err
+	}
+
+	for _,relation := range *friendRelationEntity{
+		if relation.User1 == uid{
+			friend = append(friend,relation.User2)
+		}
+		if relation.User2 == uid{
+			friend = append(friend,relation.User1)
+		}
+	}
+
+	return friend, nil
+}
+
+func (managePro *ManageProvider) GetGroupList (uid uint64) ([]uint64, error) {
+	var MemberEntity = &[]dataobject.GroupMember{}
+	var group []uint64
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Where("uid = ?", uid).Find(MemberEntity).Error
+	if err != nil{
+		global.Logger.Error("get group error",zap.Error(err))
+	}
+	for _,member := range *MemberEntity{
+		group = append(group, member.Gid)
+	}
+
+	return group, nil
+}
+
+//func (managePro *ManageProvider) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
+//	dbClient := managePro.mysqlProvider.mysqlDb
+//
+//
+//}
+
 func NewManageProvider() *ManageProvider {
 	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),
