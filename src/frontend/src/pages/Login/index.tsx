@@ -7,6 +7,7 @@ import { IRegister, register as postRegisterReq } from '@/network/user/register'
 import { ILogin, login as postLoginReq } from '@/network/user/login'
 import ThemeStore from '@/mobx/theme'
 import { setToken } from '@/utils/token'
+import { setUid } from '@/utils/uid'
 import './index.scss'
 
 // Todo: 如果 token 有效，重定向到 /home
@@ -41,9 +42,15 @@ function Login() {
         return
       }
       const { token } = resData.data
+      const { uid } = data
+      // 设置 token
       setToken(token)
+      // 设置 uid
+      setUid(uid)
       alert.show('登录成功', {
-        onClose: () => navigate('/home'),
+        onClose: () => {
+          navigate('/home')
+        },
       })
       navigate('/home')
     } else {

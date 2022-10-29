@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { compilerOptions } from './tsconfig.json'
 import react from '@vitejs/plugin-react'
 import { svgBuilder } from './src/plugins/svgBuilder'
-import { BACKENDHOST } from './src/consts'
+import { BackendHost } from './src/consts'
 
 export default defineConfig({
   plugins: [
@@ -22,7 +22,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: `${BACKENDHOST}`,
+        target: `${BackendHost}`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

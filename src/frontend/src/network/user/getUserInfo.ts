@@ -1,16 +1,15 @@
 /**
- * description: 登录
+ * description: 获取用户信息
  * author: Yuming Cui
  * date: 2022-10-28 23:35:52 +0800
  */
 
-export interface ILogin {
-  uid: string
-  password: string
+export interface IGetUserInfo {
+  uid: number
 }
 
-export async function login(data: ILogin) {
-  const url = '/api/user/login'
+export async function getUserInfo(data: IGetUserInfo): Promise<any> {
+  const url = '/api/user'
   try {
     const res = await fetch(url, {
       method: 'POST',

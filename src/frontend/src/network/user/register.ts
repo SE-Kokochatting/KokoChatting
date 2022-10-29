@@ -1,3 +1,9 @@
+/**
+ * description: 注册
+ * author: Yuming Cui
+ * date: 2022-10-28 23:35:52 +0800
+ */
+
 export interface IRegister {
   name: string
   password: string
