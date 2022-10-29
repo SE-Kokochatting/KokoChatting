@@ -14,6 +14,10 @@ func (err Error) Error() string {
 var (
 	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
 	RegisterError = NewError(errors.New("user regiter err"), 1001)
+
+
+	MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
+	MessageInternalError = NewError(errors.New("message server internal unknown error"),4001)
 )
 
 func NewError(err error, status int) error {
