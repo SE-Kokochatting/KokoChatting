@@ -2,6 +2,7 @@ package controller
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/dataobject"
 	"KokoChatting/model/req"
 	"KokoChatting/model/res"
 	"KokoChatting/service"
@@ -12,6 +13,7 @@ import (
 type ManageController struct{
 	baseController
 	ManageService *service.ManageService
+	UserService *service.UserService
 }
 
 func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
@@ -96,8 +98,44 @@ func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
 	manageCtl.WithData(quitGroupRes, c)
 }
 
+func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
+	uid := manageCtl.getUid(c)
+
+	friend, err := manageCtl.ManageService.GetFriendList(uid)
+	if err != nil{
+		manageCtl.WithErr(global.GetFriendListError, c)
+		return
+	}
+
+	friendListRes := &res.FriendListRes{}
+
+	for i := range friend{
+		userProfile := &dataobject.UserProfile{
+			Uid: friend[i],
+		}
+
+		err := manageCtl.UserService.GetUserInfo(friend[i], userProfile)
+		if err != nil {
+			global.Logger.Error("get user info error", zap.Error(err))
+			manageCtl.WithErr(global.GetFriendInfoError, c)
+			return
+		}
+		friendListRes.Data.Friend = append(friendListRes.Data.Friend, res.User{
+			Uid: userProfile.Uid,
+			Name: userProfile.Name,
+			AvatarUrl: userProfile.AvatarUrl,
+		})
+		//friendListRes.Data.Friend[i].Uid = userProfile.Uid
+		//friendListRes.Data.Friend[i].Name = userProfile.Name
+		//friendListRes.Data.Friend[i].AvatarUrl = userProfile.AvatarUrl
+	}
+
+	manageCtl.WithData(friendListRes, c)
+}
+
 func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),
+		UserService: service.NewUserService(),
 	}
 }

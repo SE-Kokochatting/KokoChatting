@@ -26,10 +26,10 @@ var (
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
 	CreatGroupError = NewError(errors.New("creat group err"),2003)
 	QuitGroupError = NewError(errors.New("quit group err"),2004)
-  
+	GetFriendListError = NewError(errors.New("get friend list err"),2005)
+	GetFriendInfoError = NewError(errors.New("get friend info err"),2006)
   	MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
 	MessageInternalError = NewError(errors.New("message server internal unknown error"),4001)
-
 )
 
 func NewError(err error, status int) error {

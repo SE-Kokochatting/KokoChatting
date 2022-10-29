@@ -17,3 +17,4 @@ type CreatGroupReq struct {
 type QuitGroupReq struct {
 	Gid uint64 `json:"gid"`
 }
+
