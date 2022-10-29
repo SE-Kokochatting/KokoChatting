@@ -3,14 +3,14 @@ package internal
 type Message interface {
 	Bytes() []byte
 	MessageType() int
-	GetUid() int64
+	GetUid() uint64
 }
 
 type SingleMessage struct {
 	content []byte
 	msgType int
-	fromuid int64
-	touid   int64
+	fromuid uint64
+	touid   uint64
 }
 
 func (sm *SingleMessage) Bytes() []byte {
@@ -21,11 +21,11 @@ func (sm *SingleMessage) MessageType() int {
 	return sm.msgType
 }
 
-func (sm *SingleMessage) GetUid() int64 {
+func (sm *SingleMessage) GetUid() uint64 {
 	return sm.touid
 }
 
-func (sm *SingleMessage) Set(from, to int64, content []byte, msgType int) {
+func (sm *SingleMessage) Set(from, to uint64, content []byte, msgType int) {
 	sm.content = content
 	sm.fromuid = from
 	sm.touid = to

@@ -24,15 +24,16 @@ func (s *WsServer) Run(){
 }
 
 
-func (s *WsServer) AddConn(conn *websocket.Conn,uid int64)error{
+func (s *WsServer) AddConn(conn *websocket.Conn,uid uint64)error{
 	return s.connManager.AddConn(internal.NewConn(conn,uid,s.connManager.HeartBeatDuration))
 }
 
-func (s *WsServer) SendMessage(msg Message){
+func (s *WsServer) SendMessage(msg Message,res chan struct{}){
 	msgs := convertToInternalMsgs(msg)
 	for _,m := range msgs{
 		s.msgManager.AddMessage(m)
 	}
+	res <- struct{}{}
 }
 
 func newWsServer()*WsServer{
@@ -53,10 +54,14 @@ func Run(){
 }
 
 
-func AddConn(conn *websocket.Conn,uid int64)error{
+func AddConn(conn *websocket.Conn,uid uint64) error {
 	return server.AddConn(conn,uid)
 }
 
-func PushMessage(msg Message){
-	server.SendMessage(msg)
+
+// 计时
+func PushMessage(msg Message) <-chan struct{}{
+	channel := make(chan struct{})
+	go server.SendMessage(msg,channel)
+	return channel
 }

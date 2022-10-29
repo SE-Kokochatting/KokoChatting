@@ -12,7 +12,7 @@ import (
 
 type Conn struct {
 	*websocket.Conn
-	uid               int64
+	uid               uint64
 	expiredTime       time.Time
 	mu                *sync.Mutex
 	heartBeatDuration time.Duration
@@ -52,7 +52,7 @@ func (conn *Conn) pushMsg() {
 }
 
 
-func (conn *Conn) Set(c *websocket.Conn,uid int64,heartBeatDuration time.Duration){
+func (conn *Conn) Set(c *websocket.Conn,uid uint64,heartBeatDuration time.Duration){
 	conn.Conn = c
 	conn.uid = uid
 	conn.expiredTime = time.Now().Add(heartBeatDuration)
@@ -60,14 +60,14 @@ func (conn *Conn) Set(c *websocket.Conn,uid int64,heartBeatDuration time.Duratio
 	conn.msgChan = make(chan Message)
 }
 
-func NewConn(conn *websocket.Conn,uid int64,heartBeatDuration time.Duration) *Conn {
+func NewConn(conn *websocket.Conn,uid uint64,heartBeatDuration time.Duration) *Conn {
 	c := connPool.Get().(*Conn)
 	c.Set(conn,uid,heartBeatDuration)
 	return c
 }
 
 type WsConnManager struct {
-	conns                     *sync.Map // map[int64]*Conn
+	conns                     *sync.Map // map[uint64]*Conn
 	maxConnNums               int
 	curConnNums               int
 	connNumMu                 *sync.Mutex
@@ -76,7 +76,7 @@ type WsConnManager struct {
 	expiredConnsChan          chan *Conn
 }
 
-// AddConn add conn to map[int64]*Conn
+// AddConn add conn to map[uint64]*Conn
 func (manager *WsConnManager) AddConn(conn *Conn) error {
 	// if current conn nums == maxConnNum ,refuse this conn and put that conn object into pool
 	if manager.isUnAvailable() {
@@ -109,7 +109,7 @@ func (manager *WsConnManager) isUnAvailable() (res bool) {
 }
 
 // getConnByUid get conn object by uid from map
-func (manager *WsConnManager) getConnByUid(uid int64) (*Conn, error) {
+func (manager *WsConnManager) getConnByUid(uid uint64) (*Conn, error) {
 	value, ok := manager.conns.Load(uid)
 	if !ok {
 		return nil, UserOfflineError
@@ -118,7 +118,7 @@ func (manager *WsConnManager) getConnByUid(uid int64) (*Conn, error) {
 }
 
 // SendTo send message to user whose id equals to uid
-func (manager *WsConnManager) SendTo(uid int64, msg Message) error {
+func (manager *WsConnManager) SendTo(uid uint64, msg Message) error {
 	conn, err := manager.getConnByUid(uid)
 	if err != nil {
 		return err
@@ -207,4 +207,3 @@ func NewWsConnManager() *WsConnManager {
 		expiredConnsChan:          make(chan *Conn),
 	}
 }
-
