@@ -32,11 +32,12 @@ var (
 
 	RequestFormatError = NewError(errors.New("request body request error"),3000)
 
-  MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
+    MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
 	MessageInternalError = NewError(errors.New("message server internal unknown error"),4001)
 	StoreMessageError = NewError(errors.New("internal error : store msg error"),4002)
 	MessageTypeError = NewError(errors.New("message type error"),4003)
 	UpgradeProtocolError = NewError(errors.New("upgrade protocol error,check your http header"),4004)
+	WsJsonMarshalError = NewError(errors.New("internal error: json marshal error"),4005)
 )
 
 func NewError(err error, status int) error {

@@ -5,7 +5,6 @@ import (
 	"KokoChatting/model/req"
 	"KokoChatting/model/res"
 	"KokoChatting/service"
-
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -20,15 +19,15 @@ type PushController struct{
 
 func (controller *PushController) SendMsg(c *gin.Context){
 	uid := controller.getUid(c)
-	req := new(req.SendMsgReq)
-	if err := c.BindJSON(req);err != nil{
+	_req := new(req.SendMsgReq)
+	if err := c.BindJSON(_req);err != nil{
 		global.Logger.Error("request format err",zap.Error(err))
 		controller.WithErr(global.RequestFormatError,c)
 		return
 	}
 
 	// wrap msg
-	wrapMsg,err := controller.msgsrv.WrapCommonMessage(uid,req.Reciever,req.MessageContent,req.MessageType)
+	wrapMsg,err := controller.msgsrv.WrapCommonMessage(uid, _req.Receiver, _req.MessageContent, _req.MessageType)
 	if err != nil{
 		global.Logger.Error("wrap msg error",zap.Error(err))
 		controller.WithErr(err,c)
@@ -36,7 +35,7 @@ func (controller *PushController) SendMsg(c *gin.Context){
 	}
 
 	// store msg
-	msgid,err := controller.msgsrv.StoreMessage(uid,req.Reciever,req.MessageContent,req.MessageType)
+	msgid,err := controller.msgsrv.StoreMessage(uid, _req.Receiver, _req.MessageContent, _req.MessageType)
 	if err != nil{
 		global.Logger.Error("store msg err",zap.Error(err))
 		controller.WithErr(err,c)
@@ -51,9 +50,9 @@ func (controller *PushController) SendMsg(c *gin.Context){
 		controller.WithErr(err,c)
 		return
 	}
-	res := &res.SendMessageRes{}
-	res.Data.Msgid = msgid
-	controller.WithData(res,c)
+	_res := &res.SendMessageRes{}
+	_res.Data.Msgid = msgid
+	controller.WithData(_res,c)
 }
 
 

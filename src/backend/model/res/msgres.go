@@ -10,5 +10,6 @@ type SendMessageRes struct{
 type WsMessage struct{
 	From uint64
 	MsgType int
-	Contents []byte
+	Contents string
+	To uint64
 }

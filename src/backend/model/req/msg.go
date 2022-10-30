@@ -1,7 +1,7 @@
 package req
 
 type SendMsgReq struct{
-	Reciever uint64 `json:"reciever"`
+	Receiver       uint64 `json:"receiver"`
 	MessageContent string `json:"messageContent"`
-	MessageType int `json:"messageType"`
+	MessageType    int    `json:"messageType"`
 }
