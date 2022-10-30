@@ -2,6 +2,7 @@ package router
 
 import (
 	"KokoChatting/controller"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,6 +27,8 @@ func Routers() *gin.Engine {
 	{
 		rg.manage.ManageRouter(privateGroup)  // 需要加入登录鉴权的接口的router group注册时需要传入的routes命名为privateGroup
 		rg.user.JWTUserRouter(privateGroup)
+		rg.upgrade.RegisterUpgradeRouter(privateGroup)
+		
 	}
 
 	publicGroup := engine.Group("/api/v1")   // 无需use中间件的routes命名为publicGroup
@@ -33,6 +36,7 @@ func Routers() *gin.Engine {
 		dummyCode(publicGroup)  // 占位，无用代码可删除
 		rg.example.RegisterExampleRouter(publicGroup)
 		rg.user.UserRouter(publicGroup)
+		
 	}
 	return engine
 }

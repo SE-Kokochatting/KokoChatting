@@ -3,12 +3,13 @@ package controller
 import (
 	"KokoChatting/global"
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
-	"time"
 )
 
 type Middleware struct{
@@ -83,6 +84,7 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 		})
 		if token == nil {
 			m.WithErr(global.JwtParseError, c)
+			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
