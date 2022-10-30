@@ -11,12 +11,14 @@ type BlockRelation struct {
 	User uint64 `json:"user"`
 	Blocker uint64 `json:"blocker"`
 }
-
+// GroupProfile 代表群组信息表
 type GroupProfile struct {
 	Gid uint64 `json:"gid" gorm:"primary_key"`
 	Name string `json:"name"`
+	// 由于gorm会自动解析成avatar_url，因此加上gorm自定义转换解析
+	AvatarUrl string `gorm:"column:avatarUrl" json:"avatarUrl"`
 }
-
+// GroupMember 代表群组里的成员表
 type GroupMember struct {
 	Id uint64 `json:"id"`
 	Gid uint64 `json:"gid"`
