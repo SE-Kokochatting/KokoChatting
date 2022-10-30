@@ -133,6 +133,38 @@ func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 	manageCtl.WithData(friendListRes, c)
 }
 
+func (manageCtl *ManageController) GetGroupListInfo (c *gin.Context) {
+	uid := manageCtl.getUid(c)
+
+	group, err := manageCtl.ManageService.GetGroupList(uid)
+	if err != nil{
+		manageCtl.WithErr(global.GetGroupError, c)
+		return
+	}
+
+	groupListRes := &res.GroupListRes{}
+
+	for i := range group{
+		groupProfile := &dataobject.GroupProfile{
+			Gid: group[i],
+		}
+
+		err := manageCtl.ManageService.GetGroupInfo(groupProfile)
+		if err != nil {
+			global.Logger.Error("get group info error", zap.Error(err))
+			manageCtl.WithErr(global.GetGroupInfoError, c)
+			return
+		}
+		groupListRes.Data.Group = append(groupListRes.Data.Group, res.GroupInfo{
+			Gid: groupProfile.Gid,
+			Name: groupProfile.Name,
+			AvatarUrl: groupProfile.AvatarUrl,
+		})
+	}
+
+	manageCtl.WithData(groupListRes, c)
+}
+
 func (manageCtl *ManageController) SetGroupAvatar (c *gin.Context) {
 	uid := manageCtl.getUid(c)
 
