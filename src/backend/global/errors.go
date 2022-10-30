@@ -28,6 +28,8 @@ var (
 	QuitGroupError = NewError(errors.New("quit group err"),2004)
 	GetFriendListError = NewError(errors.New("get friend list err"),2005)
 	GetFriendInfoError = NewError(errors.New("get friend info err"),2006)
+	SetGroupAvatarError = NewError(errors.New("set group avatar error"), 2007)
+	PermissionError = NewError(errors.New("permission error"), 2008)
   	MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
 	MessageInternalError = NewError(errors.New("message server internal unknown error"),4001)
 )

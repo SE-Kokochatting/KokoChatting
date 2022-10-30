@@ -29,3 +29,7 @@ type User struct {
 	Name string `json:"name"`
 	AvatarUrl string `json:"avatarUrl"`
 }
+
+type GroupSetAvatarRes struct {
+	Data struct {} `json:"data"`
+}
