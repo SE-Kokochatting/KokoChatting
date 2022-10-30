@@ -18,6 +18,6 @@ server:
   port: 8080
   max-wsconn-num: 200
   websocket:
-    health-check-duration: 30      # 单位为s
-    filter-offline-conn-duration: 60
+    health-check-duration: 600      # 单位为s
+    filter-offline-conn-duration: 600
     enable-compression: false

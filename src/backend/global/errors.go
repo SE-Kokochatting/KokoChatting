@@ -38,6 +38,7 @@ var (
 	StoreMessageError = NewError(errors.New("internal error : store msg error"),4002)
 	MessageTypeError = NewError(errors.New("message type error"),4003)
 	UpgradeProtocolError = NewError(errors.New("upgrade protocol error,check your http header"),4004)
+	WsJsonMarshalError = NewError(errors.New("internal error: json marshal error"),4005)
 )
 
 func NewError(err error, status int) error {

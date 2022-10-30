@@ -11,53 +11,73 @@ import (
 	"go.uber.org/zap"
 )
 
-func init(){
-	register(global.SingleMessage,WrapSingleMessage)
-	// register(global.GroupMessage,)
-	register(global.FriendRequestNotify,WrapSingleMessage)
-}
-
 // MessageHandleFunc
-type MessageWrapFunc func(from,to uint64,contents []byte)*dataobject.CommonMessage
+type MessageWrapFunc func(from,to uint64,contents string)(*dataobject.CommonMessage,error)
 
-var MsgWrapMap = make(map[int]MessageWrapFunc)
+//var MsgWrapMap = make(map[int]MessageWrapFunc)
 
-func register(msgt int,f MessageWrapFunc){
-	MsgWrapMap[msgt] = f
+
+
+type MessageService struct{
+	msgPrd *provider.MessageProvider
+	mngPrd *provider.ManageProvider
+	msgWrapMap map[int]MessageWrapFunc
+}
+
+// private:
+
+func (srv *MessageService) register(msgt int,f MessageWrapFunc){
+	srv.msgWrapMap[msgt] = f
 }
 
 
-func GetMessageWrapFunc(msgt int)(MessageWrapFunc,error){
-	if f,ok := MsgWrapMap[msgt];ok{
+func (srv *MessageService) getMessageWrapFunc(msgt int)(MessageWrapFunc,error){
+	if f,ok := srv.msgWrapMap[msgt];ok{
 		return f,nil
 	}
 	return nil,global.MessageTypeError
 }
 
 
-func WrapSingleMessage(from,to uint64,contents []byte)*dataobject.CommonMessage{
+func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string)(*dataobject.CommonMessage,error){
 	wsmsg := &res.WsMessage{
 		From: from,
 		MsgType: global.SingleMessage,
 		Contents: contents,
+		To: to,
 	}
 	c,err := json.Marshal(wsmsg)
 	if err != nil{
-		return nil
+		return nil,global.WsJsonMarshalError
 	}
 	return &dataobject.CommonMessage{
 		From: from,
 		Tos: []uint64{to},
 		Contents: c,
+	},nil
+}
+
+func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string)(*dataobject.CommonMessage,error){
+	wsmsg := &res.WsMessage{
+		From: from,
+		MsgType: global.SingleMessage,
+		Contents: contents,
+		To: to,
 	}
+	c,err := json.Marshal(wsmsg)
+	if err != nil{
+		return nil,global.WsJsonMarshalError
+	}
+	uids,err := srv.mngPrd.GetUserIdOfGroup(to)
+	return &dataobject.CommonMessage{
+		From: from,
+		Tos: uids,
+		Contents: c,
+	},nil
 }
 
 
-
-type MessageService struct{
-	msgPrd *provider.MessageProvider
-}
-
+// public:
 
 func (srv *MessageService) StoreMessage(from,to uint64,contents string,msgType int) (uint64,error) {
 	entity := &dataobject.Message{
@@ -78,19 +98,21 @@ func (srv *MessageService) StoreMessage(from,to uint64,contents string,msgType i
 
 
 func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
-	f,err := GetMessageWrapFunc(msgType)
+	f,err := srv.getMessageWrapFunc(msgType)
 	if err != nil{
 		return nil,err
 	}
-	return f(from,to,[]byte(contents)),nil
+	return f(from,to,contents)
 }
 
 
 func NewMessageService()*MessageService{
-	return &MessageService{
-
+	srv := &MessageService{
+		msgPrd: provider.NewMessageProvider(),
+		mngPrd:provider.NewManageProvider(),
+		msgWrapMap: make(map[int]MessageWrapFunc),
 	}
+	srv.register(global.SingleMessage,srv.wrapSingleMessage)
+	srv.register(global.FriendRequestNotify,srv.wrapSingleMessage)
+	return srv
 }
-
-
-
