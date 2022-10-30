@@ -2,7 +2,9 @@ package service
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/dataobject"
 	"KokoChatting/provider"
+	"errors"
 	"go.uber.org/zap"
 )
 
@@ -81,6 +83,25 @@ func (manageSrv *ManageService) GetFriendList (uid uint64) ([]uint64, error) {
 		return friend, err
 	}
 	return friend, err
+}
+
+func (manageSrv *ManageService) SetGroupAvatar (uid uint64, gid uint64, avatarUrl string) (bool, error) {
+	newProfile := &dataobject.GroupProfile{
+		Gid: gid,
+		AvatarUrl: avatarUrl,
+	}
+
+	is := manageSrv.ManageProvider.VerifyPermission(uid, gid)
+	if is != true{
+		return is, errors.New("the user have no permission")
+	}
+
+	err := manageSrv.ManageProvider.UpdateGroupInfo(newProfile)
+	if err != nil{
+		global.Logger.Error("update avatar err", zap.Error(err))
+		return is, err
+	}
+	return is, err
 }
 
 func NewManageService() *ManageService {

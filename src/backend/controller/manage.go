@@ -133,6 +133,32 @@ func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 	manageCtl.WithData(friendListRes, c)
 }
 
+func (manageCtl *ManageController) SetGroupAvatar (c *gin.Context) {
+	uid := manageCtl.getUid(c)
+
+	groupSetAvatarReq := &req.GroupSetAvatarReq{}
+	if err := c.BindJSON(groupSetAvatarReq); err != nil {
+		global.Logger.Error("set group avatar bind json error", zap.Error(err))
+		return
+	}
+
+	is, err := manageCtl.ManageService.SetGroupAvatar(uid, groupSetAvatarReq.Gid, groupSetAvatarReq.AvatarUrl)
+	if is != true{
+		global.Logger.Error("have no permission", zap.Error(err))
+		manageCtl.WithErr(global.PermissionError, c)
+		return
+	}
+	if err != nil{
+		global.Logger.Error("set group avatar error", zap.Error(err))
+		manageCtl.WithErr(global.SetGroupAvatarError, c)
+		return
+	}
+
+	groupSetAvatarRes := &res.GroupSetAvatarRes{}
+
+	manageCtl.WithData(groupSetAvatarRes, c)
+}
+
 func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),
