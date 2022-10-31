@@ -18,14 +18,28 @@ type WsMessage struct{
 
 type PullOutlineMsgRes struct {
 	Data struct {
-		Message []megOutlineInfo `json:"message"`
+		Message []MegOutlineInfo `json:"message"`
 	} `json:"data"`
 }
 
-type megOutlineInfo struct {
+type MegOutlineInfo struct {
 	SenderId        uint64    `json:"senderId"`
 	GroupId         uint64    `json:"groupId"`
 	MessageType     int       `json:"messageType"`
 	MessageNum      int       `json:"messageNum"`
 	LastMessageTime time.Time `json:"lastMessageTime"`
+}
+
+type PullMsgRes struct {
+	Data struct {
+		Message []MessageInfo `json:"message"`
+	} `json:"data"`
+}
+
+type MessageInfo struct {
+	MessageId uint64 `json:"messageId"`
+	SenderId uint64 `json:"senderId"`
+	GroupId uint64 `json:"groupId"`
+	MessageContent string `json:"messageContent"`
+	MessageType int `json:"messageType"`
 }

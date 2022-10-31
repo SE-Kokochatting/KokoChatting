@@ -109,7 +109,7 @@ func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 
 	friendListRes := &res.FriendListRes{}
 
-	for i := range friend{
+	for i := range friend {
 		userProfile := &dataobject.UserProfile{
 			Uid: friend[i],
 		}

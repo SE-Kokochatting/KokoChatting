@@ -14,9 +14,8 @@ type Message struct{
 	SendTime time.Time
 	IsRevert bool
 	Type int
+	ReadUids string `gorm:"column:read_uids"`
 }
-
-
 
 type CommonMessage struct{
 	From uint64

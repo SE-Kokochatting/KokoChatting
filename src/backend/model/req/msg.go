@@ -6,6 +6,12 @@ type SendMsgReq struct{
 	MessageType    int    `json:"messageType"`
 }
 
+type PullOutlineMsgReq struct {
+	LastMessageId uint64 `json:"lastMessageId"`
+}
+
 type PullMsgReq struct {
 	LastMessageId uint64 `json:"lastMessageId"`
+	Id uint64 `json:"id"`
+	MsgType int `json:"msgType"`
 }

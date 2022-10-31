@@ -40,6 +40,8 @@ var (
 	UpgradeProtocolError = NewError(errors.New("upgrade protocol error,check your http header"),4004)
 	MessagePullBindError = NewError(errors.New("pull message bind error"), 4005)
 	WsJsonMarshalError = NewError(errors.New("internal error: json marshal error"),4006)
+	PullOutlineError = NewError(errors.New("pull outline error"), 4007)
+	PullMessageError = NewError(errors.New("pull message error"), 4008)
 )
 
 func NewError(err error, status int) error {
