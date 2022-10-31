@@ -20,15 +20,19 @@ type upgradeController struct {
 
 // todo: get uid from gin.Context
 func (controller *upgradeController) UpgradeProtocol(c *gin.Context) {
+	uid := controller.getUid(c)
 	conn, err := controller.upgrader.Upgrade(c.Writer, c.Request, http.Header{})
 	if err != nil {
 		// 日志打印
 		global.Logger.Error("conn upgrade error", zap.Error(err))
+		controller.WithErr(global.UpgradeProtocolError,c)
+		return
 	}
-	err = controller.wsservice.AddConn(conn,1)
+	err = controller.wsservice.AddConn(conn,uid)
 	if err != nil {
 		// 日志打印
 		global.Logger.Error("add conn to ws conn managers error", zap.Error(err))
+		controller.WithData(struct{}{},c)
 	}
 
 }

@@ -17,3 +17,8 @@ type CreatGroupReq struct {
 type QuitGroupReq struct {
 	Gid uint64 `json:"gid"`
 }
+
+type GroupSetAvatarReq struct {
+	Gid uint64 `json:"gid"`
+	AvatarUrl string `gorm:"column:avatarUrl" json:"avatarUrl"`
+}

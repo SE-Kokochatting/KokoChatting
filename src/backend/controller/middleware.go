@@ -85,6 +85,7 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 		})
 		if token == nil {
 			m.WithErr(global.JwtParseError, c)
+			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)

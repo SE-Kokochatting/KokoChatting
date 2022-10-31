@@ -2,7 +2,9 @@ package service
 
 import (
 	"KokoChatting/global"
+	"KokoChatting/model/dataobject"
 	"KokoChatting/provider"
+	"errors"
 	"go.uber.org/zap"
 )
 
@@ -69,6 +71,52 @@ func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
 	err := manageSrv.ManageProvider.QuitGroup(uid, gid)
 	if err != nil{
 		global.Logger.Error("quit group err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func (manageSrv *ManageService) GetFriendList (uid uint64) ([]uint64, error) {
+	friend, err := manageSrv.ManageProvider.GetFriendList(uid)
+	if err != nil{
+		global.Logger.Error("get friend err", zap.Error(err))
+		return friend, err
+	}
+	return friend, err
+}
+
+func (manageSrv *ManageService) SetGroupAvatar (uid uint64, gid uint64, avatarUrl string) (bool, error) {
+	newProfile := &dataobject.GroupProfile{
+		Gid: gid,
+		AvatarUrl: avatarUrl,
+	}
+
+	is := manageSrv.ManageProvider.VerifyPermission(uid, gid)
+	if is != true{
+		return is, errors.New("the user have no permission")
+	}
+
+	err := manageSrv.ManageProvider.UpdateGroupInfo(newProfile)
+	if err != nil{
+		global.Logger.Error("update avatar err", zap.Error(err))
+		return is, err
+	}
+	return is, err
+}
+
+func (manageSrv *ManageService) GetGroupList (uid uint64) ([]uint64, error) {
+	group, err := manageSrv.ManageProvider.GetGroupList(uid)
+	if err != nil{
+		global.Logger.Error("get group err", zap.Error(err))
+		return group, err
+	}
+	return group, err
+}
+
+func (manageSrv *ManageService) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
+	err := manageSrv.ManageProvider.GetGroupInfo(groupProfile)
+	if err != nil{
+		global.Logger.Error("get group information err", zap.Error(err))
 		return err
 	}
 	return err
