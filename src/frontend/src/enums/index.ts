@@ -21,3 +21,9 @@ export enum Theme {
   Light = 'light',
   Dark = 'dark',
 }
+
+// Toggle 类型
+export enum ToggleType {
+  AddContact,
+  CreateGroup,
+}

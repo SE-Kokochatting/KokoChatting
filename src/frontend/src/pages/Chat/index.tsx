@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import ChatList from '@/components/ChatList'
 import ChatWindow from '@/components/ChatWindow'
 import UserInfo from '@/components/UserInfo'
+import Toggle from '@/components/Toggle'
 import ThemeStore from '@/mobx/theme'
 import './index.scss'
 
@@ -29,6 +30,7 @@ function _Chat() {
         )}
         <UserInfo />
       </div>
+      <Toggle />
     </div>
   )
 }

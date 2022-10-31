@@ -1,7 +1,5 @@
 import ListItem from './components/ListItem'
 import './index.scss'
-// type ChatListProps = {
-// };
 
 // Todo: 类型定义
 const chatListData = [
@@ -28,8 +26,7 @@ const chatListData = [
   },
 ]
 
-function ChatList(/* props: ChatListProps */) {
-  // const {} = props;
+function ChatList() {
   return (
     <div className='c-chat_list'>
       {chatListData.map(({ id, avatarUrl, name, extract, lastTime }) => (

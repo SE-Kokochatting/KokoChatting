@@ -7,10 +7,10 @@ import './index.scss'
 function _UserInfo() {
   return (
     <div
-      className='user_info'
+      className='c-user_info'
       style={{ maxWidth: UserStore.showUserInfo ? '400px' : 0 }}
     >
-      <h1 className='user_info-title'>
+      <h1 className='c-user_info-title'>
         <SvgIcon
           name='cross'
           style={{
@@ -31,11 +31,11 @@ function _UserInfo() {
         用户信息
       </h1>
       <img
-        className='user_info-avatar'
+        className='c-user_info-avatar'
         src={UserStore.avatarUrl ? UserStore.avatarUrl : DefaultAvatarUrl}
       />
-      <p className='user_info-item'>uid: {UserStore.uid}</p>
-      <p className='user_info-item'>用户名: {UserStore.name}</p>
+      <p className='c-user_info-item'>uid: {UserStore.uid}</p>
+      <p className='c-user_info-item'>用户名: {UserStore.name}</p>
     </div>
   )
 }

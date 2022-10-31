@@ -3,7 +3,6 @@
 // E.g. --global-bg-primary, --global-bg-primary_darker, --header_input-font-primary
 
 // darker 是相对的，深色模式中更深，浅色模式中更浅，lighter 同理
-// 总之，lighte/darker 不绝对
 
 body {
   --global-bg-primary: linear-gradient(
@@ -36,6 +35,8 @@ body {
 
   --global-font-secondary: #00c0ff;
   --error-font-primary: #e55b5b;
+
+  --toggle-bg-primary: radial-gradient(51% 98%, #d3d4cf 7%, #bdbfba 98%);
 }
 
 .dark {
@@ -52,4 +53,16 @@ body {
   --global-font-primary_lighter: #fff;
 
   --global-font-secondary: #b4fdff;
+
+  --toggle-bg-primary: linear-gradient(90deg, #7e898f 0%, #636c75 100%),
+    radial-gradient(
+      at top,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    radial-gradient(
+      at top,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(0, 0, 0, 0.08) 63%
+    );
 }
