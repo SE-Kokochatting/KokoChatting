@@ -11,12 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// MessageHandleFunc
 type MessageWrapFunc func(from,to uint64,contents string)(*dataobject.CommonMessage,error)
-
-//var MsgWrapMap = make(map[int]MessageWrapFunc)
-
-
 
 type MessageService struct{
 	msgPrd *provider.MessageProvider

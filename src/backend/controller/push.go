@@ -56,6 +56,7 @@ func (controller *PushController) SendMsg(c *gin.Context){
 }
 
 
+
 func NewPushController()*PushController{
 	return &PushController{
 		baseController: baseController{},
