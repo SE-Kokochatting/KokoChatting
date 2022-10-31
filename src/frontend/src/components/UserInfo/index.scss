@@ -1,11 +1,11 @@
-.user_info {
+.c-user_info {
   max-width: 400px;
   height: 100%;
   background: var(--global-bg-primary);
   color: var(--global-font-primary);
   border: 1px solid var(--global-bg-primary);
   transition: max-width 0.3s;
-  overflow: hidden;
+  white-space: nowrap;
 
   &-title {
     font-size: 20px;

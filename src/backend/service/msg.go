@@ -6,9 +6,8 @@ import (
 	"KokoChatting/model/res"
 	"KokoChatting/provider"
 	"encoding/json"
-	"time"
-
 	"go.uber.org/zap"
+	"time"
 )
 
 type MessageWrapFunc func(from,to uint64,contents string)(*dataobject.CommonMessage,error)
@@ -110,6 +109,32 @@ func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgT
 		return nil,err
 	}
 	return f(from,to,contents)
+}
+
+// PushSystemMessage push system message
+// @return msgid,error
+func (srv *MessageService) PushSystemMessage(from,to uint64,contents string,msgType int,wssrv *WsService) (uint64,error) {
+	// wrap msg
+	wrapMsg,err := srv.WrapCommonMessage(from, to, contents, msgType)
+	if err != nil{
+		global.Logger.Error("wrap msg error",zap.Error(err))
+		return 0,err
+	}
+
+	// store msg
+	msgid,err := srv.StoreMessage(from, to, contents, msgType)
+	if err != nil{
+		global.Logger.Error("store msg err",zap.Error(err))
+		return 0,err
+	}
+
+	// push msg
+	err = wssrv.SendMessage(wrapMsg)
+	if err != nil{
+		global.Logger.Error("send msg error",zap.Error(err))
+		return 0,err
+	}
+	return msgid,nil
 }
 
 

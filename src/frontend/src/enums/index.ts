@@ -12,6 +12,7 @@ export enum Direction {
 
 // 聊天类型
 export enum ChatType {
+  Mixed,
   Private,
   Group,
 }
@@ -20,4 +21,10 @@ export enum ChatType {
 export enum Theme {
   Light = 'light',
   Dark = 'dark',
+}
+
+// Toggle 类型
+export enum ToggleType {
+  AddContact,
+  CreateGroup,
 }
