@@ -104,6 +104,24 @@ func (manageSrv *ManageService) SetGroupAvatar (uid uint64, gid uint64, avatarUr
 	return is, err
 }
 
+func (manageSrv *ManageService) GetGroupList (uid uint64) ([]uint64, error) {
+	group, err := manageSrv.ManageProvider.GetGroupList(uid)
+	if err != nil{
+		global.Logger.Error("get group err", zap.Error(err))
+		return group, err
+	}
+	return group, err
+}
+
+func (manageSrv *ManageService) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
+	err := manageSrv.ManageProvider.GetGroupInfo(groupProfile)
+	if err != nil{
+		global.Logger.Error("get group information err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
 func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),

@@ -29,7 +29,8 @@ var (
 	GetFriendInfoError = NewError(errors.New("get friend info err"),2006)
 	SetGroupAvatarError = NewError(errors.New("set group avatar error"), 2007)
 	PermissionError = NewError(errors.New("permission error"), 2008)
-
+	GetGroupError = NewError(errors.New("get group list err"), 2009)
+	GetGroupInfoError = NewError(errors.New("get group info err"), 2010)
 	RequestFormatError = NewError(errors.New("request body request error"),3000)
 
     MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)

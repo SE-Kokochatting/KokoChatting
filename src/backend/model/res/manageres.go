@@ -33,3 +33,15 @@ type User struct {
 type GroupSetAvatarRes struct {
 	Data struct {} `json:"data"`
 }
+
+type GroupListRes struct {
+	Data struct{
+		Group [] GroupInfo `json:"group"`
+	} `json:"data"`
+}
+
+type GroupInfo struct {
+	Gid uint64 `json:"gid"`
+	Name string `json:"name"`
+	AvatarUrl string `json:"avatarUrl"`
+}
