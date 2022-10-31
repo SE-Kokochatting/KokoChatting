@@ -11,12 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// MessageHandleFunc
 type MessageWrapFunc func(from,to uint64,contents string)(*dataobject.CommonMessage,error)
-
-//var MsgWrapMap = make(map[int]MessageWrapFunc)
-
-
 
 type MessageService struct{
 	msgPrd *provider.MessageProvider
@@ -50,6 +45,12 @@ func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string)(*da
 	if err != nil{
 		return nil,global.WsJsonMarshalError
 	}
+	if ok,err := srv.mngPrd.IsInBlock(to,from);err != nil{
+		global.Logger.Error("is in block judge error",zap.Error(err))
+		return nil,global.QueryBlockRelationError
+	}else if ok{
+		return nil,global.HasBeenBlocked
+	}
 	return &dataobject.CommonMessage{
 		From: from,
 		Tos: []uint64{to},
@@ -67,6 +68,12 @@ func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string)(*dat
 	c,err := json.Marshal(wsmsg)
 	if err != nil{
 		return nil,global.WsJsonMarshalError
+	}
+	if ok,err := srv.mngPrd.IsInGroup(from,to);err != nil{
+		global.Logger.Error("query whether or not user is in group error",zap.Error(err))
+		return nil,global.QueryIsInGroup
+	}else if ok{
+		return nil,global.MessageSenderError
 	}
 	uids,err := srv.mngPrd.GetUserIdOfGroup(to)
 	return &dataobject.CommonMessage{
@@ -114,5 +121,6 @@ func NewMessageService()*MessageService{
 	}
 	srv.register(global.SingleMessage,srv.wrapSingleMessage)
 	srv.register(global.FriendRequestNotify,srv.wrapSingleMessage)
+	srv.register(global.GroupMessage,srv.wrapGroupMessage)
 	return srv
 }

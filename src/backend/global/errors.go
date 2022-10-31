@@ -39,6 +39,10 @@ var (
 	MessageTypeError = NewError(errors.New("message type error"),4003)
 	UpgradeProtocolError = NewError(errors.New("upgrade protocol error,check your http header"),4004)
 	WsJsonMarshalError = NewError(errors.New("internal error: json marshal error"),4005)
+	QueryBlockRelationError = NewError(errors.New("internal error: query block relation error"),4006)
+	HasBeenBlocked = NewError(errors.New("the user has been blocked"),4007)
+	QueryIsInGroup = NewError(errors.New("query user is in group error"),4008)
+	MessageSenderError = NewError(errors.New("current user is not in receiver group"),4009)
 )
 
 func NewError(err error, status int) error {
