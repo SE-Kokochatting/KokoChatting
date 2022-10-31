@@ -13,7 +13,6 @@ func (err Error) Error() string {
 // 错误码按照模块的不同第一位不同，user是1，manage是2等等，然后模块内错误码自增
 var (
 	ConfigPathError = NewError(errors.New("config path do not exist in config file"), 1000)
-
 	RegisterError = NewError(errors.New("user register err"), 1001)
 	LoginError = NewError(errors.New("user login err"), 1002)
 	PasswordError = NewError(errors.New("password is err"), 1003)
@@ -26,10 +25,19 @@ var (
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
 	CreatGroupError = NewError(errors.New("creat group err"),2003)
 	QuitGroupError = NewError(errors.New("quit group err"),2004)
-  
+	GetFriendListError = NewError(errors.New("get friend list err"),2005)
+	GetFriendInfoError = NewError(errors.New("get friend info err"),2006)
+	SetGroupAvatarError = NewError(errors.New("set group avatar error"), 2007)
+	PermissionError = NewError(errors.New("permission error"), 2008)
+
+	RequestFormatError = NewError(errors.New("request body request error"),3000)
+
   	MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
 	MessageInternalError = NewError(errors.New("message server internal unknown error"),4001)
-
+	StoreMessageError = NewError(errors.New("internal error : store msg error"),4002)
+	MessageTypeError = NewError(errors.New("message type error"),4003)
+	UpgradeProtocolError = NewError(errors.New("upgrade protocol error,check your http header"),4004)
+	MessagePullBindError = NewError(errors.New("pull message bind error"), 4005)
 )
 
 func NewError(err error, status int) error {
