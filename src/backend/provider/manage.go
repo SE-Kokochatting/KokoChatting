@@ -126,7 +126,7 @@ func (managePro *ManageProvider) GetFriendList (uid uint64) ([]uint64, error) {
 
 func (managePro *ManageProvider) GetGroupList (uid uint64) ([]uint64, error) {
 	var MemberEntity = &[]dataobject.GroupMember{}
-	var group []uint64
+	group := make([]uint64, 0)
 
 	dbClient := managePro.mysqlProvider.mysqlDb
 
@@ -182,11 +182,16 @@ func (managePro *ManageProvider) VerifyPermission (uid uint64, gid uint64) bool 
 	return true
 }
 
-//func (managePro *ManageProvider) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
-//	dbClient := managePro.mysqlProvider.mysqlDb
-//
-//
-//}
+func (managePro *ManageProvider) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Where("gid = ?", groupProfile.Gid).First(groupProfile).Error
+	if err != nil{
+		global.Logger.Error("get group information error", zap.Error(err))
+		return err
+	}
+	return err
+}
 
 func (managePro *ManageProvider) GetUserIdOfGroup (gid uint64) ([]uint64, error){
 	dbClient := managePro.mysqlProvider.mysqlDb

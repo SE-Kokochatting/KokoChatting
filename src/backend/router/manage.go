@@ -15,4 +15,5 @@ func(r *manageRouter) ManageRouter(_router gin.IRoutes){
 	_router.POST("/group/quit", routerController.QuitGroup)
 	_router.GET("/user/list", routerController.GetFriendListInfo)
 	_router.POST("/group/avatar", routerController.SetGroupAvatar)
+	_router.GET("/group/list", routerController.GetGroupListInfo)
 }

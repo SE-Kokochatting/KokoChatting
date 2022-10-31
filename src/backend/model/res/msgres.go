@@ -12,7 +12,8 @@ type SendMessageRes struct{
 type WsMessage struct{
 	From uint64
 	MsgType int
-	Contents []byte
+	Contents string
+	To uint64
 }
 
 type PullOutlineMsgRes struct {
@@ -22,9 +23,9 @@ type PullOutlineMsgRes struct {
 }
 
 type megOutlineInfo struct {
-	SenderId uint64 `json:"senderId"`
-	GroupId uint64 `json:"groupId"`
-	MessageType int `json:"messageType"`
-	MessageNum int `json:"messageNum"`
+	SenderId        uint64    `json:"senderId"`
+	GroupId         uint64    `json:"groupId"`
+	MessageType     int       `json:"messageType"`
+	MessageNum      int       `json:"messageNum"`
 	LastMessageTime time.Time `json:"lastMessageTime"`
 }
