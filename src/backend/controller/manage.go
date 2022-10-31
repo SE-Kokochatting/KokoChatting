@@ -191,6 +191,34 @@ func (manageCtl *ManageController) SetGroupAvatar (c *gin.Context) {
 	manageCtl.WithData(groupSetAvatarRes, c)
 }
 
+func (manageCtl *ManageController) TransferHost (c *gin.Context) {
+	transferHostReq := &req.TransferHostReq{}
+	err := c.BindJSON(transferHostReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	host := manageCtl.getUid(c)
+
+	err = manageCtl.ManageService.TransferHost(host, transferHostReq.Gid, transferHostReq.Uid)
+	if err != nil{
+		global.Logger.Error("transfer host err", zap.Error(err))
+		manageCtl.WithErr(global.TransferHostError, c)
+		return
+	}
+
+	err = manageCtl.ManageService.TransferMember(host, transferHostReq.Gid, host)
+	if err != nil{
+		global.Logger.Error("transfer member err", zap.Error(err))
+		manageCtl.WithErr(global.TransferMemError, c)
+		return
+	}
+
+	transferHostRes := &res.TransferHostRes{}
+
+	manageCtl.WithData(transferHostRes, c)
+}
+
 func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),

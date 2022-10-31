@@ -45,3 +45,7 @@ type GroupInfo struct {
 	Name string `json:"name"`
 	AvatarUrl string `json:"avatarUrl"`
 }
+
+type TransferHostRes struct {
+	Data struct {} `json:"data"`
+}

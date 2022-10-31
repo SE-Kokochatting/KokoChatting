@@ -23,7 +23,7 @@ var (
 	IncorrectToken = NewError(errors.New("token incorrect err"), 1008)
 	DeleteFriendError = NewError(errors.New("friend delete err"),2001)
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
-	CreatGroupError = NewError(errors.New("creat group err"),2003)
+	CreatGroupError = NewError(errors.New("create group err"),2003)
 	QuitGroupError = NewError(errors.New("quit group err"),2004)
 	GetFriendListError = NewError(errors.New("get friend list err"),2005)
 	GetFriendInfoError = NewError(errors.New("get friend info err"),2006)
@@ -31,6 +31,9 @@ var (
 	PermissionError = NewError(errors.New("permission error"), 2008)
 	GetGroupError = NewError(errors.New("get group list err"), 2009)
 	GetGroupInfoError = NewError(errors.New("get group info err"), 2010)
+	TransferHostError = NewError(errors.New("transfer host err"), 2011)
+	TransferAdminError = NewError(errors.New("transfer administrator err"), 2012)
+	TransferMemError = NewError(errors.New("transfer member err"), 2013)
 	RequestFormatError = NewError(errors.New("request body request error"),3000)
 
     MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)
