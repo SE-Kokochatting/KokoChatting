@@ -213,6 +213,38 @@ func (managePro *ManageProvider) GetUserIdOfGroup (gid uint64) ([]uint64, error)
 	return uid, nil
 }
 
+func (managePro *ManageProvider) IsInGroup (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsInBlock (user uint64, blocker uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	blockRelation := &dataobject.BlockRelation{
+		User: user,
+		Blocker: blocker,
+	}
+	err := dbClient.Where("user = ? and blocker = ?", blockRelation.User, blockRelation.Blocker).Find(blockRelation).Error
+	if err != nil{
+		global.Logger.Error("the blocker is not blocked", zap.Error(err))
+		return false, err
+	}
+
+	return true, nil
+}
+
 func NewManageProvider() *ManageProvider {
 	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),
