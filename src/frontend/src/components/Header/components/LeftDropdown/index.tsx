@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
+import { ToggleType } from '@/enums'
 import UserStore from '@/mobx/user'
+import ToggleStore from '@/mobx/toggle'
 import SvgIcon from '@/components/SvgIcon'
 import Switch from './components/Switch'
 import './index.scss'
@@ -28,6 +30,11 @@ async function handleUserInfo(uid: number) {
   const { name, avatarUrl } = resData.data
   UserStore.setUserInfo({ uid, name, avatarUrl })
   UserStore.setShowUserInfo(!UserStore.showUserInfo)
+}
+
+function handleToggle(type: ToggleType) {
+  ToggleStore.setShowToggle(true)
+  ToggleStore.setToggleType(type)
 }
 
 function _LeftDropdown(props: LeftDropdownProps) {
@@ -91,6 +98,24 @@ function _LeftDropdown(props: LeftDropdownProps) {
       >
         <SvgIcon name='myself' style={iconStyle} />
         个人信息
+      </li>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          handleToggle(ToggleType.AddContact)
+        }}
+      >
+        <SvgIcon name='addContact' style={iconStyle} />
+        添加联系人
+      </li>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          handleToggle(ToggleType.CreateGroup)
+        }}
+      >
+        <SvgIcon name='createGroup' style={iconStyle} />
+        创建群聊
       </li>
       <li className='c-header-left-dropdown-item' id='dark_mode'>
         <SvgIcon name='moon' style={iconStyle} />

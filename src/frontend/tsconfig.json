@@ -42,7 +42,8 @@
       "@/consts/*": ["src/consts/*"],
       "@/plugins/*": ["src/plugins/*"],
       "@/types/*": ["src/types"],
-      "@/enums/*": ["src/enums"]
+      "@/enums/*": ["src/enums"],
+      "@/ws/*": ["src/ws"]
     }
   },
   "include": ["src", "tests"],
