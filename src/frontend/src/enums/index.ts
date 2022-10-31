@@ -12,6 +12,7 @@ export enum Direction {
 
 // 聊天类型
 export enum ChatType {
+  Mixed,
   Private,
   Group,
 }

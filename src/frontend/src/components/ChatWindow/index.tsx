@@ -8,8 +8,7 @@ interface ChatWindowProps {
   chatType: ChatType
 }
 
-function _ChatWindow(props: ChatWindowProps) {
-  const { chatType } = props
+function _ChatWindow({ chatType }: ChatWindowProps) {
   // 之后定义其类型
   const chatInfo = [
     {

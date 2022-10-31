@@ -22,11 +22,16 @@ function _Chat() {
         <Header name='芝士软工' peopleNum={5} />
       )}
       <div className='chat-main'>
-        <ChatList />
         {pathname !== '/group' ? (
-          <ChatWindow chatType={ChatType.Private} />
+          <>
+            <ChatList chatType={ChatType.Private} />
+            <ChatWindow chatType={ChatType.Private} />
+          </>
         ) : (
-          <ChatWindow chatType={ChatType.Group} />
+          <>
+            <ChatList chatType={ChatType.Group} />
+            <ChatWindow chatType={ChatType.Group} />
+          </>
         )}
         <UserInfo />
       </div>
