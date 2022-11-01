@@ -52,6 +52,9 @@ var (
 	RevertMessageError       = NewError(errors.New("msg whose id equals to 'msgid' is not sent by current user"), 4010)
 	RevertedMessageTypeError = NewError(errors.New("only group msg and single msg can be reverted"), 4011)
 	MsgHasBeenRevertedError  = NewError(errors.New("the msg has been reverted"), 4012)
+
+	UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
+	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
 
 func NewError(err error, status int) error {
