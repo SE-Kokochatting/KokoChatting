@@ -21,6 +21,7 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	err := c.BindJSON(delFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 
@@ -42,6 +43,7 @@ func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
 	err := c.BindJSON(blockFriendReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 	//从报文首部中获取uid
@@ -62,6 +64,7 @@ func (manageCtl *ManageController) CreatGroup (c *gin.Context) {
 	err := c.BindJSON(creatGroupReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 	//从报文首部中获取uid
@@ -83,6 +86,7 @@ func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
 	err := c.BindJSON(quitGroupQeq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 	//从报文首部中获取uid
@@ -171,6 +175,7 @@ func (manageCtl *ManageController) SetGroupAvatar (c *gin.Context) {
 	groupSetAvatarReq := &req.GroupSetAvatarReq{}
 	if err := c.BindJSON(groupSetAvatarReq); err != nil {
 		global.Logger.Error("set group avatar bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 
@@ -196,6 +201,7 @@ func (manageCtl *ManageController) TransferHost (c *gin.Context) {
 	err := c.BindJSON(transferHostReq)
 	if err != nil{
 		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
 		return
 	}
 	host := manageCtl.getUid(c)
@@ -217,6 +223,36 @@ func (manageCtl *ManageController) TransferHost (c *gin.Context) {
 	transferHostRes := &res.TransferHostRes{}
 
 	manageCtl.WithData(transferHostRes, c)
+}
+
+func (manageCtl *ManageController) ChangePermission (c *gin.Context) {
+	changePermission := &req.ChangePermissionReq{}
+	err := c.BindJSON(changePermission)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+	host := manageCtl.getUid(c)
+
+	is, err := manageCtl.ManageService.IsMember(changePermission.Gid, changePermission.Uid)
+	if is == true{
+		if err := manageCtl.ManageService.TransferAdmin(host, changePermission.Gid, changePermission.Uid); err != nil{
+			global.Logger.Error("transfer admin err", zap.Error(err))
+			manageCtl.WithErr(global.TransferAdminError, c)
+			return
+		}
+	}else{
+		if err := manageCtl.ManageService.TransferMember(host, changePermission.Gid, changePermission.Uid); err != nil {
+			global.Logger.Error("transfer member err", zap.Error(err))
+			manageCtl.WithErr(global.TransferMemError, c)
+			return
+		}
+	}
+
+	changePermissionRes := &res.ChangePermissionRes{}
+
+	manageCtl.WithData(changePermissionRes, c)
 }
 
 func NewManageController() *ManageController {

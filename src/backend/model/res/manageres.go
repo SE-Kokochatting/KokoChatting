@@ -49,3 +49,7 @@ type GroupInfo struct {
 type TransferHostRes struct {
 	Data struct {} `json:"data"`
 }
+
+type ChangePermissionRes struct {
+	Data struct {} `json:"data"`
+}

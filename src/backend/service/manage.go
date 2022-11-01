@@ -142,6 +142,28 @@ func (manageSrv *ManageService) TransferHost (host uint64, gid uint64, uid uint6
 	return err
 }
 
+func (manageSrv *ManageService) TransferAdmin (host uint64, gid uint64, uid uint64) error {
+	is, err := manageSrv.ManageProvider.IsHost(host, gid)
+	if is !=  true{
+		global.Logger.Error("the user is not host", zap.Error(err))
+		return err
+	}
+
+	groupMember := &dataobject.GroupMember{
+		Uid: uid,
+		Gid: gid,
+		IsAdmin: true,
+		IsHost: false,
+	}
+
+	err = manageSrv.ManageProvider.ChangeMemberPermission(groupMember)
+	if err != nil{
+		global.Logger.Error("change permission err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
 func (manageSrv *ManageService) TransferMember (host uint64, gid uint64, uid uint64) error {
 	is, err := manageSrv.ManageProvider.IsHost(host, gid)
 	if is !=  true{
@@ -159,10 +181,20 @@ func (manageSrv *ManageService) TransferMember (host uint64, gid uint64, uid uin
 	err = manageSrv.ManageProvider.ChangeMemberPermission(groupMember)
 	if err != nil{
 		global.Logger.Error("change permission err", zap.Error(err))
+		return err
 	}
 	return err
 }
 
+func (manageSrv *ManageService) IsMember (gid uint64, uid uint64) (bool, error) {
+	is, err := manageSrv.ManageProvider.IsMember(uid, gid)
+	if is != true{
+		global.Logger.Error("the user is not member", zap.Error(err))
+		return false, err
+	}
+
+	return true, err
+}
 
 func NewManageService() *ManageService {
 	return &ManageService{
