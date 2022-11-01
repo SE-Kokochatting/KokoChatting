@@ -20,6 +20,7 @@
     &-tab {
       display: flex;
       padding: 0 10px;
+      user-select: none;
 
       &-item {
         margin-right: 15px;
@@ -42,7 +43,7 @@
       margin-top: 50px;
 
       &-input {
-        margin-bottom: 30px;
+        margin: 20px;
         background: var(--global-bg-primary_lighter);
         height: 50px;
         border-radius: 25px;
@@ -68,7 +69,7 @@
       }
 
       &-hint {
-        margin: 0 0 30px 10px;
+        margin: 10px;
         color: var(--error-font-primary);
       }
     }
