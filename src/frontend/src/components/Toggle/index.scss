@@ -1,0 +1,55 @@
+.c-toggle {
+  position: absolute;
+  background: var(--toggle-bg-primary);
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-55%);
+  width: 600px;
+  border-radius: 10px;
+  padding: 30px;
+  color: var(--global-font-primary_lighter);
+
+  &-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+
+    &-input {
+      width: 100%;
+      margin-bottom: 30px;
+      background: var(--global-bg-primary_lighter);
+      height: 50px;
+      border-radius: 25px;
+      box-sizing: border-box;
+      padding: 15px;
+      color: var(--global-font-primary_lighter);
+      font-size: 16px;
+    }
+
+    &-btn {
+      height: 40px;
+      line-height: 40px;
+      padding: 0 20px;
+      border-radius: 20px;
+      font-size: 18px;
+      background: var(--global-bg-primary);
+      cursor: pointer;
+      color: var(--global-font-primary);
+    }
+
+    &-btn:hover {
+      background: var(--global-bg-primary_darker);
+    }
+
+    &-hint {
+      margin: 0 0 30px 10px;
+      color: var(--error-font-primary);
+    }
+  }
+}

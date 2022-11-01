@@ -4,7 +4,6 @@ import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
 	"KokoChatting/provider"
-	"errors"
 	"go.uber.org/zap"
 )
 
@@ -91,12 +90,12 @@ func (manageSrv *ManageService) SetGroupAvatar (uid uint64, gid uint64, avatarUr
 		AvatarUrl: avatarUrl,
 	}
 
-	is := manageSrv.ManageProvider.VerifyPermission(uid, gid)
+	is,err := manageSrv.ManageProvider.VerifyPermission(uid, gid)
 	if is != true{
-		return is, errors.New("the user have no permission")
+		return is, err
 	}
 
-	err := manageSrv.ManageProvider.UpdateGroupInfo(newProfile)
+	err = manageSrv.ManageProvider.UpdateGroupInfo(newProfile)
 	if err != nil{
 		global.Logger.Error("update avatar err", zap.Error(err))
 		return is, err
@@ -120,6 +119,81 @@ func (manageSrv *ManageService) GetGroupInfo (groupProfile *dataobject.GroupProf
 		return err
 	}
 	return err
+}
+
+func (manageSrv *ManageService) TransferHost (host uint64, gid uint64, uid uint64) error {
+	is, err := manageSrv.ManageProvider.IsHost(host, gid)
+	if is !=  true{
+		global.Logger.Error("the user is not host", zap.Error(err))
+		return err
+	}
+
+	groupMember := &dataobject.GroupMember{
+		Uid: uid,
+		Gid: gid,
+		IsAdmin: false,
+		IsHost: true,
+	}
+
+	err = manageSrv.ManageProvider.ChangeMemberPermission(groupMember)
+	if err != nil{
+		global.Logger.Error("change permission err", zap.Error(err))
+	}
+	return err
+}
+
+func (manageSrv *ManageService) TransferAdmin (host uint64, gid uint64, uid uint64) error {
+	is, err := manageSrv.ManageProvider.IsHost(host, gid)
+	if is !=  true{
+		global.Logger.Error("the user is not host", zap.Error(err))
+		return err
+	}
+
+	groupMember := &dataobject.GroupMember{
+		Uid: uid,
+		Gid: gid,
+		IsAdmin: true,
+		IsHost: false,
+	}
+
+	err = manageSrv.ManageProvider.ChangeMemberPermission(groupMember)
+	if err != nil{
+		global.Logger.Error("change permission err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func (manageSrv *ManageService) TransferMember (host uint64, gid uint64, uid uint64) error {
+	is, err := manageSrv.ManageProvider.IsHost(host, gid)
+	if is !=  true{
+		global.Logger.Error("the user is not host", zap.Error(err))
+		return err
+	}
+
+	groupMember := &dataobject.GroupMember{
+		Uid: uid,
+		Gid: gid,
+		IsAdmin: false,
+		IsHost: false,
+	}
+
+	err = manageSrv.ManageProvider.ChangeMemberPermission(groupMember)
+	if err != nil{
+		global.Logger.Error("change permission err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func (manageSrv *ManageService) IsMember (gid uint64, uid uint64) (bool, error) {
+	is, err := manageSrv.ManageProvider.IsMember(uid, gid)
+	if is != true{
+		global.Logger.Error("the user is not member", zap.Error(err))
+		return false, err
+	}
+
+	return true, err
 }
 
 func NewManageService() *ManageService {

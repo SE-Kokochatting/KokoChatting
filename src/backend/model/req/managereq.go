@@ -22,3 +22,13 @@ type GroupSetAvatarReq struct {
 	Gid uint64 `json:"gid"`
 	AvatarUrl string `gorm:"column:avatarUrl" json:"avatarUrl"`
 }
+
+type TransferHostReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}
+
+type ChangePermissionReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}

@@ -20,7 +20,7 @@ func dummyCode(r gin.IRoutes){}
 func Routers() *gin.Engine {
 	middleware := new(controller.Middleware)
 	engine := gin.New()
-	engine.Use(middleware.ZapLogger(), gin.Recovery())  // 日志中间件使用zap替换gin原生日志库
+	engine.Use(middleware.ZapLogger(), gin.Recovery(),middleware.CORS())  // 日志中间件使用zap替换gin原生日志库
 	rg := new(routerGroup)
 
 	privateGroup := engine.Group("/api/v1").Use(middleware.JwtAuthValidate()) // use方法的参数需得是jwt鉴权和cors等 中间件（请求拦截器）
