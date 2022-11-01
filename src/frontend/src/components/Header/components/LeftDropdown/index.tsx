@@ -25,9 +25,8 @@ const iconStyle: CSSObject = {
 }
 
 async function handleUserInfo(uid: number) {
-  const res = await getUserInfo({ uid })
-  const resData = res.data
-  const { name, avatarUrl } = resData.data
+  const { data } = await getUserInfo({ uid })
+  const { name, avatarUrl } = data
   UserStore.setUserInfo({ uid, name, avatarUrl })
   UserStore.setShowUserInfo(!UserStore.showUserInfo)
 }
