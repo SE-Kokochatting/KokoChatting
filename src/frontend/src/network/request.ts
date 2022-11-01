@@ -32,8 +32,8 @@ export default async function request(
       mode: 'cors',
       body: JSON.stringify(reqData),
     })
-    // console.log(res)
     const resData = await res.json()
+    // console.log(resData)
 
     // 后端发送的数据中 data 套 data
     const { code, data } = resData

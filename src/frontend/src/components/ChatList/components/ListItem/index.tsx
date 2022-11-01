@@ -1,19 +1,27 @@
+import { observer } from 'mobx-react-lite'
+import { IChat } from '@/types'
+import CurrentChatStore from '@/mobx/currentChat'
 import './index.scss'
 
-interface ListItemProps {
-  // 必需，如果使用默认头像，后端也应提供默认头像的 url
-  avatarUrl: string
-  // 用户名 / 群名称
-  name: string
-  // 摘要，即最新消息；如果是查看好友列表或群列表的场景，则无需此值
-  extract?: string
-  // 时；如果是查看好友列表或群列表的场景，则无需此值
-  lastTime?: string
+function handleClick({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) {
+  CurrentChatStore.setCurrentChat({
+    uid,
+    gid,
+    avatarUrl,
+    name,
+    extract,
+    lastTime,
+  })
 }
-function ListItem(props: ListItemProps) {
-  const { avatarUrl, name, extract, lastTime } = props
+
+function _ListItem({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) {
   return (
-    <div className='c-chat_list-item'>
+    <div
+      className='c-chat_list-item'
+      onClick={() =>
+        handleClick({ uid, gid, avatarUrl, name, extract, lastTime })
+      }
+    >
       <div className='c-chat_list-item-avatar'>
         <img className='c-chat_list-item-avatar-img' src={avatarUrl} />
       </div>
@@ -25,4 +33,7 @@ function ListItem(props: ListItemProps) {
     </div>
   )
 }
+
+const ListItem = observer(_ListItem)
+
 export default ListItem
