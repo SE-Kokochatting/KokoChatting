@@ -10,7 +10,7 @@ import './index.scss'
 
 function _Header() {
   const [showLeftDropdown, setShowLeftDropdown] = useState(false)
-  // right dropdown
+  // Right dropdown
   const { showDropDown, setShowDropDown } = useShowDropDown()
 
   return (
@@ -69,15 +69,18 @@ function _Header() {
             height: '35px',
             position: 'absolute',
             right: '20px',
-            cursor: 'pointer',
+            cursor:
+              CurrentChatStore.currentChat !== null ? 'pointer' : 'default',
 
             '&:hover': {
               color: 'var(--global-font-primary)',
             },
           }}
           onClick={(e) => {
-            e.stopPropagation()
-            setShowDropDown(true)
+            if (CurrentChatStore.currentChat !== null) {
+              e.stopPropagation()
+              setShowDropDown(true)
+            }
           }}
         />
         <RightDropdown showDropdown={showDropDown} />
