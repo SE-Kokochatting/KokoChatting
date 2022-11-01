@@ -245,8 +245,11 @@ func (managePro *ManageProvider) IsInGroup (uid uint64, gid uint64) (bool, error
 	}
 	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
 	if err != nil{
-		global.Logger.Error("the user is not in this group", zap.Error(err))
-		return false, err
+		if err != gorm.ErrRecordNotFound{
+			global.Logger.Error("the user is not in group", zap.Error(err))
+			return true, err
+		}
+		return false,nil
 	}
 
 	return true, nil
@@ -261,10 +264,12 @@ func (managePro *ManageProvider) IsInBlock (user uint64, blocker uint64) (bool, 
 	}
 	err := dbClient.Where("user = ? and blocker = ?", blockRelation.User, blockRelation.Blocker).Find(blockRelation).Error
 	if err != nil{
-		global.Logger.Error("the blocker is not blocked", zap.Error(err))
-		return false, err
+		if err != gorm.ErrRecordNotFound{
+			global.Logger.Error("the blocker is not blocked", zap.Error(err))
+			return true, err
+		}
+		return false,nil
 	}
-
 	return true, nil
 }
 

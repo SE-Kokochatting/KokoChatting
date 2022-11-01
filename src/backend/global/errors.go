@@ -21,6 +21,7 @@ var (
 	JwtParseError   = NewError(errors.New("jwt parse err"), 1006)
 	JwtExpiredError = NewError(errors.New("jwt expired err"), 1007)
 	IncorrectToken = NewError(errors.New("token incorrect err"), 1008)
+	DatabaseQueryError = NewError(errors.New("database query error"),1009)
 	DeleteFriendError = NewError(errors.New("friend delete err"),2001)
 	BlockFriendError = NewError(errors.New("friend block err"),2002)
 	CreatGroupError = NewError(errors.New("create group err"),2003)
@@ -46,6 +47,9 @@ var (
 	HasBeenBlocked = NewError(errors.New("the user has been blocked"),4007)
 	QueryIsInGroup = NewError(errors.New("query user is in group error"),4008)
 	MessageSenderError = NewError(errors.New("current user is not in receiver group"),4009)
+	RevertMessageError = NewError(errors.New("msg whose id equals to 'msgid' is not sent by current user"),4010)
+	RevertedMessageTypeError = NewError(errors.New("only group msg and single msg can be reverted"),4011)
+	MsgHasBeenRevertedError = NewError(errors.New("the msg has been reverted"),4012)
 )
 
 func NewError(err error, status int) error {
