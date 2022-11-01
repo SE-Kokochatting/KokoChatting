@@ -18,4 +18,5 @@ func(r *manageRouter) ManageRouter(_router gin.IRoutes){
 	_router.GET("/group/list", routerController.GetGroupListInfo)
 	_router.POST("/group/host/transfer", routerController.TransferHost)
 	_router.POST("/group/host/change_permission", routerController.ChangePermission)
+	_router.POST("/user/add_friend", routerController.AgreeFriendRequest)
 }
