@@ -27,3 +27,8 @@ type TransferHostReq struct {
 	Uid uint64 `json:"uid"`
 	Gid uint64 `json:"gid"`
 }
+
+type ChangePermissionReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}

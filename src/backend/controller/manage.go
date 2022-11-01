@@ -219,6 +219,35 @@ func (manageCtl *ManageController) TransferHost (c *gin.Context) {
 	manageCtl.WithData(transferHostRes, c)
 }
 
+func (manageCtl *ManageController) ChangePermission (c *gin.Context) {
+	changePermission := &req.ChangePermissionReq{}
+	err := c.BindJSON(changePermission)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		return
+	}
+	host := manageCtl.getUid(c)
+
+	is, err := manageCtl.ManageService.IsMember(changePermission.Gid, changePermission.Uid)
+	if is == true{
+		if err := manageCtl.ManageService.TransferAdmin(host, changePermission.Gid, changePermission.Uid); err != nil{
+			global.Logger.Error("transfer admin err", zap.Error(err))
+			manageCtl.WithErr(global.TransferAdminError, c)
+			return
+		}
+	}else{
+		if err := manageCtl.ManageService.TransferMember(host, changePermission.Gid, changePermission.Uid); err != nil {
+			global.Logger.Error("transfer member err", zap.Error(err))
+			manageCtl.WithErr(global.TransferMemError, c)
+			return
+		}
+	}
+
+	changePermissionRes := &res.ChangePermissionRes{}
+
+	manageCtl.WithData(changePermissionRes, c)
+}
+
 func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),

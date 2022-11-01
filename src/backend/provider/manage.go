@@ -293,6 +293,26 @@ func (managePro *ManageProvider) IsHost (uid uint64, gid uint64) (bool, error) {
 	return true, nil
 }
 
+func (managePro *ManageProvider) IsMember (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsHost == true || memberProfile.IsAdmin == true{
+		return false, errors.New("the user is not member")
+	}
+
+	return true, nil
+}
+
 func NewManageProvider() *ManageProvider {
 	return &ManageProvider{
 		mysqlProvider: *NewMysqlProvider(),
