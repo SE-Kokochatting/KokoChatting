@@ -5,6 +5,7 @@ import (
 	"KokoChatting/model/req"
 	"KokoChatting/model/res"
 	"KokoChatting/service"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -27,7 +28,7 @@ func (pullCtl *MsgPullController) MsgPullOutline(c *gin.Context) {
 	pullMsgRes := &res.PullOutlineMsgRes{}
 	if err := pullCtl.msgPullService.PullOutlineMsg(uid, pullMsgReq, pullMsgRes); err != nil {
 		global.Logger.Error("pull outline message error", zap.Error(err))
-		pullCtl.WithErr(global.PullOutlineError ,c)
+		pullCtl.WithErr(global.PullOutlineError, c)
 		return
 	}
 
@@ -55,7 +56,7 @@ func (pullCtl *MsgPullController) MsgPull(c *gin.Context) {
 	return
 }
 
-func NewMsgPullController() *MsgPullController{
+func NewMsgPullController() *MsgPullController {
 	return &MsgPullController{
 		msgPullService: service.NewMsgPullService(),
 	}
