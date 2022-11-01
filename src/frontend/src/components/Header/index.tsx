@@ -1,4 +1,6 @@
+import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
+import CurrentChatStore from '@/mobx/currentChat'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
 import LeftDropdown from './components/LeftDropdown'
@@ -13,8 +15,7 @@ interface HeaderProps {
   peopleNum?: number
 }
 
-function Header(props: HeaderProps) {
-  const { name, peopleNum } = props
+function _Header({ name, peopleNum }: HeaderProps) {
   const [showLeftDropdown, setShowLeftDropdown] = useState(false)
 
   return (
@@ -41,10 +42,16 @@ function Header(props: HeaderProps) {
       </div>
       <div className='c-header-right'>
         <div className='c-header-right-info'>
-          <span className='c-header-right-info-name'>{name}</span>
-          {peopleNum ? (
-            <span className='c-header-right-info-num'>{peopleNum} members</span>
-          ) : (
+          <span className='c-header-right-info-name'>
+            {CurrentChatStore.currentChat?.name}
+          </span>
+          {CurrentChatStore.currentChat?.count &&
+            CurrentChatStore.currentChat?.gid && (
+              <span className='c-header-right-info-num'>
+                {CurrentChatStore.currentChat?.count} members
+              </span>
+            )}
+          {CurrentChatStore.currentChat?.uid && (
             <span className='c-header-right-info-state'>online</span>
           )}
         </div>
@@ -74,4 +81,7 @@ function Header(props: HeaderProps) {
     </div>
   )
 }
+
+const Header = observer(_Header)
+
 export default Header
