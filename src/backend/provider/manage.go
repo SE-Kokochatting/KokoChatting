@@ -39,7 +39,30 @@ func (managePro *ManageProvider) DeleteFriend (uid uint64,fid uint64) error {
 	return nil
 }
 
-func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error{
+func (managePro *ManageProvider) AddFriend (uid uint64, fid uint64) error {
+	var friendRelationEntity = &dataobject.FriendRelation{
+		User1: uid,
+		User2: fid,
+	}
+	friendRelationEntity.Preprocess()
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	err := dbClient.Where("user1 = ? and user2 = ?", friendRelationEntity.User1, friendRelationEntity.User2).Find(friendRelationEntity).Error
+	if err == nil{
+		global.Logger.Error("the user you want to add is already your friend.", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Select("user1", "user2").Create(friendRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("add friend error", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error {
 	var blockRelationEntity = &dataobject.BlockRelation{
 		User: uid,
 		Blocker: fid,

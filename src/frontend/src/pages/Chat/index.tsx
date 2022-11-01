@@ -16,11 +16,7 @@ function _Chat() {
   // Todo: 窗口类型由此时打开的窗口决定，和 /group 无关
   return (
     <div className={ThemeStore.theme === Theme.Dark ? 'chat dark' : 'chat'}>
-      {pathname !== '/group' ? (
-        <Header name='华小科' online={true} />
-      ) : (
-        <Header name='芝士软工' peopleNum={5} />
-      )}
+      <Header />
       <div className='chat-main'>
         {pathname !== '/group' ? (
           <>

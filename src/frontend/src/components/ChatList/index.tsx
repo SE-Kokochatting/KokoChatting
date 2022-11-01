@@ -1,11 +1,9 @@
+import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAlert } from 'react-alert'
 import { ChatType } from '@/enums'
-import { IGroup } from '@/types'
 import { DefaultGroupAvatar } from '@/consts'
-import { getGroupList } from '@/network/group/getGroupList'
-import { getToken } from '@/utils/token'
+import { IChat } from '@/types'
+import ChatListStore from '@/mobx/chatList'
 import ListItem from './components/ListItem'
 import Loading from '@/components/Loading'
 import './index.scss'
@@ -14,58 +12,46 @@ interface ChatListProps {
   chatType: ChatType
 }
 
-function ChatList({ chatType }: ChatListProps) {
-  const navigate = useNavigate()
-  const alert = useAlert()
-  const [chatListData, setChatListData] = useState<IGroup[]>([])
+function _ChatList({ chatType }: ChatListProps) {
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
+  async function handleFetchData() {
     setIsLoading(true)
-    const token = getToken()
-    if (!token) {
-      alert.show('请先登录', {
-        title: '创建群失败',
-        onClose: () => {
-          navigate('/login')
-        },
-      })
-      return
+
+    if (chatType === ChatType.Mixed) {
+      //
+    } else if (chatType === ChatType.Private) {
+      //
     } else {
-      switch (chatType) {
-        case ChatType.Mixed:
-          setIsLoading(false)
-          setChatListData([])
-          break
-        case ChatType.Private:
-          setIsLoading(false)
-          setChatListData([])
-          break
-        case ChatType.Group:
-          getGroupList(token).then((res) => {
-            const resData = res.data
-            const { data } = resData
-            const { group } = data
-            setChatListData(group)
-            setIsLoading(false)
-          })
-      }
+      await ChatListStore.updateGroup()
     }
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    handleFetchData()
   }, [chatType])
 
   return (
     <div className='c-chat_list'>
-      {chatListData.map(({ gid, avatarUrl, name, extract, lastTime }) => (
-        <ListItem
-          key={gid}
-          avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
-          name={name}
-          extract={extract}
-          lastTime={lastTime}
-        />
-      ))}
+      {ChatListStore.data?.map(
+        ({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) => (
+          <ListItem
+            key={uid ? `u${uid}` : `g${gid}`}
+            uid={uid}
+            gid={gid}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            name={name}
+            extract={extract}
+            lastTime={lastTime}
+          />
+        ),
+      )}
       {isLoading && <Loading />}
     </div>
   )
 }
+
+const ChatList = observer(_ChatList)
+
 export default ChatList

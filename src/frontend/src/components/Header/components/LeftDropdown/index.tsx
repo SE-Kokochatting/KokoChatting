@@ -25,9 +25,8 @@ const iconStyle: CSSObject = {
 }
 
 async function handleUserInfo(uid: number) {
-  const res = await getUserInfo({ uid })
-  const resData = res.data
-  const { name, avatarUrl } = resData.data
+  const { data } = await getUserInfo({ uid })
+  const { name, avatarUrl } = data
   UserStore.setUserInfo({ uid, name, avatarUrl })
   UserStore.setShowUserInfo(!UserStore.showUserInfo)
 }
@@ -37,8 +36,10 @@ function handleToggle(type: ToggleType) {
   ToggleStore.setToggleType(type)
 }
 
-function _LeftDropdown(props: LeftDropdownProps) {
-  const { showLeftDropdown, setShowLeftDropdown } = props
+function _LeftDropdown({
+  showLeftDropdown,
+  setShowLeftDropdown,
+}: LeftDropdownProps) {
   const navigate = useNavigate()
   const alert = useAlert()
   return (

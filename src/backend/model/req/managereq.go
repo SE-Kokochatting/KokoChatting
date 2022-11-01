@@ -32,3 +32,7 @@ type ChangePermissionReq struct {
 	Uid uint64 `json:"uid"`
 	Gid uint64 `json:"gid"`
 }
+
+type AgreeFriendReq struct {
+	Id uint64 `json:"id"`
+}
