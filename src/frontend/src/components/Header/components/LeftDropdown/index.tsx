@@ -36,8 +36,10 @@ function handleToggle(type: ToggleType) {
   ToggleStore.setToggleType(type)
 }
 
-function _LeftDropdown(props: LeftDropdownProps) {
-  const { showLeftDropdown, setShowLeftDropdown } = props
+function _LeftDropdown({
+  showLeftDropdown,
+  setShowLeftDropdown,
+}: LeftDropdownProps) {
   const navigate = useNavigate()
   const alert = useAlert()
   return (

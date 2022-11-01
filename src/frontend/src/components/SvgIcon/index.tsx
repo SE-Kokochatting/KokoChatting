@@ -5,7 +5,7 @@ import './index.scss'
 interface Props {
   name: string
   style?: CSSObject
-  onClick?: () => void
+  onClick?: (val?: any) => void
 }
 
 function SvgIcon(props: Props) {

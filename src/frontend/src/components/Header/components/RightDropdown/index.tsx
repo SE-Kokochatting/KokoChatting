@@ -3,7 +3,11 @@ import ChatListStore from '@/mobx/chatList'
 import CurrentChatStore from '@/mobx/currentChat'
 import './index.scss'
 
-function RightDropdown() {
+interface RightDropdownProps {
+  showDropdown: boolean
+}
+
+function RightDropdown({ showDropdown }: RightDropdownProps) {
   const alert = useAlert()
 
   async function handleQuit() {
@@ -16,7 +20,13 @@ function RightDropdown() {
   }
 
   return (
-    <div className='c-header-right-dropdown'>
+    <div
+      className='c-header-right-dropdown'
+      style={{ display: showDropdown ? 'flex' : 'none' }}
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
+    >
       {CurrentChatStore.currentChat?.gid && (
         <div
           className='c-header-right-dropdown-item'

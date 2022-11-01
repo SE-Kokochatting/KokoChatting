@@ -34,7 +34,7 @@ function _ChatList({ chatType }: ChatListProps) {
 
   return (
     <div className='c-chat_list'>
-      {ChatListStore.data.map(
+      {ChatListStore.data?.map(
         ({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) => (
           <ListItem
             key={uid ? `u${uid}` : `g${gid}`}
