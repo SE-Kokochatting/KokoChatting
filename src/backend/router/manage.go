@@ -17,4 +17,5 @@ func(r *manageRouter) ManageRouter(_router gin.IRoutes){
 	_router.POST("/group/avatar", routerController.SetGroupAvatar)
 	_router.GET("/group/list", routerController.GetGroupListInfo)
 	_router.POST("/group/host/transfer", routerController.TransferHost)
+	_router.POST("/group/host/change_permission", routerController.ChangePermission)
 }
