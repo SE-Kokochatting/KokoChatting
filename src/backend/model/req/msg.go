@@ -5,3 +5,8 @@ type SendMsgReq struct{
 	MessageContent string `json:"messageContent"`
 	MessageType    int    `json:"messageType"`
 }
+
+
+type RevertMsgReq struct{
+	MsgId uint64 `json:"msgid"`
+}
