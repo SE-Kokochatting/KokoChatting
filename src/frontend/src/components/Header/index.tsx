@@ -4,6 +4,7 @@ import CurrentChatStore from '@/mobx/currentChat'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
 import LeftDropdown from './components/LeftDropdown'
+import RightDropdown from './components/RightDropdown'
 import './index.scss'
 
 // name 等属性也不是必须的，因为刚进入时聊天窗口为空白，没有指定聊天对象
@@ -77,6 +78,7 @@ function _Header({ name, peopleNum }: HeaderProps) {
             cursor: 'pointer',
           }}
         />
+        <RightDropdown />
       </div>
     </div>
   )
