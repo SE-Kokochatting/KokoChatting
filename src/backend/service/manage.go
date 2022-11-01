@@ -9,6 +9,7 @@ import (
 
 type ManageService struct{
 	ManageProvider *provider.ManageProvider
+	MessageProvider *provider.MessageProvider
 }
 
 func (manageSrv *ManageService) DeleteFriend (uid uint64, fid uint64) error {
@@ -18,6 +19,24 @@ func (manageSrv *ManageService) DeleteFriend (uid uint64, fid uint64) error {
 		return err
 	}
 	return err
+}
+
+func (manageSrv *ManageService) AddFriend (uid uint64, fid uint64) error {
+	err := manageSrv.ManageProvider.AddFriend(uid, fid)
+	if err != nil{
+		global.Logger.Error("add friend err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func (manageSrv *ManageService) GetFromIdByMsgId (mid uint64) (uint64, int, error) {
+	uid, t, err := manageSrv.MessageProvider.GetFromIdAndTypeByMsgId(mid)
+	if err != nil{
+		global.Logger.Error("get from id err", zap.Error(err))
+		return 0, 0, err
+	}
+	return uid, t, err
 }
 
 func (manageSrv *ManageService) BlockFriend (uid uint64, fid uint64) error {
@@ -199,5 +218,6 @@ func (manageSrv *ManageService) IsMember (gid uint64, uid uint64) (bool, error) 
 func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),
+		MessageProvider: provider.NewMessageProvider(),
 	}
 }

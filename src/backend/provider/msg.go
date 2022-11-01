@@ -47,6 +47,16 @@ func (prd *MessageProvider) GetToIdAndTypeByMsgid(msgid uint64)(uint64,int,error
 	return res.ToId,res.Type,nil
 }
 
+func (prd *MessageProvider) GetFromIdAndTypeByMsgId (msgId uint64)(uint64, int, error) {
+	res := &dataobject.Message{}
+	err := prd.mysqlDb.Model(&dataobject.Message{}).Where("id = ?",msgId).Find(res).Error
+	if err != nil{
+		global.Logger.Error("query database error",zap.Error(err))
+		return 0, 0, err
+	}
+	return res.FromId, res.Type, nil
+}
+
 func NewMessageProvider()*MessageProvider{
 	return &MessageProvider{
 		mysqlProvider:*NewMysqlProvider(),

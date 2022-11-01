@@ -35,6 +35,7 @@ var (
 	TransferHostError = NewError(errors.New("transfer host err"), 2011)
 	TransferAdminError = NewError(errors.New("transfer administrator err"), 2012)
 	TransferMemError = NewError(errors.New("transfer member err"), 2013)
+	AgreeFriendError = NewError(errors.New("agree friend err"), 2014)
 	RequestFormatError = NewError(errors.New("request body request error"),3000)
 
     MessageServerBusy = NewError(errors.New("message server busy,please try again later"),4000)

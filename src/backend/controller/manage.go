@@ -38,6 +38,39 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	manageCtl.WithData(delFriendRes, c)
 }
 
+func (manageCtl *ManageController) AgreeFriendRequest (c *gin.Context) {
+	agreeFriendReq := &req.AgreeFriendReq{}
+	err := c.BindJSON(agreeFriendReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+	uid := manageCtl.getUid(c)
+
+	fid, t, err := manageCtl.ManageService.GetFromIdByMsgId(agreeFriendReq.Id)
+	if t != global.FriendRequestNotify{
+		global.Logger.Error("message type err", zap.Error(err))
+		manageCtl.WithErr(global.MessageTypeError, c)
+		return
+	}
+	if err != nil{
+		global.Logger.Error("get from id err", zap.Error(err))
+		manageCtl.WithErr(global.DatabaseQueryError, c)
+		return
+	}
+
+	err = manageCtl.ManageService.AddFriend(uid, fid)
+	if err != nil{
+		global.Logger.Error("add friend err", zap.Error(err))
+		manageCtl.WithErr(global.AgreeFriendError, c)
+		return
+	}
+
+	agreeFriendRes := &res.AgreeFriendRes{}
+	manageCtl.WithData(agreeFriendRes, c)
+}
+
 func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
 	blockFriendReq := &req.BlockFriendReq{}
 	err := c.BindJSON(blockFriendReq)
