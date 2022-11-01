@@ -4,6 +4,8 @@
  * date: 2022-10-31 17:03:51 +0800
  */
 
+import request from '../request'
+
 export interface ICreateGroup {
   // 群名称
   name: string
@@ -13,23 +15,12 @@ export interface ICreateGroup {
   }[]
 }
 
-export async function createGroup(
-  data: ICreateGroup,
-  token: string,
-): Promise<any> {
+export async function createGroup(reqData: ICreateGroup): Promise<any> {
   const url = '/api/create_group'
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    return res.json()
-  } catch (err) {
-    console.error(err)
-  }
+  const { code, data } = await request(
+    url,
+    { method: 'POST', useToken: true },
+    reqData,
+  )
+  return { code, data }
 }

@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react-lite'
-import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useAlert } from 'react-alert'
 import { ToggleType } from '@/enums'
 import { ICreateGroup, createGroup } from '@/network/group/createGroup'
-import { getToken } from '@/utils/token'
 import ToggleStore from '@/mobx/toggle'
+import ChatListStore from '@/mobx/chatList'
 import SvgIcon from '../SvgIcon'
 import './index.scss'
 
@@ -17,43 +16,29 @@ function _Toggle() {
     formState: { errors },
   } = useForm<ICreateGroup>()
 
-  const navigate = useNavigate()
   const alert = useAlert()
-  const onSubmit = async (data: any) => {
-    const token = getToken()
-    if (!token) {
-      alert.show('请先登录', {
-        title: '创建群失败',
-        onClose: () => {
-          reset()
-          navigate('/login')
-        },
-      })
-      return
-    } else {
-      const res = await createGroup(data, token)
-      const resData = res.data
-      const _data = resData.data
-      if (!_data) {
-        const { code } = resData
-        switch (code) {
-          case 2003:
-            alert.show('该群名称已存在', {
-              title: '创建群失败',
-              onClose: () => {
-                reset()
-              },
-            })
-            return
-        }
-      } else {
-        alert.show('创建群聊成功', {
-          onClose: () => {
-            reset()
-          },
-        })
+  const onSubmit = async (reqData: any) => {
+    const { code, data } = await createGroup(reqData)
+    if (!data) {
+      switch (code) {
+        case 2003:
+          alert.show('该群名称已存在', {
+            title: '创建群失败',
+            onClose: () => {
+              reset()
+            },
+          })
+          return
       }
     }
+    alert.show('创建群聊成功', {
+      onClose: async () => {
+        // 更新群列表
+        await ChatListStore.updateGroup()
+        ToggleStore.setShowToggle(false)
+        reset()
+      },
+    })
   }
 
   return (
