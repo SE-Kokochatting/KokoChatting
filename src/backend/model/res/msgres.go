@@ -2,18 +2,17 @@ package res
 
 import "time"
 
-type SendMessageRes struct{
-	Data struct{
+type SendMessageRes struct {
+	Data struct {
 		Msgid uint64 `json:"msgid"`
 	} `json:"data"`
 }
 
-
-type WsMessage struct{
-	From uint64
-	MsgType int
+type WsMessage struct {
+	From     uint64
+	MsgType  int
 	Contents string
-	To uint64
+	To       uint64
 }
 
 type PullOutlineMsgRes struct {
@@ -37,9 +36,10 @@ type PullMsgRes struct {
 }
 
 type MessageInfo struct {
-	MessageId uint64 `json:"messageId"`
-	SenderId uint64 `json:"senderId"`
-	GroupId uint64 `json:"groupId"`
+	MessageId      uint64 `json:"messageId"`
+	SenderId       uint64 `json:"senderId"`
+	GroupId        uint64 `json:"groupId"`
 	MessageContent string `json:"messageContent"`
-	MessageType int `json:"messageType"`
+	MessageType    int    `json:"messageType"`
+	ReadUids       string `json:"readUids"`
 }

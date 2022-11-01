@@ -4,6 +4,7 @@ import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
 	"fmt"
+
 	"go.uber.org/zap"
 )
 
@@ -14,7 +15,7 @@ type MsgPullProvider struct {
 
 func (m *MsgPullProvider) GetUidMessage(uid, lastId uint64, uidMsgList *[]dataobject.Message) error {
 	// 首先从message中查找到ToId = uid的消息
-	// 然后截取id > LastMessageId 的消息
+	// 然后截取id > LastMessageId 并且没有被撤回的消息
 	// 然后将消息封装到返回体中
 	dbClient := m.mysqlProvider.mysqlDb
 	if dbClient == nil {
@@ -35,6 +36,7 @@ func (m *MsgPullProvider) GetMessage(uid, lastMsgId, fromId uint64, msgType int)
 	if dbClient == nil {
 		return nil, fmt.Errorf("the db client is nil")
 	}
+	// 如果消息已经被撤回，不用拉取给用户
 	err := dbClient.Where("id > ? and to_id = ? and from_id = ? and type = ? and is_revert = ?", lastMsgId, uid, fromId, msgType, 0).Find(&messages).Error
 	if err != nil {
 		global.Logger.Error("find message error", zap.Error(err))
@@ -43,9 +45,9 @@ func (m *MsgPullProvider) GetMessage(uid, lastMsgId, fromId uint64, msgType int)
 	return messages, nil
 }
 
-func NewMsgPullProvider() *MsgPullProvider{
+func NewMsgPullProvider() *MsgPullProvider {
 	return &MsgPullProvider{
-		mysqlProvider: *NewMysqlProvider(),
+		mysqlProvider:  *NewMysqlProvider(),
 		ManageProvider: NewManageProvider(),
 	}
 }
