@@ -23,7 +23,7 @@ var (
 	JwtExpiredError     = NewError(errors.New("jwt expired err"), 1007)
 	IncorrectToken      = NewError(errors.New("token incorrect err"), 1008)
 	DatabaseQueryError  = NewError(errors.New("database query error"), 1009)
-	BindError           = NewError(errors.New("bind request json error"), 10010)
+	BindError           = NewError(errors.New("bind request json error"), 1010)
 	DeleteFriendError   = NewError(errors.New("friend delete err"), 2001)
 	BlockFriendError    = NewError(errors.New("friend block err"), 2002)
 	CreatGroupError     = NewError(errors.New("create group err"), 2003)
