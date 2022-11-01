@@ -4,19 +4,10 @@
  * date: 2022-10-31 18:37:08 +0800
  */
 
-export async function getGroupList(token: string): Promise<any> {
+import request from '../request'
+
+export async function getGroupList(): Promise<any> {
   const url = '/api/group/list'
-  try {
-    const res = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    })
-    return res.json()
-  } catch (err) {
-    console.error(err)
-  }
+  const { code, data } = await request(url, { method: 'GET', useToken: true })
+  return { code, data }
 }

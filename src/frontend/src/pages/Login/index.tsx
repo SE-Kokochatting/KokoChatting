@@ -23,17 +23,16 @@ function Login() {
   const { pathname } = location
   const alert = useAlert()
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (reqData: any) => {
     if (pathname === '/login') {
       // sha256 加密
-      data.password = sha256(data.password)
-      const res = await postLoginReq(data)
-      const resData = res.data
+      reqData.password = sha256(reqData.password)
+      reqData.uid = parseInt(reqData.uid, 10)
+      const { code, data } = await postLoginReq(reqData)
       // 登录失败
-      if (!resData) {
-        const { code } = res
+      if (!data) {
         switch (code) {
-          case 404:
+          case 1002:
             alert.show('密码错误！', {
               title: '登录失败',
             })
@@ -41,12 +40,11 @@ function Login() {
         }
         return
       }
-      const { token } = resData.data
-      const { uid } = data
+      const { token } = data
       // 设置 token
       setToken(token)
       // 设置 uid
-      setUid(uid)
+      setUid(reqData.uid)
       alert.show('登录成功', {
         onClose: () => {
           navigate('/home')
@@ -54,11 +52,9 @@ function Login() {
       })
       navigate('/home')
     } else {
-      const res = await postRegisterReq(data)
-      const resData = res.data
+      const { code, data } = await postRegisterReq(reqData)
       // 注册失败
-      if (!resData) {
-        const { code } = res
+      if (!data) {
         switch (code) {
           case 1001:
             alert.show('该用户已注册！', {
@@ -68,7 +64,7 @@ function Login() {
         }
         return
       }
-      const { uid } = resData.data
+      const { uid } = data
       alert.show(`您的 uid 为 ${uid}，请及时保存！`, {
         timeout: 60000,
         title: '注册成功',
