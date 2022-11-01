@@ -19,7 +19,7 @@ var (
 	PasswordError       = NewError(errors.New("password is err"), 1003)
 	GetInfoError        = NewError(errors.New("get userinfo err"), 1004)
 	AvatarError         = NewError(errors.New("update avatar err"), 1005)
-	JwtParseError       = NewError(errors.New("jwt parse err"), 1006)
+	JwtParseError       = NewError(errors.New("jwt parse err, please check your token"), 1006)
 	JwtExpiredError     = NewError(errors.New("jwt expired err"), 1007)
 	IncorrectToken      = NewError(errors.New("token incorrect err"), 1008)
 	DatabaseQueryError  = NewError(errors.New("database query error"), 1009)
