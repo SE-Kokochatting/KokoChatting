@@ -123,6 +123,43 @@ func (msgPullSrv *MsgPullService) PullMsg(uid, lastMesId, fromId uint64, msgType
 	return pullMsgRes, nil
 }
 
+func (msgPullSrv *MsgPullService) PullMsgHistory(uid uint64, pullMsgHsyReq *req.PullMsgHsyReq) (res.PullMsgRes, error) {
+	var pullMsgRes res.PullMsgRes
+
+	messages, err := msgPullSrv.msgPullPro.GetMessageHistory(uid, pullMsgHsyReq.
+		FirstMessageId, pullMsgHsyReq.Id, pullMsgHsyReq.MsgType, pullMsgHsyReq.PageNum, pullMsgHsyReq.PageSize)
+	if err != nil {
+		global.Logger.Error("pull message error", zap.Error(err))
+		return pullMsgRes, err
+	}
+
+	if pullMsgHsyReq.MsgType == global.GroupMessage {
+		if isInGroup, err := msgPullSrv.ManageProvider.IsInGroup(uid, pullMsgHsyReq.Id); !isInGroup || err != nil {
+			return pullMsgRes, err
+		}
+	}
+
+	messageList := &pullMsgRes.Data.Message
+	for _, v := range messages {
+		senderId := v.FromId
+		var groupId uint64 = 0
+		if v.Type == global.GroupMessage {
+			groupId = v.FromId
+			senderId = 0
+		}
+		*messageList = append(*messageList, res.MessageInfo{
+			MessageId:      v.Id,
+			SenderId:       senderId,
+			GroupId:        groupId,
+			MessageContent: v.Contents,
+			MessageType:    v.Type,
+			ReadUids:       v.ReadUids,
+		})
+	}
+
+	return pullMsgRes, nil
+}
+
 func NewMsgPullService() *MsgPullService {
 	return &MsgPullService{
 		msgPullPro:     provider.NewMsgPullProvider(),

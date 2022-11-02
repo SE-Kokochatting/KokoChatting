@@ -58,6 +58,7 @@ var (
 	MessagePullBindError     = NewError(errors.New("pull message bind error"), 4013)
 	PullOutlineError         = NewError(errors.New("pull outline error"), 4014)
 	PullMessageError         = NewError(errors.New("pull message error"), 4015)
+	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
 )
 
 func NewError(err error, status int) error {
