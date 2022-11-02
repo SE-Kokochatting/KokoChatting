@@ -30,7 +30,7 @@ function _Toggle() {
   async function onAddContactSubmit(reqData: any) {
     reqData.messageType = MessageType.FriendRequestNotify
     reqData.receiver = parseInt(reqData.receiver, 10)
-    const { code, data } = await addFriend(reqData)
+    const { data } = await addFriend(reqData)
     if (!data) {
       alert.show('发送添加好友请求失败', {
         onClose: () => {
@@ -149,7 +149,7 @@ function _Toggle() {
                 备注信息不能为空
               </span>
             )}
-            <button className='c-toggle-form-btn'>添加</button>
+            <button className='c-toggle-form-btn'>发送请求</button>
           </form>
         </>
       )}
