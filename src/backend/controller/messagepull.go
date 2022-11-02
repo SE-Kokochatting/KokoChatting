@@ -45,6 +45,12 @@ func (pullCtl *MsgPullController) MsgPull(c *gin.Context) {
 		return
 	}
 
+	if pullMsgReq.Id == uid {
+		global.Logger.Error("can not pull message from yourself, id can not equal to uid")
+		pullCtl.WithErr(global.MessageIdError, c)
+		return
+	}
+
 	pullMsgRes, err := pullCtl.msgPullService.PullMsg(uid, pullMsgReq.LastMessageId, pullMsgReq.Id, pullMsgReq.MsgType)
 	if err != nil {
 		global.Logger.Error("pull message error")
@@ -53,6 +59,33 @@ func (pullCtl *MsgPullController) MsgPull(c *gin.Context) {
 	}
 
 	pullCtl.WithData(pullMsgRes, c)
+	return
+}
+
+func (pullCtl *MsgPullController) MsgPullHistory(c *gin.Context) {
+	uid := pullCtl.getUid(c)
+	pullMsgHsyReq := &req.PullMsgHsyReq{}
+	if err := c.BindJSON(pullMsgHsyReq); err != nil {
+		global.Logger.Error("pull message request bind err")
+		pullCtl.WithErr(global.MessagePullBindError, c)
+		return
+	}
+
+	if pullMsgHsyReq.Id == uid {
+		global.Logger.Error("can not pull message from yourself, id can not equal to uid")
+		pullCtl.WithErr(global.MessageIdError, c)
+		return
+	}
+
+	// 需要分页式拉取消息，并返回给前端
+	pullMsgHsyRes, err := pullCtl.msgPullService.PullMsgHistory(uid, pullMsgHsyReq)
+	if err != nil {
+		global.Logger.Error("pull message error")
+		pullCtl.WithErr(global.PullMessageError, c)
+		return
+	}
+
+	pullCtl.WithData(pullMsgHsyRes, c)
 	return
 }
 

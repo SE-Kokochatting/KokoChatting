@@ -45,6 +45,23 @@ func (m *MsgPullProvider) GetMessage(uid, lastMsgId, fromId uint64, msgType int)
 	return messages, nil
 }
 
+// GetMessage find messages whose id < firstMsgId and toId = uid and fromId = fromId and msgType = msgType
+func (m *MsgPullProvider) GetMessageHistory(uid, firstMsgId, fromId uint64, msgType, pageNum, pageSize int) ([]dataobject.Message, error) {
+	var messages []dataobject.Message
+	dbClient := m.mysqlProvider.mysqlDb
+	if dbClient == nil {
+		return nil, fmt.Errorf("the db client is nil")
+	}
+	// paging return
+	err := dbClient.Limit(pageSize).Offset((pageNum-1)*pageSize).
+		Where("id < ? and to_id = ? and from_id = ? and type = ?", firstMsgId, uid, fromId, msgType).Find(&messages).Error
+	if err != nil {
+		global.Logger.Error("find message error", zap.Error(err))
+		return nil, nil
+	}
+	return messages, nil
+}
+
 func NewMsgPullProvider() *MsgPullProvider {
 	return &MsgPullProvider{
 		mysqlProvider:  *NewMysqlProvider(),
