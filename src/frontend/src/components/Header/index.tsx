@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import { useShowDropDown } from './hooks/useShowDropdown'
-import CurrentChatStore from '@/mobx/currentChat'
+import ChatStore from '@/mobx/chat'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
 import LeftDropdown from './components/LeftDropdown'
@@ -38,15 +38,14 @@ function _Header() {
       <div className='c-header-right'>
         <div className='c-header-right-info'>
           <span className='c-header-right-info-name'>
-            {CurrentChatStore.currentChat?.name}
+            {ChatStore.currentChat?.name}
           </span>
-          {CurrentChatStore.currentChat?.count &&
-            CurrentChatStore.currentChat?.gid && (
-              <span className='c-header-right-info-num'>
-                {CurrentChatStore.currentChat?.count} members
-              </span>
-            )}
-          {CurrentChatStore.currentChat?.uid && (
+          {ChatStore.currentChat?.count && ChatStore.currentChat?.gid && (
+            <span className='c-header-right-info-num'>
+              {ChatStore.currentChat?.count} members
+            </span>
+          )}
+          {ChatStore.currentChat?.uid && (
             <span className='c-header-right-info-state'>online</span>
           )}
         </div>
@@ -69,15 +68,14 @@ function _Header() {
             height: '35px',
             position: 'absolute',
             right: '20px',
-            cursor:
-              CurrentChatStore.currentChat !== null ? 'pointer' : 'default',
+            cursor: ChatStore.currentChat !== null ? 'pointer' : 'default',
 
             '&:hover': {
               color: 'var(--global-font-primary)',
             },
           }}
           onClick={(e) => {
-            if (CurrentChatStore.currentChat !== null) {
+            if (ChatStore.currentChat !== null) {
               e.stopPropagation()
               setShowDropDown(true)
             }

@@ -6,7 +6,7 @@ import { ToggleType, MessageType } from '@/enums'
 import { ICreateGroup, createGroup } from '@/network/group/createGroup'
 import { IAddFriend, addFriend } from '@/network/friend/addFriend'
 import ToggleStore from '@/mobx/toggle'
-import ChatListStore from '@/mobx/chatList'
+import ChatListStore from '@/mobx/chatlist'
 import SvgIcon from '../SvgIcon'
 import './index.scss'
 
