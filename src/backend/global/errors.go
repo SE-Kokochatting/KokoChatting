@@ -39,7 +39,7 @@ var (
 	TransferAdminError  = NewError(errors.New("transfer administrator err"), 2012)
 	TransferMemError    = NewError(errors.New("transfer member err"), 2013)
 	AgreeFriendError    = NewError(errors.New("agree friend err"), 2014)
-
+	RemoveMemberError   = NewError(errors.New("remove member err"), 2015)
 	RequestFormatError = NewError(errors.New("request body request error"), 3000)
 
 	MessageServerBusy        = NewError(errors.New("message server busy,please try again later"), 4000)
@@ -58,6 +58,7 @@ var (
 	MessagePullBindError     = NewError(errors.New("pull message bind error"), 4013)
 	PullOutlineError         = NewError(errors.New("pull outline error"), 4014)
 	PullMessageError         = NewError(errors.New("pull message error"), 4015)
+	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
 )
 
 func NewError(err error, status int) error {
