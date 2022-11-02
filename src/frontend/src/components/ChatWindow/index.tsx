@@ -1,14 +1,11 @@
 import { observer } from 'mobx-react-lite'
-import { Direction, ChatType } from '@/enums'
+import { Direction } from '@/enums'
+import ChatListStore from '@/mobx/chatlist'
 import Bubble from './components/Bubble'
 import Sender from './components/Sender'
 import './index.scss'
 
-interface ChatWindowProps {
-  chatType: ChatType
-}
-
-function _ChatWindow({ chatType }: ChatWindowProps) {
+function _ChatWindow() {
   // 之后定义其类型
   const chatInfo = [
     {
@@ -38,7 +35,7 @@ function _ChatWindow({ chatType }: ChatWindowProps) {
         {chatInfo.map(({ id, content, direction, time, read }) => (
           <Bubble
             key={id}
-            chatType={chatType}
+            chatType={ChatListStore.chatType}
             content={content}
             direction={direction}
             read={read}
