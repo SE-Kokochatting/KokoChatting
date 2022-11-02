@@ -135,6 +135,29 @@ func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
 	manageCtl.WithData(quitGroupRes, c)
 }
 
+func (manageCtl *ManageController) RemoveMember (c *gin.Context) {
+	removeMemberReq := &req.RemoveMemberReq{}
+	err := c.BindJSON(removeMemberReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+
+	admin := manageCtl.getUid(c)
+
+	is, err := manageCtl.ManageService.RemoveMember(admin, removeMemberReq.Uid, removeMemberReq.Gid)
+	if is != true{
+		global.Logger.Error("the user has no permission", zap.Error(err))
+		manageCtl.WithErr(global.PermissionError, c)
+		return
+	}
+
+	removeMemberRes := &res.RemoveMemberRes{}
+
+	manageCtl.WithData(removeMemberRes, c)
+}
+
 func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 	uid := manageCtl.getUid(c)
 

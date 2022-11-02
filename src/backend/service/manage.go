@@ -4,6 +4,7 @@ import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
 	"KokoChatting/provider"
+	"errors"
 	"go.uber.org/zap"
 )
 
@@ -92,6 +93,30 @@ func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
 		return err
 	}
 	return err
+}
+
+func (manageSrv *ManageService) RemoveMember (admin uint64, uid uint64, gid uint64) (bool, error) {
+
+	can, err := manageSrv.ManageProvider.VerifyPermission(admin, gid)
+	if can != true{
+		global.Logger.Error("has no permission", zap.Error(err))
+		return false, errors.New("the user has no permission")
+	}
+
+	isAdmin, err := manageSrv.ManageProvider.IsAdmin(admin, gid)
+	isManage, err := manageSrv.ManageProvider.VerifyPermission(uid, gid)
+	if isAdmin == true && isManage == true {
+		global.Logger.Error("has no permission", zap.Error(err))
+		return false, errors.New("the user has no permission")
+	}
+
+	err = manageSrv.ManageProvider.QuitGroup(uid, gid)
+	if err != nil{
+		global.Logger.Error("remove from group err", zap.Error(err))
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (manageSrv *ManageService) GetFriendList (uid uint64) ([]uint64, error) {
