@@ -6,6 +6,8 @@ const(
 	FriendRequestNotify
 	RevertSingleMessageNotify
 	RevertGroupMessageNotify
+	HasReadSingleNotify
+	HasReadGroupNotify
 	JoinGroupRequestNotify
 	QuitGroupNotify
 	JoinGroupNotify

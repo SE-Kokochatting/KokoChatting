@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type MessageWrapFunc func(from,to uint64,contents string)(*dataobject.CommonMessage,error)
+type MessageWrapFunc func(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error)
 
 type MessageService struct{
 	*WsService
@@ -35,10 +35,10 @@ func (srv *MessageService) getMessageWrapFunc(msgt int)(MessageWrapFunc,error){
 }
 
 
-func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string)(*dataobject.CommonMessage,error){
+func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
 	wsmsg := &res.WsMessage{
 		From: from,
-		MsgType: global.SingleMessage,
+		MsgType: msgType,
 		Contents: contents,
 		To: to,
 	}
@@ -59,10 +59,10 @@ func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string)(*da
 	},nil
 }
 
-func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string)(*dataobject.CommonMessage,error){
+func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
 	wsmsg := &res.WsMessage{
 		From: from,
-		MsgType: global.SingleMessage,
+		MsgType: msgType,
 		Contents: contents,
 		To: to,
 	}
@@ -110,7 +110,7 @@ func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgT
 	if err != nil{
 		return nil,err
 	}
-	return f(from,to,contents)
+	return f(from,to,contents,msgType)
 }
 
 // PushStoredSystemMessage push system message
@@ -207,6 +207,30 @@ func (srv *MessageService) RevertMessage(uid,msgid uint64) error {
 	return nil
 }
 
+func (srv *MessageService) MarkAsRead(uid uint64,msgs []uint64) error {
+	for _,id := range msgs{
+		msg,err := srv.msgPrd.MarkMessageAsRead(uid,id)
+		if err != nil{
+			global.Logger.Error("mark msg as read error",zap.Error(err))
+			return global.MarkMessageAsReadError
+		}
+		contents,err := json.Marshal(map[string]interface{}{
+			"ReadMsgId":id,
+		})
+		switch msg.Type {
+		case global.SingleMessage:
+			err = srv.PushUnStoredSystemMessage(uid,msg.FromId,string(contents),global.HasReadSingleNotify)
+		case global.GroupMessage:
+			err = srv.PushUnStoredSystemMessage(uid,msg.FromId,string(contents),global.HasReadGroupNotify)
+		}
+		if err != nil{
+			global.Logger.Error("push unstore msg error",zap.Error(err))
+			return err
+		}
+	}
+	return nil
+}
+
 
 func NewMessageService()*MessageService{
 	srv := &MessageService{
@@ -220,5 +244,7 @@ func NewMessageService()*MessageService{
 	srv.register(global.GroupMessage,srv.wrapGroupMessage)
 	srv.register(global.RevertSingleMessageNotify,srv.wrapSingleMessage)
 	srv.register(global.RevertGroupMessageNotify,srv.wrapGroupMessage)
+	srv.register(global.HasReadSingleNotify,srv.wrapSingleMessage)
+	srv.register(global.HasReadGroupNotify,srv.wrapGroupMessage)
 	return srv
 }

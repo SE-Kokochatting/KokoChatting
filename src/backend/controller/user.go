@@ -47,6 +47,7 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	loginReq := &req.UserLoginReq{}
 	if err := c.BindJSON(loginReq); err != nil {
 		global.Logger.Error("login bind json error", zap.Error(err))
+
 	}
 
 	// 用户登录逻辑：

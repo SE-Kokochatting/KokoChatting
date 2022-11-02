@@ -10,3 +10,8 @@ type SendMsgReq struct{
 type RevertMsgReq struct{
 	MsgId uint64 `json:"msgid"`
 }
+
+
+type MarkMsgReadReq struct{
+	MsgIDs []uint64 `json:"msgids"`
+}
