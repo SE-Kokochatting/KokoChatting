@@ -46,9 +46,24 @@ func (managePro *ManageProvider) AddFriend (uid uint64, fid uint64) error {
 	}
 	friendRelationEntity.Preprocess()
 
+	var userProfileEntity = &dataobject.UserProfile{
+		Uid: fid,
+	}
+
 	dbClient := managePro.mysqlProvider.mysqlDb
 
-	err := dbClient.Where("user1 = ? and user2 = ?", friendRelationEntity.User1, friendRelationEntity.User2).Find(friendRelationEntity).Error
+	if uid == fid {
+		global.Logger.Error("can not add yourself", zap.Error(errors.New("the friend and the user can not be same person")))
+		return errors.New("the friend and the user can not be same person")
+	}
+
+	err := dbClient.Where("uid = ?", userProfileEntity.Uid).Find(userProfileEntity).Error
+	if err != nil && err == gorm.ErrRecordNotFound{
+		global.Logger.Error("the friend is invalid", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Where("user1 = ? and user2 = ?", friendRelationEntity.User1, friendRelationEntity.User2).Find(friendRelationEntity).Error
 	if err == nil{
 		global.Logger.Error("the user you want to add is already your friend.", zap.Error(err))
 		return err
