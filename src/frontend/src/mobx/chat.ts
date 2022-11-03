@@ -5,11 +5,10 @@
  */
 
 import { makeAutoObservable } from 'mobx'
-import { IChat } from '@/types'
 import { quitGroup } from '@/network/group/quitGroup'
 
-class CurrentChatState {
-  public currentChat: IChat | null = null
+class ChatState {
+  public currentChat: any = null
 
   public constructor() {
     makeAutoObservable(this)
@@ -20,7 +19,7 @@ class CurrentChatState {
    * @param val 要设置的值
    * @returns void
    */
-  public setCurrentChat(val: IChat | null) {
+  public setCurrentChat(val: any) {
     this.currentChat = val
   }
 
@@ -37,6 +36,6 @@ class CurrentChatState {
   }
 }
 
-const CurrentChatStore = new CurrentChatState()
+const ChatStore = new ChatState()
 
-export default CurrentChatStore
+export default ChatStore

@@ -1,6 +1,6 @@
 import { useAlert } from 'react-alert'
-import ChatListStore from '@/mobx/chatList'
-import CurrentChatStore from '@/mobx/currentChat'
+import ChatListStore from '@/mobx/chatlist'
+import ChatStore from '@/mobx/chat'
 import './index.scss'
 
 interface RightDropdownProps {
@@ -11,11 +11,11 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
   const alert = useAlert()
 
   async function handleQuit() {
-    const { code } = await CurrentChatStore.quitGroup()
+    const { code } = await ChatStore.quitGroup()
     if (code === 200) {
       alert.show('已退群')
       ChatListStore.updateGroup()
-      CurrentChatStore.setCurrentChat(null)
+      ChatStore.setCurrentChat(null)
     }
   }
 
@@ -27,7 +27,7 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
         e.stopPropagation()
       }}
     >
-      {CurrentChatStore.currentChat?.gid && (
+      {ChatStore.currentChat?.gid && (
         <div
           className='c-header-right-dropdown-item'
           onClick={() => handleQuit()}

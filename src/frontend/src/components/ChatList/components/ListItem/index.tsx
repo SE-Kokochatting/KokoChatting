@@ -1,35 +1,47 @@
 import { observer } from 'mobx-react-lite'
 import { IChat } from '@/types'
-import CurrentChatStore from '@/mobx/currentChat'
+import { MessageType } from '@/enums'
+import ChatStore from '@/mobx/chat'
 import './index.scss'
 
-function handleClick({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) {
-  CurrentChatStore.setCurrentChat({
+function handleClick({ uid, gid, avatarUrl, name }: any) {
+  ChatStore.setCurrentChat({
     uid,
     gid,
     avatarUrl,
     name,
-    extract,
-    lastTime,
   })
 }
 
-function _ListItem({ uid, gid, avatarUrl, name, extract, lastTime }: IChat) {
+function _ListItem({
+  uid,
+  gid,
+  avatarUrl,
+  name,
+  messageType,
+  messageNum,
+  lastMessageTime,
+}: IChat) {
   return (
     <div
       className='c-chat_list-item'
-      onClick={() =>
-        handleClick({ uid, gid, avatarUrl, name, extract, lastTime })
-      }
+      style={{
+        display:
+          messageType === MessageType.SingleMessage ||
+          messageType === MessageType.GroupMessage
+            ? 'flex'
+            : 'none',
+      }}
+      onClick={() => handleClick({ uid, gid, avatarUrl, name })}
     >
       <div className='c-chat_list-item-avatar'>
         <img className='c-chat_list-item-avatar-img' src={avatarUrl} />
       </div>
       <div className='c-chat_list-item-main'>
         <span className='c-chat_list-item-main-name'>{name}</span>
-        <span className='c-chat_list-item-main-content'>{extract}</span>
+        {/* <span className='c-chat_list-item-main-content'>{extract}</span> */}
       </div>
-      <div className='c-chat_list-item-time'>{lastTime}</div>
+      <div className='c-chat_list-item-time'>{lastMessageTime}</div>
     </div>
   )
 }
