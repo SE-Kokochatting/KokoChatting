@@ -1,10 +1,12 @@
 import { observer } from 'mobx-react-lite'
 import { useForm } from 'react-hook-form'
 import { useAlert } from 'react-alert'
-import { ToggleType } from '@/enums'
+import { useState } from 'react'
+import { ToggleType, MessageType } from '@/enums'
 import { ICreateGroup, createGroup } from '@/network/group/createGroup'
+import { IAddFriend, addFriend } from '@/network/friend/addFriend'
 import ToggleStore from '@/mobx/toggle'
-import ChatListStore from '@/mobx/chatList'
+import ChatListStore from '@/mobx/chatlist'
 import SvgIcon from '../SvgIcon'
 import './index.scss'
 
@@ -14,10 +16,38 @@ function _Toggle() {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<ICreateGroup>()
+  } = useForm<Omit<IAddFriend, 'messageType'> | ICreateGroup>()
+
+  enum AddType {
+    Friend,
+    Group,
+  }
 
   const alert = useAlert()
-  const onSubmit = async (reqData: any) => {
+  // 此时是添加好友还是群
+  const [addType, setAddType] = useState<AddType>(AddType.Friend)
+
+  async function onAddContactSubmit(reqData: any) {
+    reqData.messageType = MessageType.FriendRequestNotify
+    reqData.receiver = parseInt(reqData.receiver, 10)
+    const { data } = await addFriend(reqData)
+    if (!data) {
+      alert.show('发送添加好友请求失败', {
+        onClose: () => {
+          reset()
+        },
+      })
+      return
+    }
+    alert.show('已发送添加好友请求', {
+      onClose: async () => {
+        ToggleStore.setShowToggle(false)
+        reset()
+      },
+    })
+  }
+
+  async function onCreateGroupSubmit(reqData: any) {
     const { code, data } = await createGroup(reqData)
     if (!data) {
       switch (code) {
@@ -64,16 +94,72 @@ function _Toggle() {
       />
       {ToggleStore.toggleType === ToggleType.AddContact && (
         <>
-          <h1 className='c-toggle-title'>添加</h1>
-          <form className='c-toggle-form' onSubmit={handleSubmit(onSubmit)}>
-            <button className='c-toggle-form-btn'>添加</button>
+          <div className='c-toggle-tab'>
+            <div
+              className={
+                addType === AddType.Friend
+                  ? 'c-toggle-tab-item selected'
+                  : 'c-toggle-tab-item'
+              }
+              onClick={() => {
+                setAddType(AddType.Friend)
+                reset()
+              }}
+            >
+              添加好友
+            </div>
+            <div
+              className={
+                addType === AddType.Group
+                  ? 'c-toggle-tab-item selected'
+                  : 'c-toggle-tab-item'
+              }
+              onClick={() => {
+                setAddType(AddType.Group)
+                reset()
+              }}
+            >
+              添加群
+            </div>
+          </div>
+          <form
+            className='c-toggle-form'
+            onSubmit={handleSubmit(onAddContactSubmit)}
+          >
+            <input
+              type='text'
+              placeholder={addType === AddType.Friend ? 'uid' : 'gid'}
+              className='c-toggle-form-input'
+              {...register('receiver', { required: true, pattern: /^[0-9]+$/ })}
+            />
+            {errors.receiver?.type === 'required' && (
+              <span className='entrance-window-form-hint'>uid 不能为空</span>
+            )}
+            <input
+              type='text'
+              placeholder='备注信息'
+              className='c-toggle-form-input'
+              {...register('messageContent', {
+                required: true,
+                pattern: /^[0-9]+$/,
+              })}
+            />
+            {errors.messageContent?.type === 'required' && (
+              <span className='entrance-window-form-hint'>
+                备注信息不能为空
+              </span>
+            )}
+            <button className='c-toggle-form-btn'>发送请求</button>
           </form>
         </>
       )}
       {ToggleStore.toggleType === ToggleType.CreateGroup && (
         <>
           <h1 className='c-toggle-title'>创建群聊</h1>
-          <form className='c-toggle-form' onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className='c-toggle-form'
+            onSubmit={handleSubmit(onCreateGroupSubmit)}
+          >
             <input
               type='text'
               placeholder='群名称'

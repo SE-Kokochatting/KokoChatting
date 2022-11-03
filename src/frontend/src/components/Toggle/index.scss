@@ -10,6 +10,24 @@
   color: var(--global-font-primary_lighter);
   z-index: 3;
 
+  &-tab {
+    display: flex;
+    padding: 0 10px;
+    user-select: none;
+    margin-bottom: 20px;
+
+    &-item {
+      margin-right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    &-item.selected {
+      border-bottom: 3px solid var(--global-font-primary);
+    }
+  }
+
   &-title {
     font-size: 24px;
     margin-bottom: 10px;
@@ -23,7 +41,7 @@
 
     &-input {
       width: 100%;
-      margin-bottom: 30px;
+      margin: 20px;
       background: var(--global-bg-primary_lighter);
       height: 50px;
       border-radius: 25px;
@@ -49,7 +67,7 @@
     }
 
     &-hint {
-      margin: 0 0 30px 10px;
+      margin: 10px;
       color: var(--error-font-primary);
     }
   }

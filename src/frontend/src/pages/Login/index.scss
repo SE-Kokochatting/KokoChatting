@@ -20,6 +20,7 @@
     &-tab {
       display: flex;
       padding: 0 10px;
+      user-select: none;
 
       &-item {
         margin-right: 15px;
@@ -40,9 +41,11 @@
       box-sizing: border-box;
       padding: 0 10px;
       margin-top: 50px;
+      align-items: center;
 
       &-input {
-        margin-bottom: 30px;
+        width: 100%;
+        margin: 20px;
         background: var(--global-bg-primary_lighter);
         height: 50px;
         border-radius: 25px;
@@ -53,6 +56,7 @@
       }
 
       &-btn {
+        width: 30%;
         height: 50px;
         border-radius: 25px;
         background: var(--global-bg-primary_lighter);
@@ -61,14 +65,16 @@
         color: var(--global-font-primary);
         cursor: pointer;
         transition: background 0.2s;
+        margin-top: 10px;
       }
 
       &-btn:hover {
-        background: #444;
+        background: var(--global-bg-primary);
+        color: var(--global-font-primary_lighter);
       }
 
       &-hint {
-        margin: 0 0 30px 10px;
+        margin: 10px;
         color: var(--error-font-primary);
       }
     }
