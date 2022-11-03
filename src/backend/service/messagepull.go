@@ -14,6 +14,7 @@ import (
 type MsgPullService struct {
 	msgPullPro *provider.MsgPullProvider
 	*provider.ManageProvider
+	*provider.UserProvider
 }
 
 type senderMsgIdx struct {
@@ -75,9 +76,15 @@ func (msgPullSrv *MsgPullService) PullOutlineMsg(uid uint64, pullReq *req.PullOu
 			groupId = senderId
 			senderId = 0
 		}
+		name, avatarUrl, err := msgPullSrv.GetProfileById(senderId, groupId, senderKey.senderMsgType)
+		if err != nil {
+			return err
+		}
 		*messageList = append(*messageList, res.MegOutlineInfo{
 			SenderId:        senderId,
 			GroupId:         groupId,
+			Name:            name,
+			AvatarUrl:       avatarUrl,
 			MessageType:     senderKey.senderMsgType,
 			MessageNum:      msgInfo.msgTotalNum,
 			LastMessageTime: msgInfo.lastMsgTime,
@@ -85,6 +92,34 @@ func (msgPullSrv *MsgPullService) PullOutlineMsg(uid uint64, pullReq *req.PullOu
 	}
 
 	return nil
+}
+
+// get user(group) name and avatarurl by senderId(groupId)
+// user or group depends on the message type
+func (msgPullSrv *MsgPullService) GetProfileById(senderId, groupId uint64, messageType int) (string, string, error) {
+	var name, avatarUrl string
+	if messageType == global.SingleMessage {
+		// get user profile
+		userProfile := &dataobject.UserProfile{
+			Uid: senderId,
+		}
+		if err := msgPullSrv.UserProvider.CheckExist(userProfile); err != nil {
+			global.Logger.Error("message pull outline: get user profile err", zap.Error(err))
+			return "", "", err
+		}
+		return userProfile.Name, userProfile.AvatarUrl, nil
+	} else if messageType == global.GroupMessage {
+		// get group profile
+		groupProfile := &dataobject.GroupProfile{
+			Gid: groupId,
+		}
+		if err := msgPullSrv.ManageProvider.GetGroupInfo(groupProfile); err != nil {
+			global.Logger.Error("message pull outline: get group profile err", zap.Error(err))
+			return "", "", err
+		}
+		return groupProfile.Name, groupProfile.AvatarUrl, nil
+	}
+	return name, avatarUrl, nil
 }
 
 func (msgPullSrv *MsgPullService) PullMsg(uid, lastMesId, fromId uint64, msgType int) (res.PullMsgRes, error) {
@@ -164,5 +199,6 @@ func NewMsgPullService() *MsgPullService {
 	return &MsgPullService{
 		msgPullPro:     provider.NewMsgPullProvider(),
 		ManageProvider: provider.NewManageProvider(),
+		UserProvider:   provider.NewUserProvider(),
 	}
 }
