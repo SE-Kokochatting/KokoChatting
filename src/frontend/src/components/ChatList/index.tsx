@@ -20,10 +20,6 @@ function _ChatList() {
       ChatListStore.updateFriend()
     } else {
       ChatListStore.updateGroup()
-<<<<<<< HEAD
-=======
-      console.log(ChatListStore.groupData)
->>>>>>> main
     }
 
     setIsLoading(false)
