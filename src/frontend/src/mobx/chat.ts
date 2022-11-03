@@ -5,11 +5,12 @@
  */
 
 import { makeAutoObservable } from 'mobx'
-import { IChat } from '@/types'
 import { quitGroup } from '@/network/group/quitGroup'
+import { IChat, IMessage } from '@/types'
 
-class CurrentChatState {
-  public currentChat: IChat | null = null
+class ChatState {
+  public currentChat: Partial<IChat> | null = null
+  public bubblesData: IMessage[] = []
 
   public constructor() {
     makeAutoObservable(this)
@@ -20,13 +21,22 @@ class CurrentChatState {
    * @param val 要设置的值
    * @returns void
    */
-  public setCurrentChat(val: IChat | null) {
+  public setCurrentChat(val: Partial<IChat> | null) {
     this.currentChat = val
   }
 
   /**
-   * 退出群
+   * 设置气泡
    * @param val 要设置的值
+   * @returns void
+   */
+  public setBubblesData(val: IMessage[]) {
+    this.bubblesData = val
+  }
+
+  /**
+   * 退出群
+   * @param
    * @returns void
    */
   public async quitGroup() {
@@ -35,8 +45,22 @@ class CurrentChatState {
     })
     return { code, data }
   }
+
+  /**
+   * 删除好友
+   * @param
+   * @returns void
+   */
+  public async deleteFriend() {}
+
+  /**
+   * 拉黑好友
+   * @param
+   * @returns void
+   */
+  public async blockFriend() {}
 }
 
-const CurrentChatStore = new CurrentChatState()
+const ChatStore = new ChatState()
 
-export default CurrentChatStore
+export default ChatStore
