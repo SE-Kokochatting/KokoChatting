@@ -7,11 +7,11 @@ type SendMsgReq struct {
 }
 
 type PullOutlineMsgReq struct {
-	LastMessageId uint64 `json:"lastMessageId" binding:"required"`
+	LastMessageId uint64 `json:"lastMessageId"`
 }
 
 type PullMsgReq struct {
-	LastMessageId uint64 `json:"lastMessageId" binding:"required"`
+	LastMessageId uint64 `json:"lastMessageId"`
 	Id            uint64 `json:"id" binding:"required"`
 	MsgType       int    `json:"msgType"`
 }

@@ -20,7 +20,7 @@ func (pullCtl *MsgPullController) MsgPullOutline(c *gin.Context) {
 	uid := pullCtl.getUid(c)
 	pullMsgReq := &req.PullOutlineMsgReq{}
 	if err := c.BindJSON(pullMsgReq); err != nil {
-		global.Logger.Error("pull message request bind err")
+		global.Logger.Error("pull message request bind err", zap.Error(err))
 		pullCtl.WithErr(global.MessagePullBindError, c)
 		return
 	}
@@ -40,7 +40,7 @@ func (pullCtl *MsgPullController) MsgPull(c *gin.Context) {
 	uid := pullCtl.getUid(c)
 	pullMsgReq := &req.PullMsgReq{}
 	if err := c.BindJSON(pullMsgReq); err != nil {
-		global.Logger.Error("pull message request bind err")
+		global.Logger.Error("pull message request bind err", zap.Error(err))
 		pullCtl.WithErr(global.MessagePullBindError, c)
 		return
 	}
@@ -66,7 +66,7 @@ func (pullCtl *MsgPullController) MsgPullHistory(c *gin.Context) {
 	uid := pullCtl.getUid(c)
 	pullMsgHsyReq := &req.PullMsgHsyReq{}
 	if err := c.BindJSON(pullMsgHsyReq); err != nil {
-		global.Logger.Error("pull message request bind err")
+		global.Logger.Error("pull message request bind err", zap.Error(err))
 		pullCtl.WithErr(global.MessagePullBindError, c)
 		return
 	}
