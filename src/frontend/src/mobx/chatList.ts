@@ -6,15 +6,17 @@
 
 import { makeAutoObservable } from 'mobx'
 import { ChatType } from '@/enums'
-import { IGroup, IMessage } from '@/types'
+import { IGroup, IMessage, IUser } from '@/types'
 import { getMsgId } from '@/utils/message'
 import { getGroupList } from '@/network/group/getGroupList'
+import { getFriendList } from '@/network/friend/getFriendList'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
 
 class ChatListState {
   public chatType: ChatType = ChatType.Message
   public groupData: IGroup[] = []
   public msgData: IMessage[] = []
+  public friendData: IUser[] = []
 
   public constructor() {
     makeAutoObservable(this)
@@ -46,7 +48,12 @@ class ChatListState {
    * @param val 要设置的值
    * @returns void
    */
-  public updateFriend() {}
+  public updateFriend() {
+    getFriendList().then(({ data }) => {
+      const { friend } = data
+      this.groupData = friend
+    })
+  }
 
   /**
    * 请求消息纲要

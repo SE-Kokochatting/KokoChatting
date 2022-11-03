@@ -17,7 +17,7 @@ function _ChatList() {
     if (ChatListStore.chatType === ChatType.Message) {
       await ChatListStore.updateMsgOutline()
     } else if (ChatListStore.chatType === ChatType.Private) {
-      //
+      await ChatListStore.updateFriend()
     } else {
       await ChatListStore.updateGroup()
     }

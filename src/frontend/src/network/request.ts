@@ -33,7 +33,7 @@ export default async function request(
       body: JSON.stringify(reqData),
     })
     const resData = await res.json()
-    console.log(resData)
+    // console.log(resData)
 
     // 后端发送的数据中 data 套 data
     const { code, data } = resData
