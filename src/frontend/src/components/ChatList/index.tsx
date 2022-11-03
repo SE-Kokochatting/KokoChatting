@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
 import { ChatType } from '@/enums'
 import { DefaultGroupAvatar } from '@/consts'
-import { IMessage, IGroup } from '@/types'
+import { IGroup, IMessageOutline, IUser } from '@/types'
 import ChatListStore from '@/mobx/chatlist'
 import ListItem from './components/ListItem'
 import Loading from '@/components/Loading'
@@ -11,15 +11,16 @@ import './index.scss'
 function _ChatList() {
   const [isLoading, setIsLoading] = useState(true)
 
-  async function handleFetchData() {
+  function handleFetchData() {
     setIsLoading(true)
 
     if (ChatListStore.chatType === ChatType.Message) {
-      await ChatListStore.updateMsgOutline()
+      ChatListStore.updateMsgOutline()
     } else if (ChatListStore.chatType === ChatType.Private) {
-      await ChatListStore.updateFriend()
+      ChatListStore.updateFriend()
     } else {
-      await ChatListStore.updateGroup()
+      ChatListStore.updateGroup()
+      console.log(ChatListStore.groupData)
     }
 
     setIsLoading(false)
@@ -40,7 +41,7 @@ function _ChatList() {
             messageType,
             messageNum,
             lastMessageTime,
-          }: IMessage) => (
+          }: Partial<IMessageOutline>) => (
             <ListItem
               key={senderId ? `u${senderId}` : `g${groupId}`}
               uid={senderId}
@@ -48,9 +49,21 @@ function _ChatList() {
               messageType={messageType}
               messageNum={messageNum}
               lastMessageTime={lastMessageTime}
+              chatType={ChatType.Message}
             />
           ),
         )}
+      {ChatListStore.chatType === ChatType.Private &&
+        ChatListStore.friendData !== null &&
+        ChatListStore.friendData.map(({ uid, avatarUrl, name }: IUser) => (
+          <ListItem
+            key={`u${uid}`}
+            gid={uid}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            name={name}
+            chatType={ChatType.Private}
+          />
+        ))}
       {ChatListStore.chatType === ChatType.Group &&
         ChatListStore.groupData !== null &&
         ChatListStore.groupData.map(({ gid, avatarUrl, name }: IGroup) => (
@@ -59,6 +72,7 @@ function _ChatList() {
             gid={gid}
             avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
             name={name}
+            chatType={ChatType.Group}
           />
         ))}
       {isLoading && <Loading />}
