@@ -12,7 +12,7 @@ function _ChatWindow() {
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>
-        {ChatStore.currentChat?.uid &&
+        {ChatStore.currentChat?.uid > 0 &&
           MsgStore.friendMsg.map(
             ({
               lastMessageTime,
@@ -21,8 +21,8 @@ function _ChatWindow() {
               messageId,
               senderId,
             }) =>
-              senderId === ChatStore.currentChat?.uid &&
-              (messageId as number) > mid && (
+              senderId === ChatStore.currentChat?.uid && (
+                // (messageId as number) > mid &&
                 <Bubble
                   key={messageId}
                   lastMessageTime={lastMessageTime}
@@ -33,7 +33,7 @@ function _ChatWindow() {
                 />
               ),
           )}
-        {ChatStore.currentChat?.gid &&
+        {ChatStore.currentChat?.gid > 0 &&
           MsgStore.groupMsg.map(
             ({
               lastMessageTime,

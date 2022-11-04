@@ -49,7 +49,7 @@ function _Header() {
             <span className='c-header-right-info-state'>online</span>
           )} */}
         </div>
-        <SvgIcon
+        {/* <SvgIcon
           name='search'
           style={{
             color: 'var(--global-font-primary_lighter)',
@@ -59,7 +59,7 @@ function _Header() {
             right: '70px',
             cursor: 'pointer',
           }}
-        />
+        /> */}
         <SvgIcon
           name='right-menu'
           style={{
