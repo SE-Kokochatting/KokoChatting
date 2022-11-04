@@ -62,7 +62,7 @@ func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string)(*da
 func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string)(*dataobject.CommonMessage,error){
 	wsmsg := &res.WsMessage{
 		From: from,
-		MsgType: global.SingleMessage,
+		MsgType: global.GroupMessage,
 		Contents: contents,
 		To: to,
 	}
@@ -220,5 +220,9 @@ func NewMessageService()*MessageService{
 	srv.register(global.GroupMessage,srv.wrapGroupMessage)
 	srv.register(global.RevertSingleMessageNotify,srv.wrapSingleMessage)
 	srv.register(global.RevertGroupMessageNotify,srv.wrapGroupMessage)
+	srv.register(global.QuitGroupNotify,srv.wrapGroupMessage)
+	srv.register(global.JoinGroupNotify,srv.wrapGroupMessage)
+	srv.register(global.AddFriendResponseNotify,srv.wrapSingleMessage)
+	srv.register(global.DeleteFriendNotify,srv.wrapSingleMessage)
 	return srv
 }

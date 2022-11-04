@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
-import { ToggleType } from '@/enums'
+import { MessageType, ToggleType } from '@/enums'
+import ChatListStore from '@/mobx/chatList'
 import UserStore from '@/mobx/user'
 import ToggleStore from '@/mobx/toggle'
 import SvgIcon from '@/components/SvgIcon'
@@ -25,9 +26,8 @@ const iconStyle: CSSObject = {
 }
 
 async function handleUserInfo(uid: number) {
-  const res = await getUserInfo({ uid })
-  const resData = res.data
-  const { name, avatarUrl } = resData.data
+  const { data } = await getUserInfo({ uid })
+  const { name, avatarUrl } = data
   UserStore.setUserInfo({ uid, name, avatarUrl })
   UserStore.setShowUserInfo(!UserStore.showUserInfo)
 }
@@ -37,8 +37,10 @@ function handleToggle(type: ToggleType) {
   ToggleStore.setToggleType(type)
 }
 
-function _LeftDropdown(props: LeftDropdownProps) {
-  const { showLeftDropdown, setShowLeftDropdown } = props
+function _LeftDropdown({
+  showLeftDropdown,
+  setShowLeftDropdown,
+}: LeftDropdownProps) {
   const navigate = useNavigate()
   const alert = useAlert()
   return (
@@ -76,7 +78,12 @@ function _LeftDropdown(props: LeftDropdownProps) {
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
-      <li className='c-header-left-dropdown-item'>
+      <li className='c-header-left-dropdown-item'
+        onClick={() => {
+          // await ChatListStore.pullMsgContent(MessageType.FriendRequestNotify)
+          handleToggle(ToggleType.Notify)
+        }}
+      >
         <SvgIcon name='notice' style={iconStyle} />
         通知
       </li>

@@ -39,7 +39,45 @@ func (managePro *ManageProvider) DeleteFriend (uid uint64,fid uint64) error {
 	return nil
 }
 
-func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error{
+func (managePro *ManageProvider) AddFriend (uid uint64, fid uint64) error {
+	var friendRelationEntity = &dataobject.FriendRelation{
+		User1: uid,
+		User2: fid,
+	}
+	friendRelationEntity.Preprocess()
+
+	var userProfileEntity = &dataobject.UserProfile{
+		Uid: fid,
+	}
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	if uid == fid {
+		global.Logger.Error("can not add yourself", zap.Error(errors.New("the friend and the user can not be same person")))
+		return errors.New("the friend and the user can not be same person")
+	}
+
+	err := dbClient.Where("uid = ?", userProfileEntity.Uid).Find(userProfileEntity).Error
+	if err != nil && err == gorm.ErrRecordNotFound{
+		global.Logger.Error("the friend is invalid", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Where("user1 = ? and user2 = ?", friendRelationEntity.User1, friendRelationEntity.User2).Find(friendRelationEntity).Error
+	if err == nil{
+		global.Logger.Error("the user you want to add is already your friend.", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Select("user1", "user2").Create(friendRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("add friend error", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error {
 	var blockRelationEntity = &dataobject.BlockRelation{
 		User: uid,
 		Blocker: fid,
@@ -288,6 +326,26 @@ func (managePro *ManageProvider) IsHost (uid uint64, gid uint64) (bool, error) {
 
 	if memberProfile.IsHost == false{
 		return false, errors.New("the user is not host")
+	}
+
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsAdmin (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsAdmin == false{
+		return false, errors.New("the user is not admin")
 	}
 
 	return true, nil

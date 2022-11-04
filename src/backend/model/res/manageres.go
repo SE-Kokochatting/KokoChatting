@@ -53,3 +53,11 @@ type TransferHostRes struct {
 type ChangePermissionRes struct {
 	Data struct {} `json:"data"`
 }
+
+type AgreeFriendRes struct {
+	Data struct {} `json:"data"`
+}
+
+type RemoveMemberRes struct {
+	Data struct {} `json:"data"`
+}

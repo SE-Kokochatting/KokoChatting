@@ -13,17 +13,18 @@ func (err Error) Error() string {
 
 // 错误码按照模块的不同第一位不同，user是1，manage是2等等，然后模块内错误码自增
 var (
-	ConfigPathError     = NewError(errors.New("config path do not exist in config file"), 1000)
-	RegisterError       = NewError(errors.New("user register err"), 1001)
-	LoginError          = NewError(errors.New("user login err"), 1002)
-	PasswordError       = NewError(errors.New("password is err"), 1003)
-	GetInfoError        = NewError(errors.New("get userinfo err"), 1004)
-	AvatarError         = NewError(errors.New("update avatar err"), 1005)
-	JwtParseError       = NewError(errors.New("jwt parse err"), 1006)
-	JwtExpiredError     = NewError(errors.New("jwt expired err"), 1007)
-	IncorrectToken      = NewError(errors.New("token incorrect err"), 1008)
-	DatabaseQueryError  = NewError(errors.New("database query error"), 1009)
-	BindError           = NewError(errors.New("bind request json error"), 1010)
+	ConfigPathError    = NewError(errors.New("config path do not exist in config file"), 1000)
+	RegisterError      = NewError(errors.New("user register err"), 1001)
+	LoginError         = NewError(errors.New("user login err"), 1002)
+	PasswordError      = NewError(errors.New("password is err"), 1003)
+	GetInfoError       = NewError(errors.New("get userinfo err"), 1004)
+	AvatarError        = NewError(errors.New("update avatar err"), 1005)
+	JwtParseError      = NewError(errors.New("jwt parse err, please check your token"), 1006)
+	JwtExpiredError    = NewError(errors.New("jwt expired err"), 1007)
+	IncorrectToken     = NewError(errors.New("token incorrect err"), 1008)
+	BindError          = NewError(errors.New("bind error, please check the request body"), 1009)
+	DatabaseQueryError = NewError(errors.New("database query error"), 1010)
+
 	DeleteFriendError   = NewError(errors.New("friend delete err"), 2001)
 	BlockFriendError    = NewError(errors.New("friend block err"), 2002)
 	CreatGroupError     = NewError(errors.New("create group err"), 2003)
@@ -37,7 +38,9 @@ var (
 	TransferHostError   = NewError(errors.New("transfer host err"), 2011)
 	TransferAdminError  = NewError(errors.New("transfer administrator err"), 2012)
 	TransferMemError    = NewError(errors.New("transfer member err"), 2013)
-	RequestFormatError  = NewError(errors.New("request body request error"), 3000)
+	AgreeFriendError    = NewError(errors.New("agree friend err"), 2014)
+	RemoveMemberError   = NewError(errors.New("remove member err"), 2015)
+	RequestFormatError = NewError(errors.New("request body request error"), 3000)
 
 	MessageServerBusy        = NewError(errors.New("message server busy,please try again later"), 4000)
 	MessageInternalError     = NewError(errors.New("message server internal unknown error"), 4001)
@@ -52,8 +55,12 @@ var (
 	RevertMessageError       = NewError(errors.New("msg whose id equals to 'msgid' is not sent by current user"), 4010)
 	RevertedMessageTypeError = NewError(errors.New("only group msg and single msg can be reverted"), 4011)
 	MsgHasBeenRevertedError  = NewError(errors.New("the msg has been reverted"), 4012)
-
-	UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
+	MessagePullBindError     = NewError(errors.New("pull message bind error"), 4013)
+	PullOutlineError         = NewError(errors.New("pull outline error"), 4014)
+	PullMessageError         = NewError(errors.New("pull message error"), 4015)
+	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
+  
+  UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
 	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
 

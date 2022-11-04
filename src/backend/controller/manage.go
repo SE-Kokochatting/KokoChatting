@@ -38,6 +38,39 @@ func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
 	manageCtl.WithData(delFriendRes, c)
 }
 
+func (manageCtl *ManageController) AgreeFriendRequest (c *gin.Context) {
+	agreeFriendReq := &req.AgreeFriendReq{}
+	err := c.BindJSON(agreeFriendReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+	uid := manageCtl.getUid(c)
+
+	fid, t, err := manageCtl.ManageService.GetFromIdByMsgId(agreeFriendReq.Id)
+	if t != global.FriendRequestNotify{
+		global.Logger.Error("message type err", zap.Error(err))
+		manageCtl.WithErr(global.MessageTypeError, c)
+		return
+	}
+	if err != nil{
+		global.Logger.Error("get from id err", zap.Error(err))
+		manageCtl.WithErr(global.DatabaseQueryError, c)
+		return
+	}
+
+	err = manageCtl.ManageService.AddFriend(uid, fid)
+	if err != nil{
+		global.Logger.Error("add friend err", zap.Error(err))
+		manageCtl.WithErr(global.AgreeFriendError, c)
+		return
+	}
+
+	agreeFriendRes := &res.AgreeFriendRes{}
+	manageCtl.WithData(agreeFriendRes, c)
+}
+
 func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
 	blockFriendReq := &req.BlockFriendReq{}
 	err := c.BindJSON(blockFriendReq)
@@ -102,6 +135,29 @@ func (manageCtl *ManageController) QuitGroup (c *gin.Context) {
 	manageCtl.WithData(quitGroupRes, c)
 }
 
+func (manageCtl *ManageController) RemoveMember (c *gin.Context) {
+	removeMemberReq := &req.RemoveMemberReq{}
+	err := c.BindJSON(removeMemberReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+
+	admin := manageCtl.getUid(c)
+
+	is, err := manageCtl.ManageService.RemoveMember(admin, removeMemberReq.Uid, removeMemberReq.Gid)
+	if is != true{
+		global.Logger.Error("the user has no permission", zap.Error(err))
+		manageCtl.WithErr(global.PermissionError, c)
+		return
+	}
+
+	removeMemberRes := &res.RemoveMemberRes{}
+
+	manageCtl.WithData(removeMemberRes, c)
+}
+
 func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 	uid := manageCtl.getUid(c)
 
@@ -113,7 +169,7 @@ func (manageCtl *ManageController) GetFriendListInfo (c *gin.Context) {
 
 	friendListRes := &res.FriendListRes{}
 
-	for i := range friend{
+	for i := range friend {
 		userProfile := &dataobject.UserProfile{
 			Uid: friend[i],
 		}

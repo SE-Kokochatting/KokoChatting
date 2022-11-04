@@ -4,11 +4,14 @@ import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
 	"KokoChatting/provider"
+	"errors"
 	"go.uber.org/zap"
 )
 
 type ManageService struct{
 	ManageProvider *provider.ManageProvider
+	MessageProvider *provider.MessageProvider
+	*MessageService
 }
 
 func (manageSrv *ManageService) DeleteFriend (uid uint64, fid uint64) error {
@@ -17,7 +20,37 @@ func (manageSrv *ManageService) DeleteFriend (uid uint64, fid uint64) error {
 		global.Logger.Error("delete friend err",zap.Error(err))
 		return err
 	}
+	msg := "you have been deleted"
+	err = manageSrv.PushUnStoredSystemMessage(uid, fid, msg, global.DeleteFriendNotify)
+	if err != nil{
+		global.Logger.Error("delete friend notify error", zap.Error(err))
+		return err
+	}
 	return err
+}
+
+func (manageSrv *ManageService) AddFriend (uid uint64, fid uint64) error {
+	err := manageSrv.ManageProvider.AddFriend(uid, fid)
+	if err != nil{
+		global.Logger.Error("add friend err", zap.Error(err))
+		return err
+	}
+	msg := "friend request is accepted"
+	err = manageSrv.PushUnStoredSystemMessage(uid, fid, msg, global.AddFriendResponseNotify)
+	if err != nil{
+		global.Logger.Error("add friend response notify error", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+func (manageSrv *ManageService) GetFromIdByMsgId (mid uint64) (uint64, int, error) {
+	uid, t, err := manageSrv.MessageProvider.GetFromIdAndTypeByMsgId(mid)
+	if err != nil{
+		global.Logger.Error("get from id err", zap.Error(err))
+		return 0, 0, err
+	}
+	return uid, t, err
 }
 
 func (manageSrv *ManageService) BlockFriend (uid uint64, fid uint64) error {
@@ -63,6 +96,12 @@ func (manageSrv *ManageService) CreatGroup (name string, uid uint64, aid []uint6
 			return 0, err
 		}
 	}
+	msg := "you have been in this group now"
+	err = manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.JoinGroupNotify)
+	if err != nil{
+		global.Logger.Error("push join group notify error",zap.Error(err))
+		return 0, err
+	}
 	return gid, err
 }
 
@@ -72,7 +111,37 @@ func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
 		global.Logger.Error("quit group err", zap.Error(err))
 		return err
 	}
+	msg := "this user quits the group"
+	err = manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.QuitGroupNotify)
+	if err != nil{
+		global.Logger.Error("push quit group notify error",zap.Error(err))
+		return err
+	}
 	return err
+}
+
+func (manageSrv *ManageService) RemoveMember (admin uint64, uid uint64, gid uint64) (bool, error) {
+
+	can, err := manageSrv.ManageProvider.VerifyPermission(admin, gid)
+	if can != true{
+		global.Logger.Error("has no permission", zap.Error(err))
+		return false, errors.New("the user has no permission")
+	}
+
+	isAdmin, err := manageSrv.ManageProvider.IsAdmin(admin, gid)
+	isManage, err := manageSrv.ManageProvider.VerifyPermission(uid, gid)
+	if isAdmin == true && isManage == true {
+		global.Logger.Error("has no permission", zap.Error(err))
+		return false, errors.New("the user has no permission")
+	}
+
+	err = manageSrv.ManageProvider.QuitGroup(uid, gid)
+	if err != nil{
+		global.Logger.Error("remove from group err", zap.Error(err))
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (manageSrv *ManageService) GetFriendList (uid uint64) ([]uint64, error) {
@@ -199,5 +268,7 @@ func (manageSrv *ManageService) IsMember (gid uint64, uid uint64) (bool, error) 
 func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),
+		MessageProvider: provider.NewMessageProvider(),
+		MessageService: NewMessageService(),
 	}
 }

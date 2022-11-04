@@ -1,71 +1,85 @@
+import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAlert } from 'react-alert'
 import { ChatType } from '@/enums'
-import { IGroup } from '@/types'
 import { DefaultGroupAvatar } from '@/consts'
-import { getGroupList } from '@/network/group/getGroupList'
-import { getToken } from '@/utils/token'
+import { IGroup, IMessageOutline, IUser } from '@/types'
+import ChatListStore from '@/mobx/chatlist'
 import ListItem from './components/ListItem'
 import Loading from '@/components/Loading'
 import './index.scss'
 
-interface ChatListProps {
-  chatType: ChatType
-}
-
-function ChatList({ chatType }: ChatListProps) {
-  const navigate = useNavigate()
-  const alert = useAlert()
-  const [chatListData, setChatListData] = useState<IGroup[]>([])
+function _ChatList() {
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
+  function handleFetchData() {
     setIsLoading(true)
-    const token = getToken()
-    if (!token) {
-      alert.show('请先登录', {
-        title: '创建群失败',
-        onClose: () => {
-          navigate('/login')
-        },
-      })
-      return
+
+    if (ChatListStore.chatType === ChatType.Message) {
+      ChatListStore.updateMsgOutline()
+    } else if (ChatListStore.chatType === ChatType.Private) {
+      ChatListStore.updateFriend()
     } else {
-      switch (chatType) {
-        case ChatType.Mixed:
-          setIsLoading(false)
-          setChatListData([])
-          break
-        case ChatType.Private:
-          setIsLoading(false)
-          setChatListData([])
-          break
-        case ChatType.Group:
-          getGroupList(token).then((res) => {
-            const resData = res.data
-            const { data } = resData
-            const { group } = data
-            setChatListData(group)
-            setIsLoading(false)
-          })
-      }
+      ChatListStore.updateGroup()
+      console.log(ChatListStore.groupData)
     }
-  }, [chatType])
+
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    handleFetchData()
+  }, [ChatListStore.chatType])
 
   return (
     <div className='c-chat_list'>
-      {chatListData.map(({ gid, avatarUrl, name, extract, lastTime }) => (
-        <ListItem
-          key={gid}
-          avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
-          name={name}
-          extract={extract}
-          lastTime={lastTime}
-        />
-      ))}
+      {ChatListStore.chatType === ChatType.Message &&
+        ChatListStore.msgData !== null &&
+        ChatListStore.msgData.map(
+          ({
+            senderId,
+            groupId,
+            messageType,
+            messageNum,
+            lastMessageTime,
+          }: Partial<IMessageOutline>) => (
+            <ListItem
+              key={senderId ? `u${senderId}` : `g${groupId}`}
+              uid={senderId}
+              gid={groupId}
+              messageType={messageType}
+              messageNum={messageNum}
+              lastMessageTime={lastMessageTime}
+              chatType={ChatType.Message}
+            />
+          ),
+        )}
+      {ChatListStore.chatType === ChatType.Private &&
+        ChatListStore.friendData !== null &&
+        ChatListStore.friendData.map(({ uid, avatarUrl, name }: IUser) => (
+          <ListItem
+            key={`u${uid}`}
+            gid={uid}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            name={name}
+            chatType={ChatType.Private}
+          />
+        ))}
+      {ChatListStore.chatType === ChatType.Group &&
+        ChatListStore.groupData !== null &&
+        ChatListStore.groupData.map(({ gid, avatarUrl, name }: IGroup) => (
+          <ListItem
+            key={`g${gid}`}
+            gid={gid}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            name={name}
+            chatType={ChatType.Group}
+          />
+        ))}
       {isLoading && <Loading />}
     </div>
   )
 }
+
+const ChatList = observer(_ChatList)
+
 export default ChatList

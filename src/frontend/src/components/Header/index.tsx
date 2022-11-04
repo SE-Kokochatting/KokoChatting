@@ -1,21 +1,17 @@
+import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
+import { useShowDropDown } from './hooks/useShowDropdown'
+import ChatStore from '@/mobx/chat'
 import SvgIcon from '@/components/SvgIcon'
 import Search from './components/Search'
 import LeftDropdown from './components/LeftDropdown'
+import RightDropdown from './components/RightDropdown'
 import './index.scss'
 
-// name 等属性也不是必须的，因为刚进入时聊天窗口为空白，没有指定聊天对象
-interface HeaderProps {
-  name?: string
-  online?: boolean
-  // todo
-  // interval?: number
-  peopleNum?: number
-}
-
-function Header(props: HeaderProps) {
-  const { name, peopleNum } = props
+function _Header() {
   const [showLeftDropdown, setShowLeftDropdown] = useState(false)
+  // Right dropdown
+  const { showDropDown, setShowDropDown } = useShowDropDown()
 
   return (
     <div className='c-header'>
@@ -41,10 +37,15 @@ function Header(props: HeaderProps) {
       </div>
       <div className='c-header-right'>
         <div className='c-header-right-info'>
-          <span className='c-header-right-info-name'>{name}</span>
-          {peopleNum ? (
-            <span className='c-header-right-info-num'>{peopleNum} members</span>
-          ) : (
+          <span className='c-header-right-info-name'>
+            {ChatStore.currentChat?.name}
+          </span>
+          {ChatStore.currentChat?.count && ChatStore.currentChat?.gid && (
+            <span className='c-header-right-info-num'>
+              {ChatStore.currentChat?.count} members
+            </span>
+          )}
+          {ChatStore.currentChat?.uid && (
             <span className='c-header-right-info-state'>online</span>
           )}
         </div>
@@ -67,11 +68,25 @@ function Header(props: HeaderProps) {
             height: '35px',
             position: 'absolute',
             right: '20px',
-            cursor: 'pointer',
+            cursor: ChatStore.currentChat !== null ? 'pointer' : 'default',
+
+            '&:hover': {
+              color: 'var(--global-font-primary)',
+            },
+          }}
+          onClick={(e) => {
+            if (ChatStore.currentChat !== null) {
+              e.stopPropagation()
+              setShowDropDown(true)
+            }
           }}
         />
+        <RightDropdown showDropdown={showDropDown} />
       </div>
     </div>
   )
 }
+
+const Header = observer(_Header)
+
 export default Header

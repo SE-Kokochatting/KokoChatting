@@ -4,10 +4,45 @@
  * date: 2022-10-31 20:39:10 +0800
  */
 
-export interface IGroup {
-  avatarUrl: string
-  gid: number
+import { MessageType } from '@/enums'
+
+export interface IUser {
+  uid: number
   name: string
-  extract?: string
-  lastTime?: string
+  avatarUrl: string
 }
+
+export interface IGroup {
+  gid: number
+  avatarUrl: string
+  name: string
+  count?: number
+}
+
+export interface IMessage {
+  messageId: number
+  senderId: number
+  groupId: number
+  messageType: MessageType
+  messageContent: string
+  lastMessageTime: string
+  name: string
+  avatarUrl: string
+  readUids: number[]
+}
+
+export type IMessageOutline = Omit<IMessage, 'messageId' | 'readUids'> & {
+  messageNum: number
+}
+
+
+export interface IMessageContent{
+  senderId: number
+  groupId: number
+  messageId: number
+  messageType: MessageType
+  messageContent: string
+  readUids: string,
+}
+
+export type IChat = IUser & IGroup & IMessageOutline
