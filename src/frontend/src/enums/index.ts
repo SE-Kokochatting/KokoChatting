@@ -27,7 +27,7 @@ export enum Theme {
 export enum ToggleType {
   AddContact,
   CreateGroup,
-  Notify
+  Notify,
 }
 
 // 消息类型
@@ -52,4 +52,14 @@ export enum MessageType {
   QuitGroupNotify,
   // 9 进群通知
   JoinGroupNotify,
+}
+
+export enum AddType {
+  Friend,
+  Group,
+}
+
+export enum NotifyType {
+  friendRequest,
+  groupManageNotify,
 }

@@ -29,9 +29,13 @@ function _NotifyItem({ publisherName, info, mid, type }: NotifyItemProps) {
   }
 
   function refuse() {
-    type === MessageType.FriendRequestNotify
-      ? MsgStore.removeFriendRequest(mid)
-      : MsgStore.removeGroupRequest(mid)
+    //     type === MessageType.FriendRequestNotify
+    //       ? MsgStore.removeFriendRequest(mid)
+    // <<<<<<< HEAD
+    //       : MsgStore.removeGroupRequest(mid)
+    // =======
+    //       : MsgStore.removeGroupNotify(mid)
+    // >>>>>>> main
   }
 
   return (

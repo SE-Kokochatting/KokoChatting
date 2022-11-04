@@ -59,8 +59,10 @@ var (
 	PullOutlineError         = NewError(errors.New("pull outline error"), 4014)
 	PullMessageError         = NewError(errors.New("pull message error"), 4015)
 	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
-  
-  UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
+	GetMemberOfGroupError    = NewError(errors.New("can not get member of group"), 4017)
+	MessageDeleteError       = NewError(errors.New("delete message error"), 4018)
+	FriendRequestError		 = NewError(errors.New("friend request error"), 4019)
+    UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
 	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
 

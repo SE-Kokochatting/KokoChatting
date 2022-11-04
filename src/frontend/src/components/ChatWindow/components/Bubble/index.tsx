@@ -1,7 +1,7 @@
 import { ChatType } from '@/enums'
 import { IMessage } from '@/types'
 import { getUid } from '@/utils/uid'
-import SvgIcon from '@/components/SvgIcon'
+// import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
 function Bubble({
@@ -12,11 +12,12 @@ function Bubble({
   chatType,
 }: Partial<IMessage> & { chatType: ChatType }) {
   const uid = getUid()
+
   return (
     <div
       style={{
-        alignSelf: uid === senderId ? 'start' : 'end',
-        margin: uid === senderId ? '15px 0 15px 30px' : '15px 30px 15px 0',
+        alignSelf: uid !== senderId ? 'start' : 'end',
+        margin: uid !== senderId ? '15px 0 15px 30px' : '15px 30px 15px 0',
         maxWidth: '50%',
         display: 'flex',
       }}

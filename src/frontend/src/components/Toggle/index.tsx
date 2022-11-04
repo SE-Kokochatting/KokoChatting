@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useForm } from 'react-hook-form'
 import { useAlert } from 'react-alert'
 import { useState, useEffect } from 'react'
-import { ToggleType, MessageType } from '@/enums'
+import { ToggleType, MessageType, AddType, NotifyType } from '@/enums'
 import { IMessageContent } from '@/types'
 import { ICreateGroup, createGroup } from '@/network/group/createGroup'
 import { IAddFriend, addFriend } from '@/network/friend/addFriend'
@@ -12,16 +12,6 @@ import MsgStore from '@/mobx/msg'
 import NotifyItem from './components/NotifyItem'
 import SvgIcon from '../SvgIcon'
 import './index.scss'
-
-enum AddType {
-  Friend,
-  Group,
-}
-
-enum NotifyType {
-  friendRequest,
-  groupManageNotify,
-}
 
 function _Toggle() {
   const {
@@ -168,9 +158,7 @@ function _Toggle() {
                 备注信息不能为空
               </span>
             )}
-            <button className='c-toggle-form-btn' type='submit'>
-              发送请求
-            </button>
+            <button className='c-toggle-form-btn'>发送请求</button>
           </form>
         </>
       )}

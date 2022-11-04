@@ -6,6 +6,7 @@ import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
 import { MessageType, ToggleType } from '@/enums'
 import ChatListStore from '@/mobx/chatList'
+import MsgStore from '@/mobx/msg'
 import UserStore from '@/mobx/user'
 import ToggleStore from '@/mobx/toggle'
 import SvgIcon from '@/components/SvgIcon'
@@ -43,6 +44,7 @@ function _LeftDropdown({
 }: LeftDropdownProps) {
   const navigate = useNavigate()
   const alert = useAlert()
+  const msgCount = MsgStore.friendRequest.length + MsgStore.groupNotify.length
   return (
     <ul
       className='c-header-left-dropdown'
@@ -78,14 +80,17 @@ function _LeftDropdown({
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
-      <li className='c-header-left-dropdown-item'
+      <li
+        className='c-header-left-dropdown-item'
         onClick={() => {
-          // await ChatListStore.pullMsgContent(MessageType.FriendRequestNotify)
           handleToggle(ToggleType.Notify)
         }}
       >
         <SvgIcon name='notice' style={iconStyle} />
         通知
+        {msgCount !== 0 && (
+          <div className='c-header-left-dropdown-msg_count'>{msgCount}</div>
+        )}
       </li>
       <li
         className='c-header-left-dropdown-item'

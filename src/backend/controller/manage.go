@@ -14,6 +14,7 @@ type ManageController struct{
 	baseController
 	ManageService *service.ManageService
 	UserService *service.UserService
+	MessageService *service.MessageService
 }
 
 func (manageCtl *ManageController) DeleteFriend (c *gin.Context) {
@@ -67,8 +68,35 @@ func (manageCtl *ManageController) AgreeFriendRequest (c *gin.Context) {
 		return
 	}
 
+	err = manageCtl.MessageService.DeleteMessage(agreeFriendReq.Id)
+	if err != nil{
+		global.Logger.Error("delete message err", zap.Error(err))
+		manageCtl.WithErr(global.MessageDeleteError, c)
+		return
+	}
+
 	agreeFriendRes := &res.AgreeFriendRes{}
 	manageCtl.WithData(agreeFriendRes, c)
+}
+
+func (manageCtl *ManageController) RefuseFriendRequest (c *gin.Context) {
+	refuseFriendReq := &req.RefuseFriendReq{}
+	err := c.BindJSON(refuseFriendReq)
+	if err != nil{
+		global.Logger.Error("bind json error", zap.Error(err))
+		manageCtl.WithErr(global.RequestFormatError, c)
+		return
+	}
+
+	err = manageCtl.MessageService.DeleteMessage(refuseFriendReq.Id)
+	if err != nil{
+		global.Logger.Error("delete message err", zap.Error(err))
+		manageCtl.WithErr(global.MessageDeleteError, c)
+		return
+	}
+
+	refuseFriendRes := &res.RefuseFriendRes{}
+	manageCtl.WithData(refuseFriendRes, c)
 }
 
 func (manageCtl *ManageController) BlockFriend (c *gin.Context) {
@@ -153,6 +181,11 @@ func (manageCtl *ManageController) RemoveMember (c *gin.Context) {
 		return
 	}
 
+	if err != nil{
+		global.Logger.Error("remove member error", zap.Error(err))
+		manageCtl.WithErr(global.RemoveMemberError, c)
+		return
+	}
 	removeMemberRes := &res.RemoveMemberRes{}
 
 	manageCtl.WithData(removeMemberRes, c)
@@ -315,5 +348,6 @@ func NewManageController() *ManageController {
 	return &ManageController{
 		ManageService: service.NewManageService(),
 		UserService: service.NewUserService(),
+		MessageService: service.NewMessageService(),
 	}
 }
