@@ -15,9 +15,7 @@ require (
 	github.com/qiniu/go-sdk/v7 v7.13.0
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/viper v1.13.0
-	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.8.0 // indirect
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.20.0
 	golang.org/x/crypto v0.1.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
