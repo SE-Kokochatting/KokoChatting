@@ -311,6 +311,25 @@ func (managePro *ManageProvider) IsInBlock (user uint64, blocker uint64) (bool, 
 	return true, nil
 }
 
+func (managePro *ManageProvider) IsInFriend (user1 uint64, user2 uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	friendRelation := &dataobject.FriendRelation{
+		User1: user1,
+		User2: user2,
+	}
+	friendRelation.Preprocess()
+	err := dbClient.Where("user1 = ? and user2 = ?", friendRelation.User1, friendRelation.User2).Find(friendRelation).Error
+	if err != nil{
+		if err != gorm.ErrRecordNotFound{
+			global.Logger.Error("the user is not your friend", zap.Error(err))
+			return true, err
+		}
+		return false,nil
+	}
+	return true, nil
+}
+
 func (managePro *ManageProvider) IsHost (uid uint64, gid uint64) (bool, error) {
 	dbClient := managePro.mysqlProvider.mysqlDb
 

@@ -40,7 +40,6 @@ var (
 	TransferMemError    = NewError(errors.New("transfer member err"), 2013)
 	AgreeFriendError    = NewError(errors.New("agree friend err"), 2014)
 	RemoveMemberError   = NewError(errors.New("remove member err"), 2015)
-	RefuseFriendError   = NewError(errors.New("refuse friend err"), 2016)
 	RequestFormatError = NewError(errors.New("request body request error"), 3000)
 
 	MessageServerBusy        = NewError(errors.New("message server busy,please try again later"), 4000)
@@ -62,6 +61,7 @@ var (
 	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
 	GetMemberOfGroupError    = NewError(errors.New("can not get member of group"), 4017)
 	MessageDeleteError       = NewError(errors.New("delete message error"), 4018)
+	FriendRequestError		 = NewError(errors.New("friend request error"), 4019)
     UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
 	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
