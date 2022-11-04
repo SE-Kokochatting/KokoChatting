@@ -6,6 +6,8 @@
   border: 1px solid var(--global-bg-primary);
   transition: max-width 0.3s;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 
   &-title {
     font-size: 20px;
@@ -20,8 +22,21 @@
   }
 
   &-item {
-    line-height: 30px;
+    line-height: 35px;
     padding-left: 10px;
     color: var(--global-font-primary);
+  }
+
+  &-btn{
+    display:block;
+    border:none;
+    width:80px;
+    height:30px;
+    border-radius: 15px;
+    background:var(--global-bg-primary_lighter);
+    position:absolute;
+    left:50%;
+    transform: translateX(-50%);
+    opacity: 0;
   }
 }

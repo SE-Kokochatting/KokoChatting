@@ -78,7 +78,8 @@ function _LeftDropdown({
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
-      <li className='c-header-left-dropdown-item'
+      <li
+        className='c-header-left-dropdown-item'
         onClick={() => {
           // await ChatListStore.pullMsgContent(MessageType.FriendRequestNotify)
           handleToggle(ToggleType.Notify)

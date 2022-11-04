@@ -27,7 +27,7 @@ export enum Theme {
 export enum ToggleType {
   AddContact,
   CreateGroup,
-  Notify
+  Notify,
 }
 
 // 消息类型

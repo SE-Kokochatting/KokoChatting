@@ -5,6 +5,12 @@ import SvgIcon from '../SvgIcon'
 import './index.scss'
 
 function _UserInfo() {
+
+  function upload(e: any){
+    const formData: FormData = new FormData()
+    formData.append()
+  }
+
   return (
     <div
       className='c-user_info'
@@ -34,8 +40,10 @@ function _UserInfo() {
         className='c-user_info-avatar'
         src={UserStore.avatarUrl ? UserStore.avatarUrl : DefaultAvatarUrl}
       />
-      <p className='c-user_info-item'>uid: {UserStore.uid}</p>
+
+      <p className='c-user_info-item'>账号: {UserStore.uid}</p>
       <p className='c-user_info-item'>用户名: {UserStore.name}</p>
+      <input className="c-user_info-btn" type="file" accept="image/gif, image/jpeg, image/png, image/jpg" onChange={upload}/>
     </div>
   )
 }
