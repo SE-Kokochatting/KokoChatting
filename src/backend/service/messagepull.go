@@ -168,6 +168,7 @@ func (msgPullSrv *MsgPullService) PullMsg(uid, lastMesId, fromId uint64, msgType
 func (msgPullSrv *MsgPullService) PullMsgHistory(uid uint64, pullMsgHsyReq *req.PullMsgHsyReq) (res.PullMsgRes, error) {
 	var pullMsgRes res.PullMsgRes
 
+	// single message works , group message has some problems to fix
 	messages, err := msgPullSrv.msgPullPro.GetMessageHistory(uid, pullMsgHsyReq.
 		FirstMessageId, pullMsgHsyReq.Id, pullMsgHsyReq.MsgType, pullMsgHsyReq.PageNum, pullMsgHsyReq.PageSize)
 	if err != nil {
