@@ -161,7 +161,6 @@ function _Toggle() {
               className='c-toggle-form-input'
               {...register('messageContent', {
                 required: true,
-                pattern: /^[0-9]+$/,
               })}
             />
             {errors.messageContent?.type === 'required' && (
