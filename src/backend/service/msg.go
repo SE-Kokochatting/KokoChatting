@@ -109,6 +109,17 @@ func (srv *MessageService) StoreMessage(from,to uint64,contents string,msgType i
 
 
 func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
+	if msgType == global.FriendRequestNotify{
+		ok, err := srv.mngPrd.IsInFriend(from, to)
+		if err != nil{
+			global.Logger.Error("database query error", zap.Error(err))
+			return nil, global.DatabaseQueryError
+		}
+		if ok || from == to{
+			global.Logger.Error("the user is already your friend")
+			return nil, global.FriendRequestError
+		}
+	}
 	f,err := srv.getMessageWrapFunc(msgType)
 	if err != nil{
 		return nil,err
