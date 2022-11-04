@@ -2,7 +2,7 @@ PROJECT_NAME="koko"
 
 
 build() {
-  go mod tidy
+  go mod tidy -compat=1.17
   go build -o koko ./main.go
 }
 
