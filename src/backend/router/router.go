@@ -11,6 +11,7 @@ type routerGroup struct{
 	msg msgRouter
 	user userRouter
 	manage manageRouter
+	upload uploadRouter
 }
 
 
@@ -34,6 +35,7 @@ func Routers() *gin.Engine {
 	publicGroup := engine.Group("/api/v1")   // 无需use中间件的routes命名为publicGroup
 	{
 		rg.user.UserRouter(publicGroup)
+		rg.upload.UploadPictureRouter(publicGroup)
 	}
 	return engine
 }

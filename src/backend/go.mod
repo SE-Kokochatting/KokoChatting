@@ -16,6 +16,7 @@ require (
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/viper v1.13.0
 	go.uber.org/zap v1.20.0
+	golang.org/dl v0.0.0-20221101163307-8012bed62c3d // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
