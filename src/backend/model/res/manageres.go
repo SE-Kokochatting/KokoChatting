@@ -58,6 +58,10 @@ type AgreeFriendRes struct {
 	Data struct {} `json:"data"`
 }
 
+type RefuseFriendRes struct {
+	Data struct {} `json:"data"`
+}
+
 type RemoveMemberRes struct {
 	Data struct {} `json:"data"`
 }

@@ -6,7 +6,6 @@ import (
 	"KokoChatting/model/res"
 	"KokoChatting/provider"
 	"encoding/json"
-	"fmt"
 	"go.uber.org/zap"
 	"time"
 )
@@ -73,10 +72,14 @@ func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string)(*dat
 	if ok,err := srv.mngPrd.IsInGroup(from,to);err != nil{
 		global.Logger.Error("query whether or not user is in group error",zap.Error(err))
 		return nil,global.QueryIsInGroup
-	}else if ok{
+	}else if !ok{
 		return nil,global.MessageSenderError
 	}
 	uids,err := srv.mngPrd.GetUserIdOfGroup(to)
+	if err != nil{
+		global.Logger.Error("query user id error", zap.Error(err))
+		return nil, global.GetMemberOfGroupError
+	}
 	return &dataobject.CommonMessage{
 		From: from,
 		Tos: uids,
@@ -147,7 +150,7 @@ func (srv *MessageService) PushUnStoredSystemMessage(from,to uint64,contents str
 		global.Logger.Error("wrap msg error",zap.Error(err))
 		return err
 	}
-	fmt.Println(string(wrapMsg.Bytes()))
+	//fmt.Println(string(wrapMsg.Bytes()))
 
 	// push msg
 	err = srv.SendMessage(wrapMsg)
@@ -207,6 +210,14 @@ func (srv *MessageService) RevertMessage(uid,msgid uint64) error {
 	return nil
 }
 
+func (srv *MessageService) DeleteMessage (msgId uint64) error {
+	err := srv.msgPrd.DeleteMessage(msgId)
+	if err != nil{
+		global.Logger.Error("delete message err", zap.Error(err))
+		return err
+	}
+	return err
+}
 
 func NewMessageService()*MessageService{
 	srv := &MessageService{
