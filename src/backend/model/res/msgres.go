@@ -38,10 +38,13 @@ type PullMsgRes struct {
 }
 
 type MessageInfo struct {
-	MessageId      uint64 `json:"messageId"`
-	SenderId       uint64 `json:"senderId"`
-	GroupId        uint64 `json:"groupId"`
-	MessageContent string `json:"messageContent"`
-	MessageType    int    `json:"messageType"`
-	ReadUids       string `json:"readUids"`
+	MessageId      uint64    `json:"messageId"`
+	SenderId       uint64    `json:"senderId"`
+	GroupId        uint64    `json:"groupId"`
+	Name           string    `json:"name"`
+	AvatarUrl      string    `json:"avatarUrl"`
+	SendTime       time.Time `json:"sendTime"`
+	MessageContent string    `json:"messageContent"`
+	MessageType    int       `json:"messageType"`
+	ReadUids       string    `json:"readUids"`
 }

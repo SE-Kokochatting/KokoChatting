@@ -53,3 +53,13 @@ export enum MessageType {
   // 9 进群通知
   JoinGroupNotify,
 }
+
+export enum AddType {
+  Friend,
+  Group,
+}
+
+export enum NotifyType {
+  friendRequest,
+  groupManageNotify,
+}

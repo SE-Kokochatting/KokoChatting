@@ -1,9 +1,9 @@
-import './index.scss'
 import { observer } from 'mobx-react-lite'
+import { useAlert } from 'react-alert'
 import { acceptFriend } from '@/network/friend/acceptFriend'
 import { MessageType } from '@/enums'
 import MsgStore from '@/mobx/msg'
-import { useAlert } from 'react-alert'
+import './index.scss'
 
 interface NotifyItemProps {
   publisherName: string
@@ -22,16 +22,20 @@ function _NotifyItem({ publisherName, info, mid, type }: NotifyItemProps) {
           MsgStore.removeFriendRequest(mid)
           alert.show('添加好友成功')
         } else {
-          alert.show('添加好友错误')
+          alert.show('添加好友失败')
         }
       })
     }
   }
 
   function refuse() {
-    type === MessageType.FriendRequestNotify
-      ? MsgStore.removeFriendRequest(mid)
-      : MsgStore.removeGroupRequest(mid)
+    //     type === MessageType.FriendRequestNotify
+    //       ? MsgStore.removeFriendRequest(mid)
+    // <<<<<<< HEAD
+    //       : MsgStore.removeGroupRequest(mid)
+    // =======
+    //       : MsgStore.removeGroupNotify(mid)
+    // >>>>>>> main
   }
 
   return (

@@ -28,6 +28,7 @@ $item-height: 50px;
       border-radius: 10px;
       color: var(--global-font-primary);
       cursor: pointer;
+      user-select: none;
 
       &:hover {
         background: var(--global-bg-primary_darker);

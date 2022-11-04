@@ -6,11 +6,10 @@
 
 import { makeAutoObservable } from 'mobx'
 import { quitGroup } from '@/network/group/quitGroup'
-import { IChat, IMessage } from '@/types'
+import { IChat } from '@/types'
 
 class ChatState {
   public currentChat: Partial<IChat> | null = null
-  public bubblesData: IMessage[] = []
 
   public constructor() {
     makeAutoObservable(this)
@@ -23,15 +22,6 @@ class ChatState {
    */
   public setCurrentChat(val: Partial<IChat> | null) {
     this.currentChat = val
-  }
-
-  /**
-   * 设置气泡
-   * @param val 要设置的值
-   * @returns void
-   */
-  public setBubblesData(val: IMessage[]) {
-    this.bubblesData = val
   }
 
   /**

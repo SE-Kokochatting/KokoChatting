@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
-import { ChatType } from '@/enums'
-import { DefaultGroupAvatar } from '@/consts'
+import { ChatType, MessageType } from '@/enums'
+import { DefaultGroupAvatarUrl, DefaultAvatarUrl } from '@/consts'
 import { IGroup, IMessageOutline, IUser } from '@/types'
 import ChatListStore from '@/mobx/chatlist'
+import MsgStore from '@/mobx/msg'
 import ListItem from './components/ListItem'
 import Loading from '@/components/Loading'
 import './index.scss'
@@ -16,11 +17,12 @@ function _ChatList() {
 
     if (ChatListStore.chatType === ChatType.Message) {
       ChatListStore.updateMsgOutline()
+      MsgStore.pullMsgContent(MessageType.SingleMessage)
+      // Todo: 也需要拉取群相关的消息
     } else if (ChatListStore.chatType === ChatType.Private) {
       ChatListStore.updateFriend()
     } else {
       ChatListStore.updateGroup()
-      console.log(ChatListStore.groupData)
     }
 
     setIsLoading(false)
@@ -41,6 +43,8 @@ function _ChatList() {
             messageType,
             messageNum,
             lastMessageTime,
+            name,
+            avatarUrl,
           }: Partial<IMessageOutline>) => (
             <ListItem
               key={senderId ? `u${senderId}` : `g${groupId}`}
@@ -50,6 +54,14 @@ function _ChatList() {
               messageNum={messageNum}
               lastMessageTime={lastMessageTime}
               chatType={ChatType.Message}
+              name={name}
+              avatarUrl={
+                avatarUrl
+                  ? avatarUrl
+                  : senderId
+                  ? DefaultAvatarUrl
+                  : DefaultGroupAvatarUrl
+              }
             />
           ),
         )}
@@ -58,8 +70,8 @@ function _ChatList() {
         ChatListStore.friendData.map(({ uid, avatarUrl, name }: IUser) => (
           <ListItem
             key={`u${uid}`}
-            gid={uid}
-            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            uid={uid}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultAvatarUrl}
             name={name}
             chatType={ChatType.Private}
           />
@@ -70,7 +82,7 @@ function _ChatList() {
           <ListItem
             key={`g${gid}`}
             gid={gid}
-            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatarUrl}
             name={name}
             chatType={ChatType.Group}
           />
