@@ -51,7 +51,7 @@ class ChatListState {
   public updateFriend() {
     getFriendList().then(({ data }) => {
       const { friend } = data
-      this.groupData = friend
+      this.friendData = friend
     })
   }
 
@@ -65,7 +65,6 @@ class ChatListState {
     pullMsgOutline({ lastMessageId: mid }).then(({ data }) => {
       const { message } = data
       this.msgData = message
-      console.log(this.msgData)
     })
   }
 }

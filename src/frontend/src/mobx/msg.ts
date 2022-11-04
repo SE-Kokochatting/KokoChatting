@@ -3,7 +3,6 @@ import { pullMsg } from '@/network/message/pullMsg'
 import { MessageType } from '@/enums'
 import { IMessageContent } from '@/types'
 import { getMsgId } from '@/utils/message'
-// import  ChatListStore  from '@/mobx/chatList'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
 
 class MsgState {
