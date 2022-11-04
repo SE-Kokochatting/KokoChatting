@@ -145,10 +145,17 @@ func (msgPullSrv *MsgPullService) PullMsg(uid, lastMesId, fromId uint64, msgType
 			groupId = v.FromId
 			senderId = 0
 		}
+		name, avatarUrl, err := msgPullSrv.GetProfileById(senderId, groupId, v.Type)
+		if err != nil {
+			return pullMsgRes, err
+		}
 		*messageList = append(*messageList, res.MessageInfo{
 			MessageId:      v.Id,
 			SenderId:       senderId,
 			GroupId:        groupId,
+			Name:           name,
+			AvatarUrl:      avatarUrl,
+			SendTime:       v.SendTime,
 			MessageContent: v.Contents,
 			MessageType:    v.Type,
 			ReadUids:       v.ReadUids,
@@ -182,10 +189,17 @@ func (msgPullSrv *MsgPullService) PullMsgHistory(uid uint64, pullMsgHsyReq *req.
 			groupId = v.FromId
 			senderId = 0
 		}
+		name, avatarUrl, err := msgPullSrv.GetProfileById(senderId, groupId, v.Type)
+		if err != nil {
+			return pullMsgRes, err
+		}
 		*messageList = append(*messageList, res.MessageInfo{
 			MessageId:      v.Id,
 			SenderId:       senderId,
 			GroupId:        groupId,
+			Name:           name,
+			AvatarUrl:      avatarUrl,
+			SendTime:       v.SendTime,
 			MessageContent: v.Contents,
 			MessageType:    v.Type,
 			ReadUids:       v.ReadUids,
