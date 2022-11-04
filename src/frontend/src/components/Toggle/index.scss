@@ -10,7 +10,8 @@
   color: var(--global-font-primary_lighter);
   z-index: 3;
   max-height: 600px;
-  overflow : auto;
+  overflow: auto;
+  transition: 0.3s height;
 
   &-tab {
     display: flex;

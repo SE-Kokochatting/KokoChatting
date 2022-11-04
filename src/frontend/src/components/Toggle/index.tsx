@@ -158,9 +158,7 @@ function _Toggle() {
                 备注信息不能为空
               </span>
             )}
-            <button className='c-toggle-form-btn' type='submit'>
-              发送请求
-            </button>
+            <button className='c-toggle-form-btn'>发送请求</button>
           </form>
         </>
       )}
