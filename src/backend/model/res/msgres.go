@@ -24,6 +24,8 @@ type PullOutlineMsgRes struct {
 type MegOutlineInfo struct {
 	SenderId        uint64    `json:"senderId"`
 	GroupId         uint64    `json:"groupId"`
+	Name            string    `json:"name"`
+	AvatarUrl       string    `json:"avatarUrl"`
 	MessageType     int       `json:"messageType"`
 	MessageNum      int       `json:"messageNum"`
 	LastMessageTime time.Time `json:"lastMessageTime"`

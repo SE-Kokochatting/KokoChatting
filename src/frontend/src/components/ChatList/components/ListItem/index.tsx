@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { IChat } from '@/types'
-import { MessageType } from '@/enums'
+import { MessageType, ChatType } from '@/enums'
 import ChatStore from '@/mobx/chat'
 import './index.scss'
 
-function handleClick({ uid, gid, avatarUrl, name }: any) {
+function handleClick({ uid, gid, avatarUrl, name }: Partial<IChat>) {
   ChatStore.setCurrentChat({
     uid,
     gid,
@@ -21,18 +21,21 @@ function _ListItem({
   messageType,
   messageNum,
   lastMessageTime,
-}: IChat) {
+  chatType,
+}: Partial<IChat> & { chatType: ChatType }) {
   return (
     <div
       className='c-chat_list-item'
       style={{
         display:
-          messageType === MessageType.SingleMessage ||
-          messageType === MessageType.GroupMessage
+          (chatType === ChatType.Message &&
+            (messageType === MessageType.SingleMessage ||
+              messageType === MessageType.GroupMessage)) ||
+          chatType !== ChatType.Message
             ? 'flex'
             : 'none',
       }}
-      onClick={() => handleClick({ uid, gid, avatarUrl, name })}
+      onClick={() => handleClick({ uid, gid, avatarUrl, name, messageType })}
     >
       <div className='c-chat_list-item-avatar'>
         <img className='c-chat_list-item-avatar-img' src={avatarUrl} />

@@ -11,12 +11,19 @@ import (
 type ManageService struct{
 	ManageProvider *provider.ManageProvider
 	MessageProvider *provider.MessageProvider
+	*MessageService
 }
 
 func (manageSrv *ManageService) DeleteFriend (uid uint64, fid uint64) error {
 	err := manageSrv.ManageProvider.DeleteFriend(uid,fid)
 	if err != nil{
 		global.Logger.Error("delete friend err",zap.Error(err))
+		return err
+	}
+	msg := "you have been deleted"
+	err = manageSrv.PushUnStoredSystemMessage(uid, fid, msg, global.DeleteFriendNotify)
+	if err != nil{
+		global.Logger.Error("delete friend notify error", zap.Error(err))
 		return err
 	}
 	return err
@@ -26,6 +33,12 @@ func (manageSrv *ManageService) AddFriend (uid uint64, fid uint64) error {
 	err := manageSrv.ManageProvider.AddFriend(uid, fid)
 	if err != nil{
 		global.Logger.Error("add friend err", zap.Error(err))
+		return err
+	}
+	msg := "friend request is accepted"
+	err = manageSrv.PushUnStoredSystemMessage(uid, fid, msg, global.AddFriendResponseNotify)
+	if err != nil{
+		global.Logger.Error("add friend response notify error", zap.Error(err))
 		return err
 	}
 	return err
@@ -83,6 +96,12 @@ func (manageSrv *ManageService) CreatGroup (name string, uid uint64, aid []uint6
 			return 0, err
 		}
 	}
+	msg := "you have been in this group now"
+	err = manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.JoinGroupNotify)
+	if err != nil{
+		global.Logger.Error("push join group notify error",zap.Error(err))
+		return 0, err
+	}
 	return gid, err
 }
 
@@ -90,6 +109,12 @@ func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
 	err := manageSrv.ManageProvider.QuitGroup(uid, gid)
 	if err != nil{
 		global.Logger.Error("quit group err", zap.Error(err))
+		return err
+	}
+	msg := "this user quits the group"
+	err = manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.QuitGroupNotify)
+	if err != nil{
+		global.Logger.Error("push quit group notify error",zap.Error(err))
 		return err
 	}
 	return err
@@ -244,5 +269,6 @@ func NewManageService() *ManageService {
 	return &ManageService{
 		ManageProvider: provider.NewManageProvider(),
 		MessageProvider: provider.NewMessageProvider(),
+		MessageService: NewMessageService(),
 	}
 }

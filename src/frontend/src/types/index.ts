@@ -20,11 +20,19 @@ export interface IGroup {
 }
 
 export interface IMessage {
+  messageId: number
   senderId: number
   groupId: number
   messageType: MessageType
-  messageNum: number
+  messageContent: string
   lastMessageTime: string
+  name: string
+  avatarUrl: string
+  readUids: number[]
+}
+
+export type IMessageOutline = Omit<IMessage, 'messageId' | 'readUids'> & {
+  messageNum: number
 }
 
 
@@ -34,7 +42,7 @@ export interface IMessageContent{
   messageId: number
   messageType: MessageType
   messageContent: string
-  readUids: string,  
+  readUids: string,
 }
 
-export type IChat = IUser & IGroup & IMessage
+export type IChat = IUser & IGroup & IMessageOutline
