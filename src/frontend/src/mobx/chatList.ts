@@ -4,14 +4,13 @@
  * date: 2022-11-01 12:54:59 +0800
  */
 
-import { makeAutoObservable,runInAction } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { ChatType } from '@/enums'
 import { IGroup, IMessage, IUser } from '@/types'
 import { getMsgId } from '@/utils/message'
 import { getGroupList } from '@/network/group/getGroupList'
 import { getFriendList } from '@/network/friend/getFriendList'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
-
 
 class ChatListState {
   public chatType: ChatType = ChatType.Message
@@ -52,7 +51,7 @@ class ChatListState {
   public updateFriend() {
     getFriendList().then(({ data }) => {
       const { friend } = data
-      this.groupData = friend
+      this.friendData = friend
     })
   }
 
@@ -66,11 +65,8 @@ class ChatListState {
     pullMsgOutline({ lastMessageId: mid }).then(({ data }) => {
       const { message } = data
       this.msgData = message
-      console.log(this.msgData)
     })
   }
-
-
 }
 
 const ChatListStore = new ChatListState()

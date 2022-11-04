@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
 import { ChatType } from '@/enums'
-import { DefaultGroupAvatar } from '@/consts'
+import { DefaultGroupAvatarUrl, DefaultAvatarUrl } from '@/consts'
 import { IGroup, IMessageOutline, IUser } from '@/types'
 import ChatListStore from '@/mobx/chatlist'
 import ListItem from './components/ListItem'
@@ -20,7 +20,6 @@ function _ChatList() {
       ChatListStore.updateFriend()
     } else {
       ChatListStore.updateGroup()
-      console.log(ChatListStore.groupData)
     }
 
     setIsLoading(false)
@@ -59,7 +58,7 @@ function _ChatList() {
           <ListItem
             key={`u${uid}`}
             gid={uid}
-            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultAvatarUrl}
             name={name}
             chatType={ChatType.Private}
           />
@@ -70,7 +69,7 @@ function _ChatList() {
           <ListItem
             key={`g${gid}`}
             gid={gid}
-            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatar}
+            avatarUrl={avatarUrl ? avatarUrl : DefaultGroupAvatarUrl}
             name={name}
             chatType={ChatType.Group}
           />

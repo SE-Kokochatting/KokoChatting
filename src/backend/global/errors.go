@@ -62,6 +62,8 @@ var (
 	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
 	GetMemberOfGroupError    = NewError(errors.New("can not get member of group"), 4017)
 	MessageDeleteError       = NewError(errors.New("delete message error"), 4018)
+    UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
+	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
 
 func NewError(err error, status int) error {

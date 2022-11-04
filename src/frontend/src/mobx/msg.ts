@@ -1,30 +1,30 @@
 import { makeAutoObservable } from 'mobx'
 import { pullMsg } from '@/network/message/pullMsg'
-import {  MessageType } from '@/enums'
+import { MessageType } from '@/enums'
 import { IMessageContent } from '@/types'
-import { getMsgId } from '@/utils/message'
-// import  ChatListStore  from '@/mobx/chatList'
+import { getMsgId, setMsgId } from '@/utils/message'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
 
-class MsgState{
-
+class MsgState {
+  // 好友请求
   public friendRequest: IMessageContent[] = []
-  public friendIsPull: boolean = false
+  public friendIsPull = false
+  // 群通知
   public groupNotify: IMessageContent[] = []
-  public groupIsPull: boolean = false
+  public groupIsPull = false
 
-  public constructor(){
+  public constructor() {
     makeAutoObservable(this)
   }
 
-
-  public removeFriendRequest(mid: number){
-    this.friendRequest = this.friendRequest.filter(item => item.messageId != mid)
+  public removeFriendRequest(mid: number) {
+    this.friendRequest = this.friendRequest.filter(
+      (item) => item.messageId !== mid,
+    )
   }
 
-
-  public removeGroupRequest(mid: number){
-    this.groupNotify = this.groupNotify.filter(item => item.messageId != mid)
+  public removeGroupRequest(mid: number) {
+    this.groupNotify = this.groupNotify.filter((item) => item.messageId !== mid)
   }
 
   /**
@@ -33,38 +33,61 @@ class MsgState{
    * @returns void
    */
   public async pullMsgContent(msgType: MessageType) {
-    if(msgType === MessageType.FriendRequestNotify){
-      if(this.friendIsPull){
-        return
-      }
+    if (msgType === MessageType.FriendRequestNotify) {
+      if (this.friendIsPull) return
       this.friendIsPull = true
-    }else if(msgType === MessageType.JoinGroupRequestNotify){
-      if(this.groupIsPull){
-        return
-      }
+    } else if (msgType === MessageType.JoinGroupRequestNotify) {
+      if (this.groupIsPull) return
       this.groupIsPull = true
     }
+
     const mid = getMsgId()
-    const {data} = await pullMsgOutline({lastMessageId:mid})
-    const {message} = data
-    this.friendRequest = []
-    this.groupNotify = []
-    for(const outlineMsg of message){
-      if(outlineMsg.messageType === msgType){
-        pullMsg({ lastMessageId: mid, id: outlineMsg.groupId === 0 ? outlineMsg.senderId : outlineMsg.groupId, msgType: msgType }).then(({ data }) => {
-          const { message } = data
-          if(msgType === MessageType.FriendRequestNotify){
-            this.friendRequest.push(...message)
-          }else{
-            this.groupNotify.push(...message)
-          }
-        })
+    // 获取消息概要数组
+    const { data } = await pullMsgOutline({ lastMessageId: mid })
+    const { message } = data
+
+    this.init()
+    if (!message) return
+
+    let maxMsgId = 0
+
+    const reqArr = []
+
+    for (const outlineMsg of message) {
+      if (outlineMsg.messageType === msgType) {
+        reqArr.push(
+          pullMsg({
+            lastMessageId: mid,
+            id:
+              outlineMsg.groupId === 0
+                ? outlineMsg.senderId
+                : outlineMsg.groupId,
+            msgType: msgType,
+          }),
+        )
       }
     }
+
+    const resData = await Promise.all(reqArr)
+    const msgArr = resData.map((item: any) => item.data.message).flat()
+
+    for (const message of msgArr) {
+      maxMsgId = Math.max(maxMsgId, message.messageId)
+      if (msgType === MessageType.FriendRequestNotify) {
+        this.friendRequest.push(message)
+      } else {
+        this.groupNotify.push(message)
+      }
+    }
+    setMsgId(maxMsgId)
+  }
+
+  private init() {
+    this.friendRequest = []
+    this.groupNotify = []
   }
 }
 
-
-const MsgStore = new MsgState
+const MsgStore = new MsgState()
 
 export default MsgStore
