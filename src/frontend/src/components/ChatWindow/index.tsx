@@ -1,37 +1,63 @@
 import { observer } from 'mobx-react-lite'
-import { ChatType, MessageType } from '@/enums'
+import { ChatType } from '@/enums'
+import { getMsgId } from '@/utils/message'
+import MsgStore from '@/mobx/msg'
 import ChatStore from '@/mobx/chat'
 import Bubble from './components/Bubble'
 import Sender from './components/Sender'
 import './index.scss'
 
 function _ChatWindow() {
+  const mid = getMsgId()
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>
-        {ChatStore.bubblesData.map(
-          ({
-            lastMessageTime,
-            readUids,
-            messageContent,
-            messageId,
-            senderId,
-            messageType,
-          }) => (
-            <Bubble
-              key={messageId}
-              lastMessageTime={lastMessageTime}
-              readUids={readUids}
-              messageContent={messageContent}
-              senderId={senderId}
-              chatType={
-                messageType === MessageType.SingleMessage
-                  ? ChatType.Private
-                  : ChatType.Group
-              }
-            />
-          ),
-        )}
+        {ChatStore.currentChat?.uid &&
+          MsgStore.friendMsg.map(
+            ({
+              lastMessageTime,
+              readUids,
+              messageContent,
+              messageId,
+              senderId,
+            }) =>
+              senderId === ChatStore.currentChat?.uid &&
+              (messageId as number) > mid && (
+                <Bubble
+                  key={messageId}
+                  lastMessageTime={lastMessageTime}
+                  readUids={readUids}
+                  messageContent={messageContent}
+                  senderId={senderId}
+                  chatType={ChatType.Private}
+                />
+              ),
+          )}
+        {ChatStore.currentChat?.gid &&
+          MsgStore.groupMsg.map(
+            ({
+              lastMessageTime,
+              readUids,
+              messageContent,
+              messageId,
+              groupId,
+              name,
+              avatarUrl,
+            }) =>
+              groupId === ChatStore.currentChat?.gid &&
+              (messageId as number) > mid && (
+                <Bubble
+                  key={messageId}
+                  lastMessageTime={lastMessageTime}
+                  readUids={readUids}
+                  messageContent={messageContent}
+                  groupId={groupId}
+                  chatType={ChatType.Group}
+                  name={name}
+                  avatarUrl={avatarUrl}
+                />
+              ),
+          )}
       </div>
       <Sender />
     </div>

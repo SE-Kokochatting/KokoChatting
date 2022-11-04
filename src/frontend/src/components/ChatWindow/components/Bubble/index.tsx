@@ -1,7 +1,7 @@
 import { ChatType } from '@/enums'
 import { IMessage } from '@/types'
 import { getUid } from '@/utils/uid'
-import SvgIcon from '@/components/SvgIcon'
+// import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
 function Bubble({

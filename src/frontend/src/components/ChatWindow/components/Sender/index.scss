@@ -10,12 +10,17 @@
   align-items: center;
   justify-content: space-between;
 
-  &-input {
-    flex: 1 0 auto;
-    box-sizing: border-box;
-    height: 60px;
-    background: var(--global-bg-primary_lighter);
-    font-size: 18px;
-    color: var(--global-font-primary);
+  &-form {
+    width: 100%;
+
+    &-input {
+      width: 100%;
+      flex: 1 0 auto;
+      box-sizing: border-box;
+      height: 60px;
+      background: var(--global-bg-primary_lighter);
+      font-size: 18px;
+      color: var(--global-font-primary);
+    }
   }
 }

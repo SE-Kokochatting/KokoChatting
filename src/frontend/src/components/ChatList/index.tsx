@@ -57,7 +57,7 @@ function _ChatList() {
         ChatListStore.friendData.map(({ uid, avatarUrl, name }: IUser) => (
           <ListItem
             key={`u${uid}`}
-            gid={uid}
+            uid={uid}
             avatarUrl={avatarUrl ? avatarUrl : DefaultAvatarUrl}
             name={name}
             chatType={ChatType.Private}

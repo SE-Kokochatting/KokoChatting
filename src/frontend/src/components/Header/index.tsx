@@ -45,9 +45,9 @@ function _Header() {
               {ChatStore.currentChat?.count} members
             </span>
           )}
-          {ChatStore.currentChat?.uid && (
+          {/* {ChatStore.currentChat?.uid && (
             <span className='c-header-right-info-state'>online</span>
-          )}
+          )} */}
         </div>
         <SvgIcon
           name='search'
