@@ -106,15 +106,15 @@ func (manageSrv *ManageService) CreatGroup (name string, uid uint64, aid []uint6
 }
 
 func (manageSrv *ManageService) QuitGroup (uid uint64, gid uint64) error {
-	err := manageSrv.ManageProvider.QuitGroup(uid, gid)
-	if err != nil{
-		global.Logger.Error("quit group err", zap.Error(err))
-		return err
-	}
 	msg := "this user quits the group"
-	err = manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.QuitGroupNotify)
+	err := manageSrv.PushUnStoredSystemMessage(uid, gid, msg, global.QuitGroupNotify)
 	if err != nil{
 		global.Logger.Error("push quit group notify error",zap.Error(err))
+		return err
+	}
+	err = manageSrv.ManageProvider.QuitGroup(uid, gid)
+	if err != nil{
+		global.Logger.Error("quit group err", zap.Error(err))
 		return err
 	}
 	return err
