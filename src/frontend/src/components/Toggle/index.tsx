@@ -13,6 +13,16 @@ import NotifyItem from './components/NotifyItem'
 import SvgIcon from '../SvgIcon'
 import './index.scss'
 
+enum AddType {
+  Friend,
+  Group,
+}
+
+enum NotifyType {
+  friendRequest,
+  groupManageNotify,
+}
+
 function _Toggle() {
   const {
     register,
@@ -21,32 +31,20 @@ function _Toggle() {
     formState: { errors },
   } = useForm<Partial<IMessageContent & ICreateGroup & IAddFriend>>()
 
-  enum AddType {
-    Friend,
-    Group,
-  }
-
-  enum NotifyType {
-    friendRequest,
-    groupManageNotify,
-  }
-
-  const hash = {
-    0: MessageType.FriendRequestNotify,
-    1: MessageType.JoinGroupRequestNotify,
-  }
-
   const alert = useAlert()
-  // 此时是添加好友还是群
+  // 添加好友/群
   const [addType, setAddType] = useState<AddType>(AddType.Friend)
-
+  // 好友请求/群通知
   const [notifyType, setNotifyType] = useState<NotifyType>(
     NotifyType.friendRequest,
   )
 
   useEffect(() => {
-    MsgStore.pullMsgContent(hash[notifyType])
-    // console.log("pull msg")
+    MsgStore.pullMsgContent(
+      notifyType === NotifyType.friendRequest
+        ? MessageType.FriendRequestNotify
+        : MessageType.JoinGroupRequestNotify,
+    )
   }, [ToggleStore.showToggle, ToggleStore.toggleType])
 
   async function onAddContactSubmit(reqData: any) {
@@ -163,7 +161,6 @@ function _Toggle() {
               className='c-toggle-form-input'
               {...register('messageContent', {
                 required: true,
-                pattern: /^[0-9]+$/,
               })}
             />
             {errors.messageContent?.type === 'required' && (
@@ -225,28 +222,26 @@ function _Toggle() {
               群通知
             </div>
           </div>
-          <div>
-            {notifyType === NotifyType.friendRequest &&
-              MsgStore.friendRequest.map((msg: IMessageContent) => (
-                <NotifyItem
-                  publisherName={`${msg.senderId}`}
-                  info={msg.messageContent}
-                  mid={msg.messageId}
-                  type={MessageType.FriendRequestNotify}
-                  key={msg.messageId}
-                />
-              ))}
-            {notifyType === NotifyType.groupManageNotify &&
-              MsgStore.groupNotify.map((msg: IMessageContent) => (
-                <NotifyItem
-                  publisherName={`${msg.groupId}`}
-                  info={msg.messageContent}
-                  mid={msg.messageId}
-                  type={MessageType.JoinGroupRequestNotify}
-                  key={msg.messageId}
-                />
-              ))}
-          </div>
+          {notifyType === NotifyType.friendRequest &&
+            MsgStore.friendRequest.map((msg: IMessageContent) => (
+              <NotifyItem
+                publisherName={`${msg.senderId}`}
+                info={msg.messageContent}
+                mid={msg.messageId}
+                type={MessageType.FriendRequestNotify}
+                key={msg.messageId}
+              />
+            ))}
+          {notifyType === NotifyType.groupManageNotify &&
+            MsgStore.groupNotify.map((msg: IMessageContent) => (
+              <NotifyItem
+                publisherName={`${msg.groupId}`}
+                info={msg.messageContent}
+                mid={msg.messageId}
+                type={MessageType.JoinGroupRequestNotify}
+                key={msg.messageId}
+              />
+            ))}
         </>
       )}
     </div>
