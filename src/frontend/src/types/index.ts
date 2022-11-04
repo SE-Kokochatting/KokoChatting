@@ -35,4 +35,14 @@ export type IMessageOutline = Omit<IMessage, 'messageId' | 'readUids'> & {
   messageNum: number
 }
 
+
+export interface IMessageContent{
+  senderId: number
+  groupId: number
+  messageId: number
+  messageType: MessageType
+  messageContent: string
+  readUids: string,
+}
+
 export type IChat = IUser & IGroup & IMessageOutline
