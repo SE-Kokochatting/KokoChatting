@@ -27,4 +27,14 @@ export interface IMessage {
   lastMessageTime: string
 }
 
+
+export interface IMessageContent{
+  senderId: number
+  groupId: number
+  messageId: number
+  messageType: MessageType
+  messageContent: string
+  readUids: string,  
+}
+
 export type IChat = IUser & IGroup & IMessage

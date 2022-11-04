@@ -9,6 +9,8 @@
   padding: 30px;
   color: var(--global-font-primary_lighter);
   z-index: 3;
+  max-height: 600px;
+  overflow : auto;
 
   &-tab {
     display: flex;
