@@ -20,4 +20,5 @@ func(r *manageRouter) ManageRouter(_router gin.IRoutes){
 	_router.POST("/group/host/change_permission", routerController.ChangePermission)
 	_router.POST("/user/add_friend", routerController.AgreeFriendRequest)
 	_router.POST("/admin/remove", routerController.RemoveMember)
+	_router.POST("/user/add_friend_refuse",routerController.RefuseFriendRequest)
 }

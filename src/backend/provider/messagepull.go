@@ -52,8 +52,8 @@ func (m *MsgPullProvider) GetMessageHistory(uid, firstMsgId, fromId uint64, msgT
 	if dbClient == nil {
 		return nil, fmt.Errorf("the db client is nil")
 	}
-	// paging return
-	err := dbClient.Limit(pageSize).Offset((pageNum-1)*pageSize).
+	// paging return order by send_time desc
+	err := dbClient.Limit(pageSize).Offset((pageNum-1)*pageSize).Order("send_time desc").
 		Where("id < ? and to_id = ? and from_id = ? and type = ?", firstMsgId, uid, fromId, msgType).Find(&messages).Error
 	if err != nil {
 		global.Logger.Error("find message error", zap.Error(err))

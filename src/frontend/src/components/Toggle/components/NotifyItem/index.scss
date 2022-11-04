@@ -1,49 +1,49 @@
 $item-height: 50px;
 
 .notify_item {
-  border:1px solid black;
+  border: 1px solid var(--global-font-primary);
   border-radius: 15px;
-  width:90%;
+  width: 90%;
   padding-left: 10px;
   margin-top: 10px;
 
-  &-ctn{
-    height:$item-height;
-    margin-top:10px;
+  &-ctn {
+    height: $item-height;
+    margin-top: 10px;
 
-    &-span{
+    &-span {
       display: inline-block;
-      height:30px;
+      height: 30px;
       line-height: 30px;
       margin-bottom: 10px;
     }
 
-    &-btn{
-      width:60px;
-      height:30px;
-      display:inline-block;
+    &-btn {
+      width: 60px;
+      height: 30px;
+      display: inline-block;
       background: var(--global-bg-primary);
-      margin-top:10px;
-      margin-right:10px;
-      border-radius:10px;
+      margin-top: 10px;
+      margin-right: 10px;
+      border-radius: 10px;
       color: var(--global-font-primary);
       cursor: pointer;
+      user-select: none;
 
-
-      &:hover{
+      &:hover {
         background: var(--global-bg-primary_darker);
       }
     }
 
-    .agree{
-      margin-left:200px;
+    .agree {
+      margin-left: 200px;
     }
   }
 
-  &-info{
+  &-info {
     font-size: 14px;
     line-height: 20px;
     margin-bottom: 5px;
-    color:grey;
+    color: var(--global-font-primary);
   }
 }
