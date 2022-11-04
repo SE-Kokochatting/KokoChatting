@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
-import { ToggleType } from '@/enums'
+import { MessageType, ToggleType } from '@/enums'
+import ChatListStore from '@/mobx/chatList'
 import UserStore from '@/mobx/user'
 import ToggleStore from '@/mobx/toggle'
 import SvgIcon from '@/components/SvgIcon'
@@ -77,7 +78,12 @@ function _LeftDropdown({
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
-      <li className='c-header-left-dropdown-item'>
+      <li className='c-header-left-dropdown-item'
+        onClick={() => {
+          // await ChatListStore.pullMsgContent(MessageType.FriendRequestNotify)
+          handleToggle(ToggleType.Notify)
+        }}
+      >
         <SvgIcon name='notice' style={iconStyle} />
         通知
       </li>
