@@ -31,7 +31,7 @@ function _NotifyItem({ publisherName, info, mid, type }: NotifyItemProps) {
   function refuse() {
     type === MessageType.FriendRequestNotify
       ? MsgStore.removeFriendRequest(mid)
-      : MsgStore.removeGroupRequest(mid)
+      : MsgStore.removeGroupNotify(mid)
   }
 
   return (

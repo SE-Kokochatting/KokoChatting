@@ -14,10 +14,24 @@
     cursor: pointer;
     padding: 0 35px;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
   }
 
   &-item:hover {
     background: var(--global-bg-primary_lighter);
+  }
+
+  &-msg_count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    width: 18px;
+    margin-left: 10px;
+    border: 1px solid var(--error-font-primary);
+    color: var(--error-font-primary);
+    border-radius: 50%;
   }
 }
 

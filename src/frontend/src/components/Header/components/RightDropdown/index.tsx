@@ -19,6 +19,10 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
     }
   }
 
+  // async function deleteFriend() {}
+
+  // async function blockFriend() {}
+
   return (
     <div
       className='c-header-right-dropdown'
@@ -27,7 +31,7 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
         e.stopPropagation()
       }}
     >
-      {ChatStore.currentChat?.gid && (
+      {ChatStore.currentChat?.gid > 0 && (
         <div
           className='c-header-right-dropdown-item'
           onClick={() => handleQuit()}
