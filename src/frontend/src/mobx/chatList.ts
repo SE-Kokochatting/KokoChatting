@@ -7,7 +7,6 @@
 import { makeAutoObservable } from 'mobx'
 import { ChatType } from '@/enums'
 import { IGroup, IMessage, IUser } from '@/types'
-import { getMsgId } from '@/utils/message'
 import { getGroupList } from '@/network/group/getGroupList'
 import { getFriendList } from '@/network/friend/getFriendList'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
@@ -61,7 +60,7 @@ class ChatListState {
    * @returns void
    */
   public updateMsgOutline() {
-    const mid = getMsgId()
+    const mid = 0
     pullMsgOutline({ lastMessageId: mid }).then(({ data }) => {
       const { message } = data
       this.msgData = message
