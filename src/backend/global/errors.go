@@ -59,6 +59,9 @@ var (
 	PullOutlineError         = NewError(errors.New("pull outline error"), 4014)
 	PullMessageError         = NewError(errors.New("pull message error"), 4015)
 	MessageIdError           = NewError(errors.New("can not pull message from yourself, please check your id"), 4016)
+  
+  UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
+	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
 
 func NewError(err error, status int) error {

@@ -51,7 +51,7 @@ class ChatListState {
   public updateFriend() {
     getFriendList().then(({ data }) => {
       const { friend } = data
-      this.groupData = friend
+      this.friendData = friend
     })
   }
 
