@@ -67,14 +67,11 @@ export default class WS extends WebSocket {
         break
       case MessageType.SingleMessage:
         MsgStore.sendMsg(msg, MessageType.SingleMessage)
-        // 有新消息后滑动到页面底部
-        Emitter.emit('scrollToBottom')
         // 由于有新的消息，需要让 IntersectionObserver 能够监测到新的 DOM 元素
         Emitter.emit('updateIntersect')
         break
       case MessageType.GroupMessage:
         MsgStore.sendMsg(msg, MessageType.GroupMessage)
-        Emitter.emit('scrollToBottom')
         Emitter.emit('updateIntersect')
         break
       case MessageType.FriendRequestNotify:

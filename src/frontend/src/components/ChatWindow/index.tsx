@@ -15,6 +15,7 @@ function _ChatWindow() {
   const mid = getMsgId()
   const uid = getUid()
 
+  // 处理消息已读
   function handleMsgRead() {
     // 在页面上渲染的消息
     const renderedMsg =
@@ -27,36 +28,39 @@ function _ChatWindow() {
         : MsgStore.groupMsg.filter(
             ({ groupId }) => groupId === ChatStore.currentChat?.gid,
           )
-    // 气泡 Dom 数组
-    const bubbleDomArr = [
-      ...document.querySelectorAll('.c-chat_window-chat_area-bubble_wrapper'),
-    ]
-    // key: DOM 值: message
-    const bubbleMap = {}
 
-    bubbleDomArr.forEach((item, i) => {
-      bubbleMap[item.id] = renderedMsg[i]
-    })
+    setTimeout(() => {
+      // 气泡 Dom 数组
+      const bubbleDomArr = [
+        ...document.querySelectorAll('.c-chat_window-chat_area-bubble_wrapper'),
+      ]
+      // key: DOM 值: message
+      const bubbleMap = {}
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((item) => {
-        if (item.isIntersecting) {
-          const msgObj = bubbleMap[item.target.id]
-          const { senderId, messageId, readUids } = msgObj
-          if (senderId !== uid && !readUids.includes(uid)) {
-            msgHasRead({ msgids: [messageId] }).then(() => {
-              io.unobserve(item.target)
-            })
-          }
-        }
+      bubbleDomArr.forEach((item, i) => {
+        bubbleMap[item.id] = renderedMsg[i]
       })
-    })
 
-    bubbleDomArr.forEach((item) => io.observe(item))
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((item) => {
+          if (item.isIntersecting) {
+            const msgObj = bubbleMap[item.target.id]
+            const { senderId, messageId, readUids } = msgObj
+            if (senderId !== uid && !readUids.includes(uid)) {
+              msgHasRead({ msgids: [messageId] }).then(() => {
+                io.unobserve(item.target)
+              })
+            }
+          }
+        })
+      })
+      bubbleDomArr.forEach((item) => io.observe(item))
+    }, 0)
   }
 
   useEffect(() => {
     handleMsgRead()
+    // 滑到页面底部
     Emitter.emit('scrollToBottom')
   }, [ChatStore.currentChat])
 
