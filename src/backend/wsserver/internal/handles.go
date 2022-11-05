@@ -11,6 +11,7 @@ var handlers = make(map[int]msgHandler)
 func init(){
 	registerHandler(websocket.PingMessage,&pingHandler{})
 	registerHandler(websocket.PongMessage,&pongHandler{})
+	registerHandler(websocket.TextMessage,&textHandle{})
 }
 
 func registerHandler(msgType int,handle msgHandler){
@@ -47,5 +48,17 @@ type pongHandler struct {
 
 func (handle *pongHandler) handle(msg []byte,conn *Conn)error{
 	global.Logger.Debug("pong handler handle msg")
+	return nil
+}
+
+
+
+type textHandle struct{
+
+}
+
+
+func (handle *textHandle) handle(msg []byte,conn *Conn)error{
+	global.Logger.Debug(string(msg))
 	return nil
 }
