@@ -2,10 +2,19 @@
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /api/v1/example           --> KokoChatting/controller.(*ExampleController).Example-fm (3 handlers)
-[GIN-debug] POST   /api/v1/user/register     --> KokoChatting/controller.(*UserController).Register-fm (3 handlers)
-[GIN-debug] POST   /api/v1/user/login        --> KokoChatting/controller.(*UserController).Login-fm (3 handlers)
-[GIN-debug] POST   /api/v1/user/list_delete  --> KokoChatting/controller.(*DeleteFriendController).DeleteFriend-fm (3 handlers)
+[GIN-debug] POST   /api/v1/user/list_delete  --> KokoChatting/controller.(*ManageController).DeleteFriend-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/list_block   --> KokoChatting/controller.(*ManageController).BlockFriend-fm (5 handlers)
+[GIN-debug] POST   /api/v1/creat_group       --> KokoChatting/controller.(*ManageController).CreatGroup-fm (5 handlers)
+[GIN-debug] POST   /api/v1/group/quit        --> KokoChatting/controller.(*ManageController).QuitGroup-fm (5 handlers)
+[GIN-debug] GET    /api/v1/user/list         --> KokoChatting/controller.(*ManageController).GetFriendListInfo-fm (5 handlers)
+[GIN-debug] POST   /api/v1/group/avatar      --> KokoChatting/controller.(*ManageController).SetGroupAvatar-fm (5 handlers)
+[GIN-debug] GET    /api/v1/group/list        --> KokoChatting/controller.(*ManageController).GetGroupListInfo-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/avatar       --> KokoChatting/controller.(*UserController).SetUserAvatar-fm (5 handlers)
+[GIN-debug] GET    /api/v1/upgrade_protocol  --> KokoChatting/controller.(*upgradeController).UpgradeProtocol-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/friend/send_message --> KokoChatting/controller.(*PushController).SendMsg-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/register     --> KokoChatting/controller.(*UserController).Register-fm (4 handlers)
+[GIN-debug] POST   /api/v1/user/login        --> KokoChatting/controller.(*UserController).Login-fm (4 handlers)
+[GIN-debug] POST   /api/v1/user              --> KokoChatting/controller.(*UserController).GetUserInfo-fm (4 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on localhost:8080
