@@ -40,8 +40,6 @@ class UserState {
     this.name = name
     this.avatarUrl = avatarUrl
   }
-
-
 }
 
 const UserStore = new UserState()

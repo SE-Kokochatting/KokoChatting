@@ -10,17 +10,14 @@ function _UserInfo() {
   const alert = useAlert()
   function upload(e: any) {
     const formData: FormData = new FormData()
-    console.log('upload ', e.target.files[0])
     formData.append('file', e.target.files[0])
     fetch('/api/upload', {
       method: 'POST',
       body: formData,
     }).then(async (res) => {
       const resData = await res.json()
-      console.log(resData)
       const { code, data } = resData
       if (code !== 200) {
-        console.log(code, data)
         alert.show('上传失败')
         return
       }

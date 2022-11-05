@@ -38,7 +38,7 @@ function Sender() {
         return
       }
       const { msgid } = data
-
+      const now = new Date()
       MsgStore.sendMsg(
         {
           messageId: msgid,
@@ -50,6 +50,7 @@ function Sender() {
           groupId: ChatStore.currentChat?.gid,
           readUids: [],
           avatarUrl: UserStore.avatarUrl,
+          sendTime: `${now.getHours()}:${now.getMinutes()}`,
         },
         messageType,
       )

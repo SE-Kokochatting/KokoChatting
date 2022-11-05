@@ -30,11 +30,11 @@ function _NotifyItem({ publisherName, info, mid, type }: NotifyItemProps) {
   }
 
   function refuse() {
-    refuseFriend({id: mid}).then((res) => {
-      if(res.code === 200){
+    refuseFriend({ id: mid }).then((res) => {
+      if (res.code === 200) {
         MsgStore.removeFriendRequest(mid)
-      }else{
-        alert.show("操作失败")
+      } else {
+        alert.show('操作失败')
       }
     })
   }

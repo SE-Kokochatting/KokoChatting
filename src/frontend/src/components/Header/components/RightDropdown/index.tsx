@@ -18,42 +18,42 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
       alert.show('已退群')
       ChatListStore.updateGroup()
       ChatStore.setCurrentChat(null)
-    }else{
+    } else {
       alert.show('操作异常')
     }
   }
 
   async function deleteFriend() {
-    if (ChatStore.currentChat === null){
+    if (ChatStore.currentChat === null) {
       return
     }
-    if (ChatStore.currentChat.uid === undefined){
+    if (ChatStore.currentChat.uid === undefined) {
       return
     }
-    const { code } = await delFriend({fid:ChatStore.currentChat.uid})
-    if(code === 200){
+    const { code } = await delFriend({ fid: ChatStore.currentChat.uid })
+    if (code === 200) {
       // 刷新好友列表
-      alert.show("删除成功")
+      alert.show('删除成功')
       ChatListStore.updateFriend()
-    }else{
-      alert.show("删除好友失败")
+    } else {
+      alert.show('删除好友失败')
     }
   }
 
   async function _blockFriend() {
-    if (ChatStore.currentChat === null){
+    if (ChatStore.currentChat === null) {
       return
     }
-    if (ChatStore.currentChat.uid === undefined){
+    if (ChatStore.currentChat.uid === undefined) {
       return
     }
-    const {code} = await blockFriend({fid:ChatStore.currentChat.uid})
-    if(code === 200){
+    const { code } = await blockFriend({ fid: ChatStore.currentChat.uid })
+    if (code === 200) {
       // 刷新好友列表
-      alert.show("拉黑成功")
+      alert.show('拉黑成功')
       ChatListStore.updateFriend()
-    }else{
-      alert.show("拉黑好友失败")
+    } else {
+      alert.show('拉黑好友失败')
     }
   }
 
@@ -83,8 +83,8 @@ function RightDropdown({ showDropdown }: RightDropdownProps) {
             拉黑好友
           </div>
           <div
-          className='c-header-right-dropdown-item'
-          onClick={() => deleteFriend()}
+            className='c-header-right-dropdown-item'
+            onClick={() => deleteFriend()}
           >
             删除好友
           </div>

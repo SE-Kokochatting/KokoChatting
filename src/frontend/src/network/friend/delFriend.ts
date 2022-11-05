@@ -4,7 +4,6 @@
  * date: 2022-11-01 19:51:42 +0800
  */
 
-
 import request from '../request'
 
 export interface IDelFriend {

@@ -4,6 +4,9 @@ export function transformTimestamp(timestamp: string) {
   if (timestamp === '' || timestamp === undefined) {
     return ''
   }
+  if (timestamp.length <= 5) {
+    return timestamp
+  }
   let a = new Date(timestamp).getTime()
   const now = new Date()
   const date = new Date(a)
