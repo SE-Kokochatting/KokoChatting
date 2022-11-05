@@ -71,7 +71,6 @@ func (controller *PushController) RevertMessage(c *gin.Context) {
 	controller.WithData(nil, c)
 }
 
-<<<<<<< HEAD
 
 func (controller *PushController) MarkMessageAsRead(c *gin.Context){
 	_req := new(req.MarkMsgReadReq)
@@ -93,9 +92,6 @@ func (controller *PushController) MarkMessageAsRead(c *gin.Context){
 
 
 func NewPushController()*PushController{
-=======
-func NewPushController() *PushController {
->>>>>>> main
 	return &PushController{
 		baseController: baseController{},
 		wssrv:          new(service.WsService),
