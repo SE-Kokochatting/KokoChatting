@@ -4,6 +4,7 @@ import (
 	"KokoChatting/global"
 	req "KokoChatting/model/req"
 	"encoding/json"
+	"go.uber.org/zap"
 
 	"github.com/gorilla/websocket"
 )
@@ -38,7 +39,8 @@ func (handle *pingHandler) handle(msg []byte,conn *Conn)error{
 	conn.mu.Lock()
 	conn.expiredTime.Add(conn.heartBeatDuration)
 	conn.mu.Unlock()
-	return conn.WriteMessage(websocket.PongMessage,msg)
+	global.Logger.Debug("ping handle",zap.String("msg",string(msg)))
+	return conn.WriteMessage(websocket.TextMessage,msg)
 }
 
 
@@ -63,6 +65,7 @@ type textHandle struct{
 func (handle *textHandle) handle(msg []byte,conn *Conn)error{
 	pingReq := &req.PingReq{}
 	err := json.Unmarshal(msg,pingReq)
+	global.Logger.Debug("text handle",zap.String("msg",string(msg)))
 	if err != nil{
 		//
 		global.Logger.Debug(string(msg))
