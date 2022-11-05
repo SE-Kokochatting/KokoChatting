@@ -58,11 +58,12 @@ export default class WS extends WebSocket {
 
   public messageHandler(e: any) {
     const msg = this.getMsg(e)
+    let realMsgId = 0
     // 接受到数据，根据 MsgType，把对象 push 进 MsgStore 的不同消息数组中
     switch (msg.messageType) {
       case MessageType.PongMessage:
         this.webSocketState = true
-        console.log('收到心跳响应' + msg.time)
+        console.log('收到心跳响应' + msg.Time)
         break
       case MessageType.SingleMessage:
         Emitter.emit('scrollToBottom')
@@ -79,16 +80,14 @@ export default class WS extends WebSocket {
         MsgStore.sendMsg(msg, MessageType.JoinGroupNotify)
         break
       case MessageType.HasReadSingleNotify:
-        console.log(msg)
-        MsgStore.setMsgRead(
-          MessageType.SingleMessage,
-          msg.messageId,
-          msg.readUids,
-        )
+        realMsgId = JSON.parse(msg.messageContent).ReadMsgId
+        MsgStore.setMsgRead(MessageType.SingleMessage, realMsgId, [
+          msg.senderId,
+        ])
         break
       case MessageType.HasReadGroupNotify:
-        const realMsgId = JSON.parse(msg.messageContent).ReadMsgId
-        MsgStore.setMsgRead(MessageType.GroupMessage, realMsgId, msg.readUids)
+        realMsgId = JSON.parse(msg.messageContent).ReadMsgId
+        MsgStore.setMsgRead(MessageType.GroupMessage, realMsgId, [msg.senderId])
         break
     }
   }
@@ -108,7 +107,7 @@ export default class WS extends WebSocket {
     this.send(JSON.stringify(sendData))
   }
 
-  public getMsg(e: any): IMessage & { time: string } {
+  public getMsg(e: any): IMessage & { Time: string } {
     return JSON.parse(e.data)
   }
 
