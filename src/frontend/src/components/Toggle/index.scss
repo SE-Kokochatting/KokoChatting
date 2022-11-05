@@ -12,11 +12,11 @@
   max-height: 600px;
   overflow: auto;
   transition: 0.3s height;
+  user-select: none;
 
   &-tab {
     display: flex;
     padding: 0 10px;
-    user-select: none;
     margin-bottom: 20px;
 
     &-item {
