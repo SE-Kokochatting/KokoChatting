@@ -2,6 +2,8 @@ package internal
 
 import (
 	"KokoChatting/global"
+	req "KokoChatting/model/req"
+	"encoding/json"
 
 	"github.com/gorilla/websocket"
 )
@@ -59,6 +61,12 @@ type textHandle struct{
 
 
 func (handle *textHandle) handle(msg []byte,conn *Conn)error{
-	global.Logger.Debug(string(msg))
-	return nil
+	pingReq := &req.PingReq{}
+	err := json.Unmarshal(msg,pingReq)
+	if err != nil{
+		//
+		global.Logger.Debug(string(msg))
+		return nil
+	}
+	return getHandler(websocket.PingMessage).handle(msg,conn)
 }
