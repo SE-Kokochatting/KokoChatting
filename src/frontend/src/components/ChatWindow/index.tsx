@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { msgHasRead } from '@/network/message/msgHasRead'
 import MsgStore from '@/mobx/msg'
 import ChatStore from '@/mobx/chat'
+import Emitter from '@/utils/eventEmitter'
 import Bubble from './components/Bubble'
 import Sender from './components/Sender'
 import './index.scss'
@@ -56,6 +57,7 @@ function _ChatWindow() {
 
   useEffect(() => {
     handleMsgRead()
+    // Emitter.emit('scrollToBottom')
   }, [ChatStore.currentChat])
 
   return (

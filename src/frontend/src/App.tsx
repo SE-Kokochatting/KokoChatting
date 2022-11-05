@@ -5,7 +5,7 @@ import { positions, Provider } from 'react-alert'
 import { router } from '@/routes'
 import { WsHost } from '@/consts'
 import { getToken } from '@/utils/token'
-import { messageCenter } from '@/utils/messageCenter'
+import Emitter from '@/utils/eventEmitter'
 import AlertMUITemplate from 'react-alert-template-mui'
 import WS from '@/ws'
 import './App.scss'
@@ -46,15 +46,29 @@ function reconnectWebSocket() {
   connectWebSocket()
 }
 
-function App() {
-  // 接收重连消息
-  messageCenter.on('reconnect', reconnectWebSocket)
+function scrollToBottom() {
+  const ChatWindowDom = document.querySelector(
+    '.c-chat_window-chat_area',
+  ) as Element
+  console.log(ChatWindowDom, '执行了！')
+  ChatWindowDom.scrollTo(0, ChatWindowDom.scrollHeight)
+}
 
+function App() {
   useEffect(() => {
     if (socket !== null) {
       return
     }
     connectWebSocket()
+  }, [])
+
+  useEffect(() => {
+    Emitter.on('reconnect', reconnectWebSocket)
+    Emitter.on('scrollToBottom', scrollToBottom)
+    return () => {
+      Emitter.removeListener('reconnect')
+      Emitter.removeListener('scrollToBottom')
+    }
   }, [])
 
   return (
