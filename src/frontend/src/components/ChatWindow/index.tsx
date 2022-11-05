@@ -11,23 +11,18 @@ import './index.scss'
 function _ChatWindow() {
   const mid = getMsgId()
   const uid = getUid()
+
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>
         {ChatStore.currentChat?.uid > 0 &&
           MsgStore.friendMsg.map(
-            ({
-              lastMessageTime,
-              readUids,
-              messageContent,
-              messageId,
-              senderId,
-            }) =>
+            ({ sendTime, readUids, messageContent, messageId, senderId }) =>
               (senderId === ChatStore.currentChat?.uid || senderId === uid) && (
                 // (messageId as number) > mid &&
                 <Bubble
                   key={messageId}
-                  lastMessageTime={lastMessageTime}
+                  sendTime={sendTime}
                   readUids={readUids}
                   messageContent={messageContent}
                   senderId={senderId}
