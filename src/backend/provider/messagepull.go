@@ -53,7 +53,7 @@ func (m *MsgPullProvider) GetMessageHistory(uid, firstMsgId, fromId uint64, msgT
 		return nil, fmt.Errorf("the db client is nil")
 	}
 	// paging return order by send_time desc
-	dbClient = dbClient.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("send_time desc")
+	dbClient = dbClient.Limit(pageSize).Offset((pageNum - 1) * pageSize)
 	// dynamic select
 	if msgType == global.SingleMessage {
 		dbClient = dbClient.Where("id<? and type=?", firstMsgId, msgType)
