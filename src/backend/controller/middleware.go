@@ -3,6 +3,7 @@ package controller
 import (
 	"KokoChatting/global"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"net/http"
 	"os"
 	"time"
@@ -125,6 +126,53 @@ func (m *Middleware) CORS() gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusNoContent)
 		}
 		// 处理请求
+		c.Next()
+	}
+}
+
+
+func (m *Middleware) WsJwtAuth() gin.HandlerFunc{
+	return func(c *gin.Context){
+		// 由于token保存在请求头中，所以需要使用c.getHeader，而不是c.Param函数
+		//tokenString := c.GetHeader("Sec-Websocket-Protocol")
+		protocols := websocket.Subprotocols(c.Request)
+		if len(protocols) != 2{
+			m.WithErr(global.WsSubProtocolError,c)
+			c.Abort()
+			return
+		}
+		tokenString := protocols[1]
+		// tokenString := c.Param("Authorization")
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return hmacSampleSecret, nil
+		})
+		if token == nil {
+			m.WithErr(global.JwtParseError, c)
+			c.Abort()
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if token.Valid {
+			if ok {
+				c.Set("userUid", claims["Uid"])
+				c.Set("userPassword", claims["Password"])
+			}
+		} else if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				m.WithErr(global.IncorrectToken, c)
+			} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
+				m.WithErr(global.JwtExpiredError, c)
+			} else {
+				m.WithErr(global.JwtParseError, c)
+			}
+			c.Abort()
+		}
+
 		c.Next()
 	}
 }
