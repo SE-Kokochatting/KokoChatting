@@ -48,3 +48,11 @@ type MessageInfo struct {
 	MessageType    int       `json:"messageType"`
 	ReadUids       string    `json:"readUids"`
 }
+
+
+type PongMessage struct {
+	From     int    `json:"From"`
+	MsgType  int    `json:"MsgType"`
+	Contents string `json:"Contents"`
+	To       int    `json:"To"`
+}

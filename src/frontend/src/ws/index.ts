@@ -5,6 +5,7 @@
  */
 
 import { MessageType } from '@/enums'
+import messageCenter from '@/utils/messageCenter'
 import { WsHost } from '@/consts'
 import MsgStore from '@/mobx/msg'
 
@@ -22,13 +23,6 @@ interface HeartBeatConfig {
   timeout: number
   // 断线重连时间
   reconnect: number
-}
-
-interface WSData {
-  From: number
-  MsgType: MessageType
-  Contents: string
-  To: number
 }
 
 export default class WS extends WebSocket {
@@ -73,6 +67,7 @@ export default class WS extends WebSocket {
         console.log('收到心跳响应' + data.time)
         break
       case MessageType.SingleMessage:
+        console.log(data)
         break
     }
   }
@@ -121,6 +116,7 @@ export default class WS extends WebSocket {
   public reconnectWebSocket() {
     if (!this.isReconnect) return
     return setTimeout(() => {
+      messageCenter.emit('reconnect')
       console.log('已重连')
     }, this.heartBeat.reconnect)
   }
