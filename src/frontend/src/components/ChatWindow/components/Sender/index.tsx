@@ -2,7 +2,9 @@ import { useForm } from 'react-hook-form'
 import { useAlert } from 'react-alert'
 import { sendMsg } from '@/network/message/sendMsg'
 import { MessageType } from '@/enums'
+import UserStore from '@/mobx/user'
 import ChatStore from '@/mobx/chat'
+import MsgStore from '@/mobx/msg'
 import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
@@ -21,18 +23,35 @@ function Sender() {
         title: '消息发送失败',
       })
     } else {
-      const { code } = await sendMsg({
+      const messageType = ChatStore.currentChat.uid
+        ? MessageType.SingleMessage
+        : MessageType.GroupMessage
+      const { code, data } = await sendMsg({
         receiver: ChatStore.currentChat.uid as number,
         messageContent: content,
-        messageType: ChatStore.currentChat.uid
-          ? MessageType.SingleMessage
-          : MessageType.GroupMessage,
+        messageType,
       })
       if (code === 3000) {
         alert.show('发生了未知的错误', {
           title: '消息发送失败',
         })
+        return
       }
+      const { msgid } = data
+
+      MsgStore.sendMsg(
+        {
+          messageId: msgid,
+          messageContent: content,
+          messageType: messageType,
+          name: UserStore.name,
+          senderId: UserStore.uid,
+          groupId: ChatStore.currentChat?.gid,
+          readUids: [],
+          avatarUrl: UserStore.avatarUrl,
+        },
+        messageType,
+      )
     }
   }
 

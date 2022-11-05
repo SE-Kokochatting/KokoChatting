@@ -36,6 +36,7 @@ jobs:
           # execute commands on ssh
           script: |
             cd /code/kokochatting
+            chmod +x ./server.sh
             ./server.sh stop
             rm -rf *
         

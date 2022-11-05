@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { ChatType } from '@/enums'
 import { getMsgId } from '@/utils/message'
+import { getUid } from '@/utils/uid'
 import MsgStore from '@/mobx/msg'
 import ChatStore from '@/mobx/chat'
 import Bubble from './components/Bubble'
@@ -9,23 +10,19 @@ import './index.scss'
 
 function _ChatWindow() {
   const mid = getMsgId()
+  const uid = getUid()
+
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>
         {ChatStore.currentChat?.uid > 0 &&
           MsgStore.friendMsg.map(
-            ({
-              lastMessageTime,
-              readUids,
-              messageContent,
-              messageId,
-              senderId,
-            }) =>
-              senderId === ChatStore.currentChat?.uid && (
+            ({ sendTime, readUids, messageContent, messageId, senderId }) =>
+              (senderId === ChatStore.currentChat?.uid || senderId === uid) && (
                 // (messageId as number) > mid &&
                 <Bubble
                   key={messageId}
-                  lastMessageTime={lastMessageTime}
+                  sendTime={sendTime}
                   readUids={readUids}
                   messageContent={messageContent}
                   senderId={senderId}

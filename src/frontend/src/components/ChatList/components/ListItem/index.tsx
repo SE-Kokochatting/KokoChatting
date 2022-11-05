@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { IChat } from '@/types'
 import { MessageType, ChatType } from '@/enums'
 import ChatStore from '@/mobx/chat'
+import { transformTimestamp } from '@/utils/date'
 import './index.scss'
 
 function handleClick({ uid, gid, avatarUrl, name }: Partial<IChat>) {
@@ -37,14 +38,20 @@ function _ListItem({
       }}
       onClick={() => handleClick({ uid, gid, avatarUrl, name, messageType })}
     >
-      <div className='c-chat_list-item-avatar'>
-        <img className='c-chat_list-item-avatar-img' src={avatarUrl} />
-      </div>
+      <div
+        className='c-chat_list-item-avatar'
+        style={{
+          backgroundImage: `url(${avatarUrl})`,
+          backgroundSize: 'cover',
+        }}
+      />
       <div className='c-chat_list-item-main'>
         <span className='c-chat_list-item-main-name'>{name}</span>
         {/* <span className='c-chat_list-item-main-content'>{extract}</span> */}
       </div>
-      <div className='c-chat_list-item-time'>{lastMessageTime}</div>
+      <div className='c-chat_list-item-time'>
+        {transformTimestamp(lastMessageTime)}
+      </div>
     </div>
   )
 }

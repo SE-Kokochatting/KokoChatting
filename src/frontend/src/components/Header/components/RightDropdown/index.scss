@@ -8,16 +8,19 @@
   border-radius: 10px;
   display: flex;
   background: var(--global-bg-primary_lighter);
+  flex-direction: column;
 
   &-item {
-    margin: 0 10px;
     padding: 0 10px;
     height: 40px;
     line-height: 40px;
     border-radius: 10px;
     cursor: pointer;
-    width: 100%;
+    width: 80%;
     background: var(--global-bg-primary);
+    left: 0;
+    right:0;
+    margin: 10px auto;
   }
 
   &-item:hover {

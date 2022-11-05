@@ -24,15 +24,6 @@ func (controller *PushController) SendMsg(c *gin.Context) {
 		controller.WithErr(global.RequestFormatError, c)
 		return
 	}
-
-	// wrap msg
-	wrapMsg, err := controller.msgsrv.WrapCommonMessage(uid, _req.Receiver, _req.MessageContent, _req.MessageType)
-	if err != nil {
-		global.Logger.Error("wrap msg error", zap.Error(err))
-		controller.WithErr(err, c)
-		return
-	}
-
 	// store msg
 	msgid, err := controller.msgsrv.StoreMessage(uid, _req.Receiver, _req.MessageContent, _req.MessageType)
 	if err != nil {
@@ -40,6 +31,16 @@ func (controller *PushController) SendMsg(c *gin.Context) {
 		controller.WithErr(err, c)
 		return
 	}
+
+	// wrap msg
+	wrapMsg, err := controller.msgsrv.WrapCommonMessage(uid, _req.Receiver, _req.MessageContent, _req.MessageType,msgid)
+	if err != nil {
+		global.Logger.Error("wrap msg error", zap.Error(err))
+		controller.WithErr(err, c)
+		return
+	}
+
+
 
 	// push msg
 	err = controller.wssrv.SendMessage(wrapMsg)

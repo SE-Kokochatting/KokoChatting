@@ -8,6 +8,7 @@
   position: relative;
   // 宽度适应文字内容
   width: fit-content;
+  min-width: 60px;
 
   &-time {
     font-size: 13px;

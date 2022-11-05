@@ -1,11 +1,12 @@
 import { ChatType } from '@/enums'
 import { IMessage } from '@/types'
 import { getUid } from '@/utils/uid'
+import { transformTimestamp } from '@/utils/date'
 // import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
 function Bubble({
-  lastMessageTime,
+  sendTime,
   readUids,
   messageContent,
   senderId,
@@ -58,7 +59,7 @@ function Bubble({
           {messageContent}
         </div>
         <span className='c-chat_window-chat_area-bubble-time'>
-          {lastMessageTime}
+          {transformTimestamp(sendTime)}
         </span>
       </div>
     </div>

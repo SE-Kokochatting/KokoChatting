@@ -62,6 +62,8 @@ var (
 	GetMemberOfGroupError    = NewError(errors.New("can not get member of group"), 4017)
 	MessageDeleteError       = NewError(errors.New("delete message error"), 4018)
 	FriendRequestError		 = NewError(errors.New("friend request error"), 4019)
+	WsSubProtocolError		 = NewError(errors.New("websocket subprotocol format error"),4020)
+
     UploadPictureError 	= NewError(errors.New("upload picture error"), 5000)
 	GetFileError 	= NewError(errors.New("get file error"), 5001)
 )
