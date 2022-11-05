@@ -1,8 +1,6 @@
 import './index.scss'
-// type SearchProps = {
-// };
-function Search(/* props: SearchProps */) {
-  // const {} = props;
+
+function Search() {
   return (
     <div className='c-header-search'>
       <input

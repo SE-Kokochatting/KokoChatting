@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { compilerOptions } from './tsconfig.json'
 import react from '@vitejs/plugin-react'
 import { svgBuilder } from './src/plugins/svgBuilder'
-import { BackendHost } from './src/consts'
+import { BackendHost, WsHost } from './src/consts'
 
 export default defineConfig({
   plugins: [
@@ -26,11 +26,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      // '/test': {
-      //   target: 'https://yapi.hustunique.com/mock',
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/test/, ''),
-      // },
+      '/ws': {
+        target: `${WsHost}`,
+        ws: true,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ws/, ''),
+      },
     },
   },
 })
