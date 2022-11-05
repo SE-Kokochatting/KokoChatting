@@ -198,6 +198,7 @@ func (msgPullSrv *MsgPullService) PullMsgHistory(uid uint64, pullMsgHsyReq *req.
 			MessageId:      v.Id,
 			SenderId:       senderId,
 			GroupId:        groupId,
+			ReceiverId:     v.ToId,
 			Name:           name,
 			AvatarUrl:      avatarUrl,
 			SendTime:       v.SendTime,

@@ -41,6 +41,7 @@ type MessageInfo struct {
 	MessageId      uint64    `json:"messageId"`
 	SenderId       uint64    `json:"senderId"`
 	GroupId        uint64    `json:"groupId"`
+	ReceiverId     uint64    `json:"receiverId"`
 	Name           string    `json:"name"`
 	AvatarUrl      string    `json:"avatarUrl"`
 	SendTime       time.Time `json:"sendTime"`
