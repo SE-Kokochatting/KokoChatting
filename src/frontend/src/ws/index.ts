@@ -95,7 +95,6 @@ export default class WS extends WebSocket {
 
   public closeHandler(e: any) {
     this.webSocketState = false
-    console.log(e)
     console.log('websocket断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
   }
 
