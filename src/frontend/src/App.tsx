@@ -51,6 +51,9 @@ function App() {
   messageCenter.on('reconnect', reconnectWebSocket)
 
   useEffect(() => {
+    if (socket !== null) {
+      return
+    }
     connectWebSocket()
   }, [])
 

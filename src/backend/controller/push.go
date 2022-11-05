@@ -71,7 +71,27 @@ func (controller *PushController) RevertMessage(c *gin.Context) {
 	controller.WithData(nil, c)
 }
 
-func NewPushController() *PushController {
+
+func (controller *PushController) MarkMessageAsRead(c *gin.Context){
+	_req := new(req.MarkMsgReadReq)
+	if err := c.BindJSON(_req);err != nil{
+		global.Logger.Error("request format error",zap.Error(err))
+		controller.WithErr(global.RequestFormatError,c)
+		return
+	}
+	uid := controller.getUid(c)
+	err := controller.msgsrv.MarkAsRead(uid,_req.MsgIDs)
+	if err != nil{
+		global.Logger.Error("mark msg error")
+		controller.WithErr(err,c)
+		return
+	}
+	controller.WithData(nil,c)
+}
+
+
+
+func NewPushController()*PushController{
 	return &PushController{
 		baseController: baseController{},
 		wssrv:          new(service.WsService),

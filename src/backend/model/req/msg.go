@@ -29,7 +29,15 @@ type PullMsgHsyReq struct {
 }
 
 
+
+
+type MarkMsgReadReq struct {
+	MsgIDs []uint64 `json:"msgids"`
+}
+
+
 type PingReq struct{
 	ModeCode int	`json:"modeCode"`
 	Time string		`json:"time"`
+
 }

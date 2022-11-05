@@ -3,6 +3,8 @@ package provider
 import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
+	"KokoChatting/util"
+	"encoding/json"
 	"go.uber.org/zap"
 )
 
@@ -47,9 +49,40 @@ func (prd *MessageProvider) CheckIsReverted(msgid uint64) (bool,error){
 }
 
 // MarkMessageAsReverted 将消息标记为被撤回
-func (prd *MessageProvider) MarkMessageAsReverted(msgid uint64)error{
+func (prd *MessageProvider) MarkMessageAsReverted(msgid uint64) error {
 	return prd.mysqlDb.Model(&dataobject.Message{}).Where("id = ?",msgid).Updates(dataobject.Message{
 		IsRevert: true,
+	}).Error
+}
+
+
+func (prd *MessageProvider) MarkMessageAsRead(uid,msgId uint64) (*dataobject.Message,error) {
+	msg := new(dataobject.Message)
+	err := prd.mysqlDb.Model(&dataobject.Message{}).Where("id = ?",msgId).Find(msg).Error
+	if err != nil{
+		global.Logger.Error("msg record not find")
+		return nil,err
+	}
+	uids := make([]uint64,0)
+	if msg.ReadUids != ""{
+		err = json.Unmarshal([]byte(msg.ReadUids),&uids)
+		if err != nil{
+			return nil,err
+		}
+	}
+	_,isExist := util.BinarySearch(uids,uid)
+	if isExist{
+		global.Logger.Debug("this msg has been mark as read")
+		return msg,nil
+	}
+	uids = append(uids,uid)
+	util.QuickSort(uids,0,len(uids))
+	data,err := json.Marshal(uids)
+	if err != nil{
+		return nil,err
+	}
+	return msg,prd.mysqlDb.Model(&dataobject.Message{}).Where("id = ?",msgId).Updates(dataobject.Message{
+		ReadUids: string(data),
 	}).Error
 }
 

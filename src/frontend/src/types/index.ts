@@ -25,14 +25,18 @@ export interface IMessage {
   groupId: number
   messageType: MessageType
   messageContent: string
-  lastMessageTime: string
+  sendTime: string
   name: string
   avatarUrl: string
   readUids: number[]
 }
 
-export type IMessageOutline = Omit<IMessage, 'messageId' | 'readUids'> & {
+export type IMessageOutline = Omit<
+  IMessage,
+  'messageId' | 'readUids' | 'sendTime'
+> & {
   messageNum: number
+  lastMessageTime: string
 }
 
 export interface IMessageContent {

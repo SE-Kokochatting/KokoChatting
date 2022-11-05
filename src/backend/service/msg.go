@@ -12,6 +12,7 @@ import (
 
 type MessageWrapFunc func(from,to uint64,contents string,msgId uint64,msgType int)(*dataobject.CommonMessage,error)
 
+
 type MessageService struct{
 	*WsService
 	*MsgPullService
@@ -33,6 +34,7 @@ func (srv *MessageService) getMessageWrapFunc(msgt int)(MessageWrapFunc,error){
 	}
 	return nil,global.MessageTypeError
 }
+
 
 
 func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string,msgId uint64,msgType int)(*dataobject.CommonMessage,error){
@@ -229,6 +231,31 @@ func (srv *MessageService) RevertMessage(uid,msgid uint64) error {
 	return nil
 }
 
+func (srv *MessageService) MarkAsRead(uid uint64,msgs []uint64) error {
+	for _,id := range msgs{
+		msg,err := srv.msgPrd.MarkMessageAsRead(uid,id)
+		if err != nil{
+			global.Logger.Error("mark msg as read error",zap.Error(err))
+			return global.MarkMessageAsReadError
+		}
+		contents,err := json.Marshal(map[string]interface{}{
+			"ReadMsgId":id,
+		})
+		switch msg.Type {
+		case global.SingleMessage:
+			err = srv.PushUnStoredSystemMessage(uid,msg.FromId,string(contents),global.HasReadSingleNotify)
+		case global.GroupMessage:
+			err = srv.PushUnStoredSystemMessage(uid,msg.FromId,string(contents),global.HasReadGroupNotify)
+		}
+		if err != nil{
+			global.Logger.Error("push unstore msg error",zap.Error(err))
+			return err
+		}
+	}
+	return nil
+}
+
+
 func (srv *MessageService) DeleteMessage (msgId uint64) error {
 	err := srv.msgPrd.DeleteMessage(msgId)
 	if err != nil{
@@ -237,6 +264,7 @@ func (srv *MessageService) DeleteMessage (msgId uint64) error {
 	}
 	return err
 }
+
 
 func NewMessageService()*MessageService{
 	srv := &MessageService{
@@ -251,6 +279,8 @@ func NewMessageService()*MessageService{
 	srv.register(global.GroupMessage,srv.wrapGroupMessage)
 	srv.register(global.RevertSingleMessageNotify,srv.wrapSingleMessage)
 	srv.register(global.RevertGroupMessageNotify,srv.wrapGroupMessage)
+	srv.register(global.HasReadSingleNotify,srv.wrapSingleMessage)
+	srv.register(global.HasReadGroupNotify,srv.wrapGroupMessage)
 	srv.register(global.QuitGroupNotify,srv.wrapGroupMessage)
 	srv.register(global.JoinGroupNotify,srv.wrapGroupMessage)
 	srv.register(global.AddFriendResponseNotify,srv.wrapSingleMessage)

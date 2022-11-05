@@ -32,6 +32,9 @@ var (
 	GetFriendListError  = NewError(errors.New("get friend list err"), 2005)
 	GetFriendInfoError  = NewError(errors.New("get friend info err"), 2006)
 	SetGroupAvatarError = NewError(errors.New("set group avatar error"), 2007)
+
+	MarkMessageAsReadError = NewError(errors.New("the msgid is invalid or internal parse error"),4013)
+
 	PermissionError     = NewError(errors.New("permission error"), 2008)
 	GetGroupError       = NewError(errors.New("get group list err"), 2009)
 	GetGroupInfoError   = NewError(errors.New("get group info err"), 2010)
