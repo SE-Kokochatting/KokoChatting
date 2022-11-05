@@ -22,6 +22,7 @@ export interface IGroup {
 export interface IMessage {
   messageId: number
   senderId: number
+  receiverId: number
   groupId: number
   messageType: MessageType
   messageContent: string

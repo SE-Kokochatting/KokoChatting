@@ -111,6 +111,7 @@ class MsgState {
     }
     const resData = await Promise.all(reqArr)
     const msgArr = resData.map((item: any) => item.data.message).flat()
+    // console.log(msgArr)
 
     for (const message of msgArr) {
       // maxMsgId = Math.max(maxMsgId, message.messageId)
@@ -136,11 +137,47 @@ class MsgState {
    * @param msgType 消息类型
    * @returns void
    */
-  public sendMsg(message: Partial<IMessage>, msgType: MessageType) {
-    if (msgType === MessageType.SingleMessage) {
-      this.friendMsg.push(message)
-    } else if (msgType === MessageType.GroupMessage) {
-      this.groupMsg.push(message)
+  public sendMsg(message: any, msgType: MessageType) {
+    switch (msgType) {
+      case MessageType.SingleMessage:
+        this.friendMsg.push(message)
+        break
+      case MessageType.GroupMessage:
+        this.groupMsg.push(message)
+        break
+      case MessageType.FriendRequestNotify:
+        this.friendRequest.push(message)
+        break
+      case MessageType.JoinGroupNotify:
+        this.groupNotify.push(message)
+        break
+    }
+  }
+
+  /**
+   * 设置消息已读
+   * @param message 发送的消息
+   * @param msgType 消息类型
+   * @returns void
+   */
+  public setMsgRead(msgType: MessageType, msgId: number, readUids: number[]) {
+    switch (msgType) {
+      case MessageType.SingleMessage:
+        for (const item of this.friendMsg) {
+          if (item.messageId === msgId) {
+            item.readUids = [...readUids]
+            break
+          }
+        }
+        break
+      case MessageType.GroupMessage:
+        for (const item of this.groupMsg) {
+          if (item.messageId === msgId) {
+            item.readUids = [...readUids]
+            break
+          }
+        }
+        break
     }
   }
 
