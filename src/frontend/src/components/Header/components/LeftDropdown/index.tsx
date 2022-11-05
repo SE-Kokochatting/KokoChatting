@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { CSSObject } from '@emotion/react'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
-import { MessageType, ToggleType } from '@/enums'
-import ChatListStore from '@/mobx/chatList'
+import { ToggleType } from '@/enums'
 import MsgStore from '@/mobx/msg'
 import UserStore from '@/mobx/user'
 import ToggleStore from '@/mobx/toggle'
@@ -26,11 +26,10 @@ const iconStyle: CSSObject = {
   marginRight: '20px',
 }
 
-async function handleUserInfo(uid: number) {
+async function fetchUserInfo(uid: number) {
   const { data } = await getUserInfo({ uid })
   const { name, avatarUrl } = data
   UserStore.setUserInfo({ uid, name, avatarUrl })
-  UserStore.setShowUserInfo(!UserStore.showUserInfo)
 }
 
 function handleToggle(type: ToggleType) {
@@ -45,6 +44,21 @@ function _LeftDropdown({
   const navigate = useNavigate()
   const alert = useAlert()
   const msgCount = MsgStore.friendRequest.length + MsgStore.groupNotify.length
+
+  useEffect(() => {
+    const uid = getUid()
+    if (!uid) {
+      alert.show('请尝试重新登录！', {
+        title: '操作失败',
+        onClose: () => {
+          navigate('/login')
+        },
+      })
+    } else {
+      fetchUserInfo(uid)
+    }
+  }, [])
+
   return (
     <ul
       className='c-header-left-dropdown'
@@ -95,17 +109,7 @@ function _LeftDropdown({
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
-          const uid = getUid()
-          if (!uid) {
-            alert.show('请尝试重新登录！', {
-              title: '操作失败',
-              onClose: () => {
-                navigate('/login')
-              },
-            })
-          } else {
-            handleUserInfo(uid)
-          }
+          UserStore.setShowUserInfo(!UserStore.showUserInfo)
         }}
       >
         <SvgIcon name='myself' style={iconStyle} />

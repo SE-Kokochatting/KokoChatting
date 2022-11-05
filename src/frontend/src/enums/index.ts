@@ -52,6 +52,12 @@ export enum MessageType {
   QuitGroupNotify,
   // 9 进群通知
   JoinGroupNotify,
+  // 10 同意好友请求通知
+  AddFriendResponseNotify,
+  // 11 删除好友通知
+  DeleteFriendNotify,
+  // 12 心跳包
+  PongMessage,
 }
 
 export enum AddType {
