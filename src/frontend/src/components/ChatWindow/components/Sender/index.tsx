@@ -46,6 +46,7 @@ function Sender() {
           messageType: messageType,
           name: UserStore.name,
           senderId: UserStore.uid,
+          receiverId: ChatStore.currentChat?.uid,
           groupId: ChatStore.currentChat?.gid,
           readUids: [],
           avatarUrl: UserStore.avatarUrl,

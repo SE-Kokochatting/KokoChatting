@@ -6,7 +6,7 @@
 
 import { MessageType } from '@/enums'
 import { IMessage } from '@/types'
-import messageCenter from '@/utils/messageCenter'
+import Emitter from '@/utils/eventEmitter'
 import MsgStore from '@/mobx/msg'
 
 enum ModeCode {
@@ -65,9 +65,11 @@ export default class WS extends WebSocket {
         console.log('收到心跳响应' + msg.time)
         break
       case MessageType.SingleMessage:
+        Emitter.emit('scrollToBottom')
         MsgStore.sendMsg(msg, MessageType.SingleMessage)
         break
       case MessageType.GroupMessage:
+        Emitter.emit('scrollToBottom')
         MsgStore.sendMsg(msg, MessageType.GroupMessage)
         break
       case MessageType.FriendRequestNotify:
@@ -77,6 +79,7 @@ export default class WS extends WebSocket {
         MsgStore.sendMsg(msg, MessageType.JoinGroupNotify)
         break
       case MessageType.HasReadSingleNotify:
+        console.log(msg)
         MsgStore.setMsgRead(
           MessageType.SingleMessage,
           msg.messageId,
@@ -84,11 +87,8 @@ export default class WS extends WebSocket {
         )
         break
       case MessageType.HasReadGroupNotify:
-        MsgStore.setMsgRead(
-          MessageType.GroupMessage,
-          msg.messageId,
-          msg.readUids,
-        )
+        const realMsgId = JSON.parse(msg.messageContent).ReadMsgId
+        MsgStore.setMsgRead(MessageType.GroupMessage, realMsgId, msg.readUids)
         break
     }
   }
@@ -139,7 +139,7 @@ export default class WS extends WebSocket {
   public reconnectWebSocket() {
     if (!this.isReconnect) return
     return setTimeout(() => {
-      messageCenter.emit('reconnect')
+      Emitter.emit('reconnect')
       console.log('已重连')
     }, this.heartBeat.reconnect)
   }
