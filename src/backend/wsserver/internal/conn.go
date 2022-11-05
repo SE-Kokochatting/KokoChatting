@@ -28,13 +28,19 @@ func (conn *Conn) serve() {
 		msgType, msg, err = conn.ReadMessage()
 		if err != nil {
 			global.Logger.Error("ws conn read message error", zap.Error(err))
-			conn.Close()
+			err := conn.Close()
+			if err != nil{
+				global.Logger.Error("conn close error",zap.Error(err))
+			}
 			return
 		}
 		err = getHandler(msgType).handle(msg, conn)
 		if err != nil {
 			global.Logger.Error("msg handler handle msg error", zap.Error(err))
-			conn.Close()
+			err := conn.Close()
+			if err != nil{
+				global.Logger.Error("conn close error",zap.Error(err))
+			}
 			return
 		}
 	}
@@ -81,13 +87,19 @@ func (manager *WsConnManager) AddConn(conn *Conn) error {
 	// if current conn nums == maxConnNum ,refuse this conn and put that conn object into pool
 	global.Logger.Debug("user connected",zap.Uint64("uid",conn.uid))
 	if manager.isUnAvailable() {
-		conn.Close()
+		err := conn.Close()
+		if err != nil{
+			global.Logger.Error("conn close error",zap.Error(err))
+		}
 		connPool.Put(conn)
 		return AddConnError
 	}
 	if value, ok := manager.conns.Load(conn.uid); ok {
 		conn := value.(*Conn)
-		conn.Close()
+		err := conn.Close()
+		if err != nil{
+			global.Logger.Error("conn close error",zap.Error(err))
+		}
 		manager.conns.Delete(conn.uid)
 		connPool.Put(conn)
 	}
@@ -161,7 +173,10 @@ func (manager *WsConnManager) HandleOfflineConns() {
 			if conn == nil{
 				global.Logger.Error("conn == nil")
 			}
-			conn.Close()
+			err := conn.Close()
+			if err != nil{
+				global.Logger.Error("conn close error",zap.Error(err))
+			}
 			connPool.Put(conn)
 		}
 	}
