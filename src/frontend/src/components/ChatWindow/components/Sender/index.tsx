@@ -46,6 +46,7 @@ function Sender() {
           messageType: messageType,
           name: UserStore.name,
           senderId: UserStore.uid,
+          receiverId: ChatStore.currentChat?.uid,
           groupId: ChatStore.currentChat?.gid,
           readUids: [],
           avatarUrl: UserStore.avatarUrl,
@@ -75,6 +76,7 @@ function Sender() {
           className='c-chat_window-sender-form-input'
           type='text'
           placeholder='Write a message...'
+          autoComplete='off'
           {...register('content', { required: true })}
         />
       </form>

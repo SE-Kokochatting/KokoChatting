@@ -76,6 +76,13 @@ type WsConnManager struct {
 	expiredConnsChan          chan *Conn
 }
 
+
+func (manager *WsConnManager) SubConnNums(){
+	manager.connNumMu.Lock()
+	manager.curConnNums--
+	manager.connNumMu.Unlock()
+}
+
 // AddConn add conn to map[uint64]*Conn
 func (manager *WsConnManager) AddConn(conn *Conn) error {
 	// if current conn nums == maxConnNum ,refuse this conn and put that conn object into pool
@@ -90,6 +97,7 @@ func (manager *WsConnManager) AddConn(conn *Conn) error {
 		conn.Close()
 		manager.conns.Delete(conn.uid)
 		connPool.Put(conn)
+		manager.SubConnNums()
 	}
 	manager.conns.Store(conn.uid, conn)
 	manager.connNumMu.Lock()
@@ -163,6 +171,7 @@ func (manager *WsConnManager) HandleOfflineConns() {
 			}
 			conn.Close()
 			connPool.Put(conn)
+			manager.SubConnNums()
 		}
 	}
 }
