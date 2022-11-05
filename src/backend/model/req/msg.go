@@ -27,3 +27,9 @@ type PullMsgHsyReq struct {
 	PageNum        int    `json:"pageNum"`
 	PageSize       int    `json:"pageSize"`
 }
+
+
+type PingReq struct{
+	ModeCode int	`json:"modeCode"`
+	Time string		`json:"time"`
+}
