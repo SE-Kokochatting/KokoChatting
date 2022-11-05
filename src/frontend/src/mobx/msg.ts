@@ -1,9 +1,10 @@
+/* eslint-disable complexity */
 import { makeAutoObservable } from 'mobx'
 import { pullMsg } from '@/network/message/pullMsg'
 import { pullHistoryMsg } from '@/network/message/pullHistoryMsg'
 import { MessageType } from '@/enums'
 import { IMessageContent, IMessage } from '@/types'
-import { getMsgId, setMsgId } from '@/utils/message'
+// import { getMsgId, setMsgId } from '@/utils/message'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
 
 class MsgState {
@@ -70,33 +71,49 @@ class MsgState {
 
     this.init()
     if (!message) return
-    let maxMsgId = 0
+    // let maxMsgId = 0
 
     const reqArr = []
 
     // 拉取消息
     for (const outlineMsg of message) {
       if (outlineMsg.messageType === msgType) {
-        reqArr.push(
-          pullHistoryMsg({
-            firstMessageId: 100000,
-            id:
-              outlineMsg.groupId === 0
-                ? outlineMsg.senderId
-                : outlineMsg.groupId,
-            msgType: msgType,
-            pageNum: 1,
-            pageSize: 100000,
-          }),
-        )
+        switch (msgType) {
+          case MessageType.SingleMessage:
+            reqArr.push(
+              pullHistoryMsg({
+                firstMessageId: 100000,
+                id:
+                  outlineMsg.groupId === 0
+                    ? outlineMsg.senderId
+                    : outlineMsg.groupId,
+                msgType: msgType,
+                pageNum: 1,
+                pageSize: 100000,
+              }),
+            )
+            break
+          case MessageType.FriendRequestNotify:
+          case MessageType.JoinGroupNotify:
+            reqArr.push(
+              pullMsg({
+                lastMessageId: 0,
+                id:
+                  outlineMsg.groupId === 0
+                    ? outlineMsg.senderId
+                    : outlineMsg.groupId,
+                msgType: msgType,
+              }),
+            )
+            break
+        }
       }
     }
-
     const resData = await Promise.all(reqArr)
     const msgArr = resData.map((item: any) => item.data.message).flat()
 
     for (const message of msgArr) {
-      maxMsgId = Math.max(maxMsgId, message.messageId)
+      // maxMsgId = Math.max(maxMsgId, message.messageId)
       if (msgType === MessageType.FriendRequestNotify) {
         this.friendRequest.push(message)
       } else if (
