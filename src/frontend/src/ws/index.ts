@@ -55,7 +55,7 @@ export default class WS extends WebSocket {
     !!this.heartBeat &&
       !!this.heartBeat.time &&
       this.startHeartBeat(this.heartBeat.time) // 是否启动心跳机制
-    console.log('开启')
+    console.log('websocket开启')
   }
 
   public messageHandler(e: any) {
@@ -72,15 +72,16 @@ export default class WS extends WebSocket {
     }
   }
 
-  public closeHandler() {
+  public closeHandler(e: any) {
     this.webSocketState = false
-    console.log('关闭')
+    console.log(e)
+    console.log('websocket断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
   }
 
   public errorHandler() {
     this.webSocketState = false
     this.reconnectWebSocket()
-    console.error('出错')
+    console.error('websocket出错')
   }
 
   public sendMsg(sendData: any) {
@@ -98,6 +99,7 @@ export default class WS extends WebSocket {
         modeCode: ModeCode.HeartBeat,
         time: new Date(),
       })
+      console.log('已发送心跳包')
       this.waitingTimer = this.waitingServer()
     }, time)
   }
