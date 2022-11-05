@@ -2,7 +2,8 @@ import { ChatType } from '@/enums'
 import { IMessage } from '@/types'
 import { getUid } from '@/utils/uid'
 import { transformTimestamp } from '@/utils/date'
-// import SvgIcon from '@/components/SvgIcon'
+import ChatStore from '@/mobx/chat'
+import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
 function Bubble({
@@ -16,6 +17,8 @@ function Bubble({
 
   return (
     <div
+      className='c-chat_window-chat_area-bubble_wrapper'
+      id={`bubble_${sendTime}_${messageContent}`}
       style={{
         alignSelf: uid !== senderId ? 'start' : 'end',
         margin: uid !== senderId ? '15px 0 15px 30px' : '15px 30px 15px 0',
@@ -23,18 +26,19 @@ function Bubble({
         display: 'flex',
       }}
     >
-      {/* {read && (
-        <SvgIcon
-          name='done'
-          style={{
-            width: '25px',
-            height: '25px',
-            color: 'var(--global-font-primary_lighter)',
-            alignSelf: 'end',
-            marginRight: '10px',
-          }}
-        />
-      )} */}
+      {readUids?.includes(ChatStore.currentChat?.uid as number) &&
+        senderId === uid && (
+          <SvgIcon
+            name='done'
+            style={{
+              width: '25px',
+              height: '25px',
+              color: 'var(--global-font-primary_lighter)',
+              alignSelf: 'end',
+              marginRight: '10px',
+            }}
+          />
+        )}
       {chatType === ChatType.Group && uid !== senderId && (
         <img
           src='https://p.qqan.com/up/2021-2/16137992359659254.jpg'
@@ -59,7 +63,7 @@ function Bubble({
           {messageContent}
         </div>
         <span className='c-chat_window-chat_area-bubble-time'>
-          {transformTimestamp(sendTime)}
+          {transformTimestamp(sendTime as string)}
         </span>
       </div>
     </div>

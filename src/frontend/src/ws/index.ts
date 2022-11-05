@@ -5,11 +5,9 @@
  */
 
 import { MessageType } from '@/enums'
+import { IMessage } from '@/types'
 import messageCenter from '@/utils/messageCenter'
-import { WsHost } from '@/consts'
 import MsgStore from '@/mobx/msg'
-
-type CallBack = (e: Event) => void
 
 enum ModeCode {
   Msg,
@@ -59,15 +57,38 @@ export default class WS extends WebSocket {
   }
 
   public messageHandler(e: any) {
-    const data = this.getMsg(e)
+    const msg = this.getMsg(e)
     // 接受到数据，根据 MsgType，把对象 push 进 MsgStore 的不同消息数组中
-    switch (data.modeCode) {
+    switch (msg.messageType) {
       case MessageType.PongMessage:
         this.webSocketState = true
-        console.log('收到心跳响应' + data.time)
+        console.log('收到心跳响应' + msg.time)
         break
       case MessageType.SingleMessage:
-        console.log(data)
+        MsgStore.sendMsg(msg, MessageType.SingleMessage)
+        break
+      case MessageType.GroupMessage:
+        MsgStore.sendMsg(msg, MessageType.GroupMessage)
+        break
+      case MessageType.FriendRequestNotify:
+        MsgStore.sendMsg(msg, MessageType.FriendRequestNotify)
+        break
+      case MessageType.JoinGroupNotify:
+        MsgStore.sendMsg(msg, MessageType.JoinGroupNotify)
+        break
+      case MessageType.HasReadSingleNotify:
+        MsgStore.setMsgRead(
+          MessageType.SingleMessage,
+          msg.messageId,
+          msg.readUids,
+        )
+        break
+      case MessageType.HasReadGroupNotify:
+        MsgStore.setMsgRead(
+          MessageType.GroupMessage,
+          msg.messageId,
+          msg.readUids,
+        )
         break
     }
   }
@@ -88,7 +109,7 @@ export default class WS extends WebSocket {
     this.send(JSON.stringify(sendData))
   }
 
-  public getMsg(e: any) {
+  public getMsg(e: any): IMessage & { time: string } {
     return JSON.parse(e.data)
   }
 

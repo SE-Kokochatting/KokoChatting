@@ -75,6 +75,7 @@ function Sender() {
           className='c-chat_window-sender-form-input'
           type='text'
           placeholder='Write a message...'
+          autoComplete='off'
           {...register('content', { required: true })}
         />
       </form>
