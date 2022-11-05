@@ -3,6 +3,7 @@ package controller
 import (
 	"KokoChatting/global"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"net/http"
 	"os"
 	"time"
@@ -133,7 +134,9 @@ func (m *Middleware) CORS() gin.HandlerFunc {
 func (m *Middleware) WsJwtAuth() gin.HandlerFunc{
 	return func(c *gin.Context){
 		// 由于token保存在请求头中，所以需要使用c.getHeader，而不是c.Param函数
-		tokenString := c.GetHeader("Sec-Websocket-Protocol")
+		//tokenString := c.GetHeader("Sec-Websocket-Protocol")
+		protocols := websocket.Subprotocols(c.Request)
+		tokenString := protocols[1]
 		// tokenString := c.Param("Authorization")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
