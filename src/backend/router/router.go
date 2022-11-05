@@ -28,7 +28,6 @@ func Routers() *gin.Engine {
 	{
 		rg.manage.ManageRouter(privateGroup)  // 需要加入登录鉴权的接口的router group注册时需要传入的routes命名为privateGroup
 		rg.user.JWTUserRouter(privateGroup)
-		rg.upgrade.RegisterUpgradeRouter(privateGroup)
 		rg.msg.RegisterMsgRouter(privateGroup)
 	}
 
@@ -36,6 +35,11 @@ func Routers() *gin.Engine {
 	{
 		rg.user.UserRouter(publicGroup)
 		rg.upload.UploadPictureRouter(publicGroup)
+	}
+
+	wsGroup := engine.Group("/api/v1").Use(middleware.WsJwtAuth())
+	{
+		rg.upgrade.RegisterUpgradeRouter(wsGroup)
 	}
 	return engine
 }
