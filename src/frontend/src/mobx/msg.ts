@@ -1,8 +1,9 @@
 import { makeAutoObservable } from 'mobx'
 import { pullMsg } from '@/network/message/pullMsg'
+import { pullHistoryMsg } from '@/network/message/pullHistoryMsg'
 import { MessageType } from '@/enums'
 import { IMessageContent, IMessage } from '@/types'
-import { setMsgId } from '@/utils/message'
+import { getMsgId, setMsgId } from '@/utils/message'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
 
 class MsgState {
@@ -63,15 +64,12 @@ class MsgState {
       this.groupMsgIsPull = true
     }
 
-    // const mid = getMsgId()
-    const mid = 0
     // 获取消息概要数组
-    const { data } = await pullMsgOutline({ lastMessageId: mid })
+    const { data } = await pullMsgOutline({ lastMessageId: 0 })
     const { message } = data
 
     this.init()
     if (!message) return
-
     let maxMsgId = 0
 
     const reqArr = []
@@ -80,16 +78,15 @@ class MsgState {
     for (const outlineMsg of message) {
       if (outlineMsg.messageType === msgType) {
         reqArr.push(
-          pullMsg({
-            // 由于在消息页面，拿好友申请举例，需要渲染出以前没有同意或拒绝的请求
-            // 因此，需要从0开始请求，对于已处理的请求，后端不会返回给前端
-            // 好友聊天界面中，拿到maxMsgId，只渲染大于此id的消息
-            lastMessageId: 0,
+          pullHistoryMsg({
+            firstMessageId: 100000,
             id:
               outlineMsg.groupId === 0
                 ? outlineMsg.senderId
                 : outlineMsg.groupId,
             msgType: msgType,
+            pageNum: 1,
+            pageSize: 100000,
           }),
         )
       }
@@ -97,7 +94,6 @@ class MsgState {
 
     const resData = await Promise.all(reqArr)
     const msgArr = resData.map((item: any) => item.data.message).flat()
-    console.log(msgArr)
 
     for (const message of msgArr) {
       maxMsgId = Math.max(maxMsgId, message.messageId)
@@ -115,17 +111,21 @@ class MsgState {
         this.groupMsg.push(message)
       }
     }
-    setMsgId(maxMsgId)
   }
 
-  // /**
-  //  * 发送消息
-  //  * @param val 要设置的值
-  //  * @returns void
-  //  */
-  // public sendMsg() {
-
-  // }
+  /**
+   * 发送消息
+   * @param message 发送的消息
+   * @param msgType 消息类型
+   * @returns void
+   */
+  public sendMsg(message: Partial<IMessage>, msgType: MessageType) {
+    if (msgType === MessageType.SingleMessage) {
+      this.friendMsg.push(message)
+    } else if (msgType === MessageType.GroupMessage) {
+      this.groupMsg.push(message)
+    }
+  }
 
   private init() {
     this.friendMsg = []
