@@ -138,6 +138,7 @@ class MsgState {
    * @returns void
    */
   public sendMsg(message: any, msgType: MessageType) {
+    // 自己发送，或者是他人发送，都会滑到底部
     Emitter.emit('scrollToBottom')
     switch (msgType) {
       case MessageType.SingleMessage:
