@@ -48,6 +48,9 @@ func NewUpgradeController() *upgradeController {
 		baseController: baseController{},
 		upgrader:       &websocket.Upgrader{
 			HandshakeTimeout: time.Duration(heartBeatDur) * time.Second,
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
 		}, // 暂无特殊配置   
 		wsservice:      new(service.WsService),
 	}
