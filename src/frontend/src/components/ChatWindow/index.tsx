@@ -60,6 +60,13 @@ function _ChatWindow() {
     Emitter.emit('scrollToBottom')
   }, [ChatStore.currentChat])
 
+  useEffect(() => {
+    Emitter.on('updateIntersect', handleMsgRead)
+    return () => {
+      Emitter.removeListener('updateIntersect')
+    }
+  }, [])
+
   return (
     <div className='c-chat_window'>
       <div className='c-chat_window-chat_area'>

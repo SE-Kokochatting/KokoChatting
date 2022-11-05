@@ -66,12 +66,16 @@ export default class WS extends WebSocket {
         console.log('收到心跳响应' + msg.Time)
         break
       case MessageType.SingleMessage:
-        Emitter.emit('scrollToBottom')
         MsgStore.sendMsg(msg, MessageType.SingleMessage)
+        // 有新消息后滑动到页面底部
+        Emitter.emit('scrollToBottom')
+        // 由于有新的消息，需要让 IntersectionObserver 能够监测到新的 DOM 元素
+        Emitter.emit('updateIntersect')
         break
       case MessageType.GroupMessage:
-        Emitter.emit('scrollToBottom')
         MsgStore.sendMsg(msg, MessageType.GroupMessage)
+        Emitter.emit('scrollToBottom')
+        Emitter.emit('updateIntersect')
         break
       case MessageType.FriendRequestNotify:
         MsgStore.sendMsg(msg, MessageType.FriendRequestNotify)
