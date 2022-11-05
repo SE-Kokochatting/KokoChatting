@@ -6,6 +6,7 @@ import { MessageType } from '@/enums'
 import { IMessageContent, IMessage } from '@/types'
 // import { getMsgId, setMsgId } from '@/utils/message'
 import { pullMsgOutline } from '@/network/message/pullMsgOutline'
+import Emitter from '@/utils/eventEmitter'
 
 class MsgState {
   // 好友请求
@@ -111,7 +112,6 @@ class MsgState {
     }
     const resData = await Promise.all(reqArr)
     const msgArr = resData.map((item: any) => item.data.message).flat()
-    // console.log(msgArr)
 
     for (const message of msgArr) {
       // maxMsgId = Math.max(maxMsgId, message.messageId)
@@ -138,6 +138,7 @@ class MsgState {
    * @returns void
    */
   public sendMsg(message: any, msgType: MessageType) {
+    Emitter.emit('scrollToBottom')
     switch (msgType) {
       case MessageType.SingleMessage:
         this.friendMsg.push(message)
