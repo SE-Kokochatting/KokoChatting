@@ -7,10 +7,11 @@ import (
 	"KokoChatting/model/res"
 	"KokoChatting/model/utilstruct"
 	"KokoChatting/service"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
-	"time"
 )
 
 type UserController struct {
@@ -25,6 +26,8 @@ func (userCtl *UserController) Register(c *gin.Context) {
 	regReq := &req.UserRegisterReq{}
 	if err := c.BindJSON(regReq); err != nil {
 		global.Logger.Error("bind json error", zap.Error(err))
+		userCtl.WithErr(global.BindError, c)
+		return
 	}
 
 	// return corresponding error
@@ -47,7 +50,12 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	loginReq := &req.UserLoginReq{}
 	if err := c.BindJSON(loginReq); err != nil {
 		global.Logger.Error("login bind json error", zap.Error(err))
+<<<<<<< HEAD
 
+=======
+		userCtl.WithErr(global.BindError, c)
+		return
+>>>>>>> main
 	}
 
 	// 用户登录逻辑：
@@ -65,11 +73,11 @@ func (userCtl *UserController) Login(c *gin.Context) {
 	loginRes := &res.UserLoginRes{}
 	// generate tokenStr
 	claims := utilstruct.Claims{
-		Uid: loginReq.Uid,
+		Uid:      loginReq.Uid,
 		Password: loginReq.Password,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(3*time.Hour*time.Duration(1))),
-			IssuedAt: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(3 * time.Hour * time.Duration(1))),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -96,6 +104,8 @@ func (userCtl *UserController) GetUserInfo(c *gin.Context) {
 	userInfoReq := &req.UserInfoReq{}
 	if err := c.BindJSON(userInfoReq); err != nil {
 		global.Logger.Error("get user info bind json error", zap.Error(err))
+		userCtl.WithErr(global.BindError, c)
+		return
 	}
 
 	userProfile := &dataobject.UserProfile{
@@ -111,12 +121,12 @@ func (userCtl *UserController) GetUserInfo(c *gin.Context) {
 
 	userInfoRes := &res.UserInfoRes{
 		Data: struct {
-			Uid uint64 `json:"uid"`
-			Name string `json:"name"`
+			Uid       uint64 `json:"uid"`
+			Name      string `json:"name"`
 			AvatarUrl string `json:"avatarUrl"`
 		}{
-			Uid: userProfile.Uid,
-			Name: userProfile.Name,
+			Uid:       userProfile.Uid,
+			Name:      userProfile.Name,
 			AvatarUrl: userProfile.AvatarUrl,
 		},
 	}
@@ -133,6 +143,8 @@ func (userCtl *UserController) SetUserAvatar(c *gin.Context) {
 	setAvatarReq := &req.UserSetAvatarReq{}
 	if err := c.BindJSON(setAvatarReq); err != nil {
 		global.Logger.Error("set avatar bind json error", zap.Error(err))
+		userCtl.WithErr(global.BindError, c)
+		return
 	}
 
 	err := userCtl.userService.SetAvatar(uid, setAvatarReq.AvatarUrl)

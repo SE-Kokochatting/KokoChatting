@@ -6,15 +6,16 @@ import (
 	"KokoChatting/model/res"
 	"KokoChatting/provider"
 	"encoding/json"
-	"fmt"
 	"go.uber.org/zap"
 	"time"
 )
 
-type MessageWrapFunc func(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error)
+type MessageWrapFunc func(from,to uint64,contents string,msgId uint64,msgType int)(*dataobject.CommonMessage,error)
+
 
 type MessageService struct{
 	*WsService
+	*MsgPullService
 	msgPrd *provider.MessageProvider
 	mngPrd *provider.ManageProvider
 	msgWrapMap map[int]MessageWrapFunc
@@ -35,12 +36,19 @@ func (srv *MessageService) getMessageWrapFunc(msgt int)(MessageWrapFunc,error){
 }
 
 
-func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
-	wsmsg := &res.WsMessage{
-		From: from,
-		MsgType: msgType,
-		Contents: contents,
-		To: to,
+
+func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string,msgId uint64,msgType int)(*dataobject.CommonMessage,error){
+	name,url,err := srv.GetProfileById(from,0,global.SingleMessage)
+	wsmsg := &res.MessageInfo{
+		SenderId: from,
+		MessageId: msgId,
+		GroupId: 0,
+		Name: name,
+		AvatarUrl: url,
+		SendTime: time.Now(),
+		MessageContent :contents,
+		MessageType  : msgType,
+		ReadUids      :"",
 	}
 	c,err := json.Marshal(wsmsg)
 	if err != nil{
@@ -59,10 +67,10 @@ func (srv *MessageService) wrapSingleMessage(from,to uint64,contents string,msgT
 	},nil
 }
 
-func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
+func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string,msgId uint64,msgType int)(*dataobject.CommonMessage,error){
 	wsmsg := &res.WsMessage{
 		From: from,
-		MsgType: msgType,
+		MsgType: global.GroupMessage,
 		Contents: contents,
 		To: to,
 	}
@@ -73,10 +81,14 @@ func (srv *MessageService) wrapGroupMessage(from,to uint64,contents string,msgTy
 	if ok,err := srv.mngPrd.IsInGroup(from,to);err != nil{
 		global.Logger.Error("query whether or not user is in group error",zap.Error(err))
 		return nil,global.QueryIsInGroup
-	}else if ok{
+	}else if !ok{
 		return nil,global.MessageSenderError
 	}
 	uids,err := srv.mngPrd.GetUserIdOfGroup(to)
+	if err != nil{
+		global.Logger.Error("query user id error", zap.Error(err))
+		return nil, global.GetMemberOfGroupError
+	}
 	return &dataobject.CommonMessage{
 		From: from,
 		Tos: uids,
@@ -105,23 +117,29 @@ func (srv *MessageService) StoreMessage(from,to uint64,contents string,msgType i
 }
 
 
-func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgType int)(*dataobject.CommonMessage,error){
+func (srv *MessageService) WrapCommonMessage(from,to uint64,contents string,msgType int,msgId uint64)(*dataobject.CommonMessage,error){
+	if msgType == global.FriendRequestNotify{
+		ok, err := srv.mngPrd.IsInFriend(from, to)
+		if err != nil{
+			global.Logger.Error("database query error", zap.Error(err))
+			return nil, global.DatabaseQueryError
+		}
+		if ok || from == to{
+			global.Logger.Error("the user is already your friend")
+			return nil, global.FriendRequestError
+		}
+	}
 	f,err := srv.getMessageWrapFunc(msgType)
 	if err != nil{
 		return nil,err
 	}
-	return f(from,to,contents,msgType)
+	return f(from,to,contents,msgId,msgType)
 }
 
 // PushStoredSystemMessage push system message
 // @return msgid,error
 func (srv *MessageService) PushStoredSystemMessage(from,to uint64,contents string,msgType int) (uint64,error) {
-	// wrap msg
-	wrapMsg,err := srv.WrapCommonMessage(from, to, contents, msgType)
-	if err != nil{
-		global.Logger.Error("wrap msg error",zap.Error(err))
-		return 0,err
-	}
+
 
 	// store msg
 	msgid,err := srv.StoreMessage(from, to, contents, msgType)
@@ -130,6 +148,12 @@ func (srv *MessageService) PushStoredSystemMessage(from,to uint64,contents strin
 		return 0,err
 	}
 
+	// wrap msg
+	wrapMsg,err := srv.WrapCommonMessage(from, to, contents, msgType,msgid)
+	if err != nil{
+		global.Logger.Error("wrap msg error",zap.Error(err))
+		return 0,err
+	}
 	// push msg
 	err = srv.SendMessage(wrapMsg)
 	if err != nil{
@@ -142,12 +166,12 @@ func (srv *MessageService) PushStoredSystemMessage(from,to uint64,contents strin
 
 func (srv *MessageService) PushUnStoredSystemMessage(from,to uint64,contents string,msgType int) error{
 	// wrap msg
-	wrapMsg,err := srv.WrapCommonMessage(from, to, contents, msgType)
+	wrapMsg,err := srv.WrapCommonMessage(from, to, contents, msgType,0)
 	if err != nil{
 		global.Logger.Error("wrap msg error",zap.Error(err))
 		return err
 	}
-	fmt.Println(string(wrapMsg.Bytes()))
+	//fmt.Println(string(wrapMsg.Bytes()))
 
 	// push msg
 	err = srv.SendMessage(wrapMsg)
@@ -232,9 +256,20 @@ func (srv *MessageService) MarkAsRead(uid uint64,msgs []uint64) error {
 }
 
 
+func (srv *MessageService) DeleteMessage (msgId uint64) error {
+	err := srv.msgPrd.DeleteMessage(msgId)
+	if err != nil{
+		global.Logger.Error("delete message err", zap.Error(err))
+		return err
+	}
+	return err
+}
+
+
 func NewMessageService()*MessageService{
 	srv := &MessageService{
 		WsService:new(WsService),
+		MsgPullService:NewMsgPullService() ,
 		msgPrd: provider.NewMessageProvider(),
 		mngPrd:provider.NewManageProvider(),
 		msgWrapMap: make(map[int]MessageWrapFunc),
@@ -246,5 +281,9 @@ func NewMessageService()*MessageService{
 	srv.register(global.RevertGroupMessageNotify,srv.wrapGroupMessage)
 	srv.register(global.HasReadSingleNotify,srv.wrapSingleMessage)
 	srv.register(global.HasReadGroupNotify,srv.wrapGroupMessage)
+	srv.register(global.QuitGroupNotify,srv.wrapGroupMessage)
+	srv.register(global.JoinGroupNotify,srv.wrapGroupMessage)
+	srv.register(global.AddFriendResponseNotify,srv.wrapSingleMessage)
+	srv.register(global.DeleteFriendNotify,srv.wrapSingleMessage)
 	return srv
 }

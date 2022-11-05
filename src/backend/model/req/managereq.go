@@ -22,3 +22,27 @@ type GroupSetAvatarReq struct {
 	Gid uint64 `json:"gid"`
 	AvatarUrl string `gorm:"column:avatarUrl" json:"avatarUrl"`
 }
+
+type TransferHostReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}
+
+type ChangePermissionReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}
+
+type AgreeFriendReq struct {
+	Id uint64 `json:"id"`
+}
+
+type RefuseFriendReq struct {
+	Id uint64 `json:"id"`
+}
+
+type RemoveMemberReq struct {
+	Uid uint64 `json:"uid"`
+	Gid uint64 `json:"gid"`
+}
+

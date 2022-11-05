@@ -45,3 +45,23 @@ type GroupInfo struct {
 	Name string `json:"name"`
 	AvatarUrl string `json:"avatarUrl"`
 }
+
+type TransferHostRes struct {
+	Data struct {} `json:"data"`
+}
+
+type ChangePermissionRes struct {
+	Data struct {} `json:"data"`
+}
+
+type AgreeFriendRes struct {
+	Data struct {} `json:"data"`
+}
+
+type RefuseFriendRes struct {
+	Data struct {} `json:"data"`
+}
+
+type RemoveMemberRes struct {
+	Data struct {} `json:"data"`
+}

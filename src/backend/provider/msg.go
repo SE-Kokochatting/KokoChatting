@@ -18,6 +18,23 @@ func (prd *MessageProvider) StoreMessage(msg *dataobject.Message) error {
 	return prd.mysqlDb.Error
 }
 
+func (prd *MessageProvider) DeleteMessage(msgId uint64) error {
+	dbClient := prd.mysqlDb
+	res := new(dataobject.Message)
+	err := dbClient.Model(&dataobject.Message{}).Where("id = ?", msgId).Find(res).Error
+	if err != nil{
+		global.Logger.Error("message id invalid",zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Model(&dataobject.Message{}).Where("id = ?", msgId).Delete(res).Error
+	if err != nil{
+		global.Logger.Error("database delete error",zap.Error(err))
+		return err
+	}
+	return nil
+}
+
 // CheckMessageOfUser 检查消息是否是当前用户发出
 func (prd *MessageProvider) CheckMessageOfUser(uid,msgid uint64)(bool,error){
 	var count int
@@ -78,6 +95,16 @@ func (prd *MessageProvider) GetToIdAndTypeByMsgid(msgid uint64)(uint64,int,error
 		return 0,0,err
 	}
 	return res.ToId,res.Type,nil
+}
+
+func (prd *MessageProvider) GetFromIdAndTypeByMsgId (msgId uint64)(uint64, int, error) {
+	res := &dataobject.Message{}
+	err := prd.mysqlDb.Model(&dataobject.Message{}).Where("id = ?",msgId).Find(res).Error
+	if err != nil{
+		global.Logger.Error("query database error",zap.Error(err))
+		return 0, 0, err
+	}
+	return res.FromId, res.Type, nil
 }
 
 func NewMessageProvider()*MessageProvider{

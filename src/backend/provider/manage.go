@@ -3,6 +3,7 @@ package provider
 import (
 	"KokoChatting/global"
 	"KokoChatting/model/dataobject"
+	"errors"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 )
@@ -38,7 +39,45 @@ func (managePro *ManageProvider) DeleteFriend (uid uint64,fid uint64) error {
 	return nil
 }
 
-func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error{
+func (managePro *ManageProvider) AddFriend (uid uint64, fid uint64) error {
+	var friendRelationEntity = &dataobject.FriendRelation{
+		User1: uid,
+		User2: fid,
+	}
+	friendRelationEntity.Preprocess()
+
+	var userProfileEntity = &dataobject.UserProfile{
+		Uid: fid,
+	}
+
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	if uid == fid {
+		global.Logger.Error("can not add yourself", zap.Error(errors.New("the friend and the user can not be same person")))
+		return errors.New("the friend and the user can not be same person")
+	}
+
+	err := dbClient.Where("uid = ?", userProfileEntity.Uid).Find(userProfileEntity).Error
+	if err != nil && err == gorm.ErrRecordNotFound{
+		global.Logger.Error("the friend is invalid", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Where("user1 = ? and user2 = ?", friendRelationEntity.User1, friendRelationEntity.User2).Find(friendRelationEntity).Error
+	if err == nil{
+		global.Logger.Error("the user you want to add is already your friend.", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Select("user1", "user2").Create(friendRelationEntity).Error
+	if err != nil{
+		global.Logger.Error("add friend error", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (managePro *ManageProvider) BlockFriend (uid uint64, fid uint64) error {
 	var blockRelationEntity = &dataobject.BlockRelation{
 		User: uid,
 		Blocker: fid,
@@ -85,6 +124,28 @@ func (managePro *ManageProvider) CreateMember (gid uint64, uid uint64, isAdmin b
 		global.Logger.Error("creat member error",zap.Error(err))
 		return err
 	}
+	return nil
+}
+
+func (managePro *ManageProvider) ChangeMemberPermission (newMember *dataobject.GroupMember) error {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	member := &dataobject.GroupMember{}
+	err := dbClient.Where("gid = ? and uid = ?", newMember.Gid, newMember.Uid).First(member).Error
+	if err != nil{
+		global.Logger.Error("the group has no such user", zap.Error(err))
+		return err
+	}
+
+	err = dbClient.Model(&dataobject.GroupMember{}).Where("gid = ? and uid = ?", newMember.Gid, newMember.Uid).Updates(map[string]interface{}{
+		"is_admin": newMember.IsAdmin,
+		"is_host": newMember.IsHost,
+	}).Error
+	if err != nil {
+		global.Logger.Error("change permission error", zap.Error(err))
+		return err
+	}
+
 	return nil
 }
 
@@ -162,25 +223,6 @@ func (managePro *ManageProvider) UpdateGroupInfo (newProfile *dataobject.GroupPr
 
 	return nil
 }
-// VerifyPermission 返回是否是管理员或群主，是则返回true，不是则返回false
-func (managePro *ManageProvider) VerifyPermission (uid uint64, gid uint64) bool {
-	dbClient := managePro.mysqlProvider.mysqlDb
-
-	memberProfile := &dataobject.GroupMember{
-		Gid: gid,
-		Uid: uid,
-	}
-	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
-	if err != nil{
-		global.Logger.Error("the user is not in this group", zap.Error(err))
-		return false
-	}
-
-	if memberProfile.IsHost == false && memberProfile.IsAdmin == false {
-		return false
-	}
-	return true
-}
 
 func (managePro *ManageProvider) GetGroupInfo (groupProfile *dataobject.GroupProfile) error {
 	dbClient := managePro.mysqlProvider.mysqlDb
@@ -211,6 +253,25 @@ func (managePro *ManageProvider) GetUserIdOfGroup (gid uint64) ([]uint64, error)
 	}
 
 	return uid, nil
+}
+// VerifyPermission 返回是否是管理员或群主，是则返回true，不是则返回false
+func (managePro *ManageProvider) VerifyPermission (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsHost == false && memberProfile.IsAdmin == false {
+		return false, errors.New("the user has no permission")
+	}
+	return true, nil
 }
 
 func (managePro *ManageProvider) IsInGroup (uid uint64, gid uint64) (bool, error) {
@@ -247,6 +308,85 @@ func (managePro *ManageProvider) IsInBlock (user uint64, blocker uint64) (bool, 
 		}
 		return false,nil
 	}
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsInFriend (user1 uint64, user2 uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	friendRelation := &dataobject.FriendRelation{
+		User1: user1,
+		User2: user2,
+	}
+	friendRelation.Preprocess()
+	err := dbClient.Where("user1 = ? and user2 = ?", friendRelation.User1, friendRelation.User2).Find(friendRelation).Error
+	if err != nil{
+		if err != gorm.ErrRecordNotFound{
+			global.Logger.Error("the user is not your friend", zap.Error(err))
+			return true, err
+		}
+		return false,nil
+	}
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsHost (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsHost == false{
+		return false, errors.New("the user is not host")
+	}
+
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsAdmin (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsAdmin == false{
+		return false, errors.New("the user is not admin")
+	}
+
+	return true, nil
+}
+
+func (managePro *ManageProvider) IsMember (uid uint64, gid uint64) (bool, error) {
+	dbClient := managePro.mysqlProvider.mysqlDb
+
+	memberProfile := &dataobject.GroupMember{
+		Gid: gid,
+		Uid: uid,
+	}
+	err := dbClient.Where("uid = ? and gid = ?", memberProfile.Uid, memberProfile.Gid).Find(memberProfile).Error
+	if err != nil{
+		global.Logger.Error("the user is not in this group", zap.Error(err))
+		return false, err
+	}
+
+	if memberProfile.IsHost == true || memberProfile.IsAdmin == true{
+		return false, errors.New("the user is not member")
+	}
+
 	return true, nil
 }
 

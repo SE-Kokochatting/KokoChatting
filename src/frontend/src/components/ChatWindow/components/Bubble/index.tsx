@@ -1,30 +1,29 @@
-import { Direction, ChatType } from '@/enums'
-import SvgIcon from '@/components/SvgIcon'
+import { ChatType } from '@/enums'
+import { IMessage } from '@/types'
+import { getUid } from '@/utils/uid'
+import { transformTimestamp } from '@/utils/date'
+// import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
 
-interface BubbleProps {
-  content: string
-  chatType: ChatType
-  direction: Direction
-  read?: boolean
-  time: string
-}
+function Bubble({
+  sendTime,
+  readUids,
+  messageContent,
+  senderId,
+  chatType,
+}: Partial<IMessage> & { chatType: ChatType }) {
+  const uid = getUid()
 
-function Bubble(props: BubbleProps) {
-  const { content, chatType, direction, read, time } = props
   return (
     <div
       style={{
-        alignSelf: direction === Direction.Left ? 'start' : 'end',
-        margin:
-          direction === Direction.Left
-            ? '15px 0 15px 30px'
-            : '15px 30px 15px 0',
+        alignSelf: uid !== senderId ? 'start' : 'end',
+        margin: uid !== senderId ? '15px 0 15px 30px' : '15px 30px 15px 0',
         maxWidth: '50%',
         display: 'flex',
       }}
     >
-      {read && (
+      {/* {read && (
         <SvgIcon
           name='done'
           style={{
@@ -35,8 +34,8 @@ function Bubble(props: BubbleProps) {
             marginRight: '10px',
           }}
         />
-      )}
-      {chatType === ChatType.Group && direction === Direction.Left && (
+      )} */}
+      {chatType === ChatType.Group && uid !== senderId && (
         <img
           src='https://p.qqan.com/up/2021-2/16137992359659254.jpg'
           style={{
@@ -51,13 +50,17 @@ function Bubble(props: BubbleProps) {
       )}
       <div
         className={
-          direction === Direction.Left
+          uid === senderId
             ? 'c-chat_window-chat_area-bubble'
             : 'c-chat_window-chat_area-bubble right'
         }
       >
-        <div className='c-chat_window-chat_area-bubble-content'>{content}</div>
-        <span className='c-chat_window-chat_area-bubble-time'>{time}</span>
+        <div className='c-chat_window-chat_area-bubble-content'>
+          {messageContent}
+        </div>
+        <span className='c-chat_window-chat_area-bubble-time'>
+          {transformTimestamp(sendTime)}
+        </span>
       </div>
     </div>
   )

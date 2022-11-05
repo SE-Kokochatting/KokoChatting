@@ -17,13 +17,11 @@ type Message struct{
 	ReadUids string `gorm:"column:read_uids"`
 }
 
-
 type CommonMessage struct{
 	From uint64
 	Tos []uint64
 	Contents []byte
 }
-
 
 func (msg *CommonMessage) FromUid() uint64 {
 	return msg.From

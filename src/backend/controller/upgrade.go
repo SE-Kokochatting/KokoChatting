@@ -21,6 +21,7 @@ type upgradeController struct {
 // todo: get uid from gin.Context
 func (controller *upgradeController) UpgradeProtocol(c *gin.Context) {
 	uid := controller.getUid(c)
+	controller.upgrader.Subprotocols = []string{"chat"}
 	conn, err := controller.upgrader.Upgrade(c.Writer, c.Request, http.Header{})
 	if err != nil {
 		// 日志打印
@@ -48,6 +49,9 @@ func NewUpgradeController() *upgradeController {
 		baseController: baseController{},
 		upgrader:       &websocket.Upgrader{
 			HandshakeTimeout: time.Duration(heartBeatDur) * time.Second,
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
 		}, // 暂无特殊配置   
 		wsservice:      new(service.WsService),
 	}

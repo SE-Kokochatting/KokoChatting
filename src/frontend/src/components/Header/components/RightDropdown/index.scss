@@ -1,0 +1,29 @@
+.c-header-right-dropdown {
+  position: absolute;
+  z-index: 10;
+  width: 220px;
+  padding: 30px 0;
+  right: 0;
+  top: 55px;
+  border-radius: 10px;
+  display: flex;
+  background: var(--global-bg-primary_lighter);
+  flex-direction: column;
+
+  &-item {
+    padding: 0 10px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 80%;
+    background: var(--global-bg-primary);
+    left: 0;
+    right:0;
+    margin: 10px auto;
+  }
+
+  &-item:hover {
+    background: var(--global-bg-primary_darker);
+  }
+}

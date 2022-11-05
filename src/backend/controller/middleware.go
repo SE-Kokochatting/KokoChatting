@@ -3,6 +3,8 @@ package controller
 import (
 	"KokoChatting/global"
 	"fmt"
+	"github.com/gorilla/websocket"
+	"net/http"
 	"os"
 	"time"
 
@@ -12,7 +14,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type Middleware struct{
+type Middleware struct {
 	baseController
 }
 
@@ -23,9 +25,9 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 	// 日志Encoder 还是JSONEncoder，把日志行格式化成JSON格式的
 	encoder := zapcore.NewJSONEncoder(encoderConfig)
 
-	path,err := global.GetGlobalConfig().GetConfigByPath("logger.ginlog")
-	if err != nil{
-		panic("config logger.ginlog get error: "+err.Error())
+	path, err := global.GetGlobalConfig().GetConfigByPath("logger.ginlog")
+	if err != nil {
+		panic("config logger.ginlog get error: " + err.Error())
 	}
 
 	file, _ := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 644)
@@ -36,7 +38,7 @@ func (m *Middleware) ZapLogger() gin.HandlerFunc {
 		zapcore.NewCore(encoder, fileWriteSyncer, global.GetLoggerLevel()),
 	)
 	logger := zap.New(core)
-	return func(c *gin.Context){
+	return func(c *gin.Context) {
 		// Start timer
 		start := time.Now()
 		path := c.Request.URL.Path
@@ -84,6 +86,7 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 		})
 		if token == nil {
 			m.WithErr(global.JwtParseError, c)
+			c.Abort()
 			return
 		}
 
@@ -94,9 +97,75 @@ func (m *Middleware) JwtAuthValidate() gin.HandlerFunc {
 				c.Set("userPassword", claims["Password"])
 			}
 		} else if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors & jwt.ValidationErrorMalformed != 0 {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 				m.WithErr(global.IncorrectToken, c)
-			} else if ve.Errors & (jwt.ValidationErrorExpired | jwt.ValidationErrorNotValidYet) != 0 {
+			} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
+				m.WithErr(global.JwtExpiredError, c)
+			} else {
+				m.WithErr(global.JwtParseError, c)
+			}
+			c.Abort()
+		}
+
+		c.Next()
+	}
+}
+
+func (m *Middleware) CORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method //请求方法
+		//fmt.Println(method)
+		c.Header("Access-Control-Allow-Origin", "*")                                                                                         // 指明哪些请求源被允许访问资源，值可以为 "*"，"null"，或者单个源地址。
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization, Token")                              //对于预请求来说，指明了哪些头信息可以用于实际的请求中。
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")                                                                       //对于预请求来说，哪些请求方式可以用于实际的请求。
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type") //对于预请求来说，指明哪些头信息可以安全的暴露给 CORS API 规范的 API
+		c.Header("Access-Control-Allow-Credentials", "true")                                                                                 //指明当请求中省略 creadentials 标识时响应是否暴露。对于预请求来说，它表明实际的请求中可以包含用户凭证。
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		// 处理请求
+		c.Next()
+	}
+}
+
+
+func (m *Middleware) WsJwtAuth() gin.HandlerFunc{
+	return func(c *gin.Context){
+		// 由于token保存在请求头中，所以需要使用c.getHeader，而不是c.Param函数
+		//tokenString := c.GetHeader("Sec-Websocket-Protocol")
+		protocols := websocket.Subprotocols(c.Request)
+		if len(protocols) != 2{
+			m.WithErr(global.WsSubProtocolError,c)
+			c.Abort()
+			return
+		}
+		tokenString := protocols[1]
+		// tokenString := c.Param("Authorization")
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			hmacSampleSecret := []byte(global.GetGlobalConfig().GetConfigByName("jwt.secret").(string))
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return hmacSampleSecret, nil
+		})
+		if token == nil {
+			m.WithErr(global.JwtParseError, c)
+			c.Abort()
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if token.Valid {
+			if ok {
+				c.Set("userUid", claims["Uid"])
+				c.Set("userPassword", claims["Password"])
+			}
+		} else if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				m.WithErr(global.IncorrectToken, c)
+			} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
 				m.WithErr(global.JwtExpiredError, c)
 			} else {
 				m.WithErr(global.JwtParseError, c)

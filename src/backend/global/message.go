@@ -11,5 +11,8 @@ const(
 	JoinGroupRequestNotify
 	QuitGroupNotify
 	JoinGroupNotify
+	AddFriendResponseNotify
+	DeleteFriendNotify
+	PongMessage
 )
 

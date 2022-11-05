@@ -1,9 +1,60 @@
+import { useForm } from 'react-hook-form'
+import { useAlert } from 'react-alert'
+import { sendMsg } from '@/network/message/sendMsg'
+import { MessageType } from '@/enums'
+import UserStore from '@/mobx/user'
+import ChatStore from '@/mobx/chat'
+import MsgStore from '@/mobx/msg'
 import SvgIcon from '@/components/SvgIcon'
 import './index.scss'
-// type SenderProps = {
-// };
-function Sender(/* props: SenderProps */) {
-  // const {} = props;
+
+interface ISendMsg {
+  content: string
+}
+
+function Sender() {
+  const alert = useAlert()
+  const { register, reset, handleSubmit } = useForm<ISendMsg>()
+
+  async function onSubmit({ content }: ISendMsg) {
+    reset()
+    if (!ChatStore.currentChat) {
+      alert.show('请先选择要发送消息的对象', {
+        title: '消息发送失败',
+      })
+    } else {
+      const messageType = ChatStore.currentChat.uid
+        ? MessageType.SingleMessage
+        : MessageType.GroupMessage
+      const { code, data } = await sendMsg({
+        receiver: ChatStore.currentChat.uid as number,
+        messageContent: content,
+        messageType,
+      })
+      if (code === 3000) {
+        alert.show('发生了未知的错误', {
+          title: '消息发送失败',
+        })
+        return
+      }
+      const { msgid } = data
+
+      MsgStore.sendMsg(
+        {
+          messageId: msgid,
+          messageContent: content,
+          messageType: messageType,
+          name: UserStore.name,
+          senderId: UserStore.uid,
+          groupId: ChatStore.currentChat?.gid,
+          readUids: [],
+          avatarUrl: UserStore.avatarUrl,
+        },
+        messageType,
+      )
+    }
+  }
+
   return (
     <div className='c-chat_window-sender'>
       <SvgIcon
@@ -16,13 +67,20 @@ function Sender(/* props: SenderProps */) {
           cursor: 'pointer',
         }}
       />
-      <input
-        className='c-chat_window-sender-input'
-        type='text'
-        placeholder='Write a message...'
-      />
+      <form
+        className='c-chat_window-sender-form'
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <input
+          className='c-chat_window-sender-form-input'
+          type='text'
+          placeholder='Write a message...'
+          {...register('content', { required: true })}
+        />
+      </form>
+
       <div style={{ marginRight: '20px' }}>
-        <SvgIcon
+        {/* <SvgIcon
           name='expression'
           style={{
             width: '30px',
@@ -31,7 +89,7 @@ function Sender(/* props: SenderProps */) {
             marginRight: '20px',
             cursor: 'pointer',
           }}
-        />
+        /> */}
         <SvgIcon
           name='send'
           style={{

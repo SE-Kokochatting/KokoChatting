@@ -4,24 +4,19 @@
  * date: 2022-10-28 23:35:52 +0800
  */
 
+import request from '../request'
+
 export interface ILogin {
-  uid: string
+  uid: number
   password: string
 }
 
-export async function login(data: ILogin) {
+export async function login(reqData: ILogin): Promise<any> {
   const url = '/api/user/login'
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    return res.json()
-  } catch (err) {
-    console.error(err)
-  }
+  const { code, data } = await request(
+    url,
+    { method: 'POST', useToken: false },
+    reqData,
+  )
+  return { code, data }
 }

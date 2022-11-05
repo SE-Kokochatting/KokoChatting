@@ -1,10 +1,14 @@
 import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { CSSObject } from '@emotion/react'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { getUserInfo } from '@/network/user/getUserInfo'
 import { getUid } from '@/utils/uid'
+import { ToggleType } from '@/enums'
+import MsgStore from '@/mobx/msg'
 import UserStore from '@/mobx/user'
+import ToggleStore from '@/mobx/toggle'
 import SvgIcon from '@/components/SvgIcon'
 import Switch from './components/Switch'
 import './index.scss'
@@ -22,18 +26,39 @@ const iconStyle: CSSObject = {
   marginRight: '20px',
 }
 
-async function handleUserInfo(uid: number) {
-  const res = await getUserInfo({ uid })
-  const resData = res.data
-  const { name, avatarUrl } = resData.data
+async function fetchUserInfo(uid: number) {
+  const { data } = await getUserInfo({ uid })
+  const { name, avatarUrl } = data
   UserStore.setUserInfo({ uid, name, avatarUrl })
-  UserStore.setShowUserInfo(!UserStore.showUserInfo)
 }
 
-function _LeftDropdown(props: LeftDropdownProps) {
-  const { showLeftDropdown, setShowLeftDropdown } = props
+function handleToggle(type: ToggleType) {
+  ToggleStore.setShowToggle(true)
+  ToggleStore.setToggleType(type)
+}
+
+function _LeftDropdown({
+  showLeftDropdown,
+  setShowLeftDropdown,
+}: LeftDropdownProps) {
   const navigate = useNavigate()
   const alert = useAlert()
+  const msgCount = MsgStore.friendRequest.length + MsgStore.groupNotify.length
+
+  useEffect(() => {
+    const uid = getUid()
+    if (!uid) {
+      alert.show('请尝试重新登录！', {
+        title: '操作失败',
+        onClose: () => {
+          navigate('/login')
+        },
+      })
+    } else {
+      fetchUserInfo(uid)
+    }
+  }, [])
+
   return (
     <ul
       className='c-header-left-dropdown'
@@ -69,28 +94,44 @@ function _LeftDropdown(props: LeftDropdownProps) {
         <SvgIcon name='group' style={iconStyle} />
         群组
       </li>
-      <li className='c-header-left-dropdown-item'>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          handleToggle(ToggleType.Notify)
+        }}
+      >
         <SvgIcon name='notice' style={iconStyle} />
         通知
+        {msgCount !== 0 && (
+          <div className='c-header-left-dropdown-msg_count'>{msgCount}</div>
+        )}
       </li>
       <li
         className='c-header-left-dropdown-item'
         onClick={() => {
-          const uid = getUid()
-          if (!uid) {
-            alert.show('请尝试重新登录！', {
-              title: '操作失败',
-              onClose: () => {
-                navigate('/login')
-              },
-            })
-          } else {
-            handleUserInfo(uid)
-          }
+          UserStore.setShowUserInfo(!UserStore.showUserInfo)
         }}
       >
         <SvgIcon name='myself' style={iconStyle} />
         个人信息
+      </li>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          handleToggle(ToggleType.AddContact)
+        }}
+      >
+        <SvgIcon name='addContact' style={iconStyle} />
+        添加联系人
+      </li>
+      <li
+        className='c-header-left-dropdown-item'
+        onClick={() => {
+          handleToggle(ToggleType.CreateGroup)
+        }}
+      >
+        <SvgIcon name='createGroup' style={iconStyle} />
+        创建群聊
       </li>
       <li className='c-header-left-dropdown-item' id='dark_mode'>
         <SvgIcon name='moon' style={iconStyle} />

@@ -1,5 +1,4 @@
 .c-chat_list-item {
-  display: flex;
   height: 60px;
   min-height: 60px;
   align-items: center;
@@ -10,10 +9,14 @@
   &-avatar {
     margin-right: 15px;
     flex: 0 0 50px;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    overflow: hidden;
 
     &-img {
       width: 50px;
-      border-radius: 50%;
+
     }
   }
 
@@ -32,16 +35,16 @@
       white-space: nowrap;
     }
 
-    &-content {
-      width: 100%;
-      height: 25px;
-      line-height: 25px;
-      color: var(--global-font-primary);
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    // &-content {
+    //   width: 100%;
+    //   height: 25px;
+    //   line-height: 25px;
+    //   color: var(--global-font-primary);
+    //   font-size: 14px;
+    //   overflow: hidden;
+    //   text-overflow: ellipsis;
+    //   white-space: nowrap;
+    // }
   }
 
   &-time {
