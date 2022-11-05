@@ -28,7 +28,7 @@ function connectWebSocket() {
     socket = new WS(`${WsHost}/upgrade_protocol`, ['chat', token])
     socket.init(
       {
-        time: 300 * 1000,
+        time: 20 * 1000,
         timeout: 10 * 1000,
         reconnect: 5 * 1000,
       },
@@ -50,7 +50,6 @@ function scrollToBottom() {
   const ChatWindowDom = document.querySelector(
     '.c-chat_window-chat_area',
   ) as Element
-  console.log(ChatWindowDom, '执行了！')
   ChatWindowDom.scrollTo(0, ChatWindowDom.scrollHeight)
 }
 

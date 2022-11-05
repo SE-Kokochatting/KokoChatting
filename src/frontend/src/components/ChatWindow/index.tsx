@@ -42,8 +42,8 @@ function _ChatWindow() {
       entries.forEach((item) => {
         if (item.isIntersecting) {
           const msgObj = bubbleMap[item.target.id]
-          const { senderId, messageId } = msgObj
-          if (senderId !== uid) {
+          const { senderId, messageId, readUids } = msgObj
+          if (senderId !== uid && !readUids.includes(uid)) {
             msgHasRead({ msgids: [messageId] }).then(() => {
               io.unobserve(item.target)
             })
@@ -57,7 +57,7 @@ function _ChatWindow() {
 
   useEffect(() => {
     handleMsgRead()
-    // Emitter.emit('scrollToBottom')
+    Emitter.emit('scrollToBottom')
   }, [ChatStore.currentChat])
 
   return (
