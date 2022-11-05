@@ -79,6 +79,7 @@ type WsConnManager struct {
 // AddConn add conn to map[uint64]*Conn
 func (manager *WsConnManager) AddConn(conn *Conn) error {
 	// if current conn nums == maxConnNum ,refuse this conn and put that conn object into pool
+	global.Logger.Debug("user connected",zap.Uint64("uid",conn.uid))
 	if manager.isUnAvailable() {
 		conn.Close()
 		connPool.Put(conn)

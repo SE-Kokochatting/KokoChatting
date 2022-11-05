@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useAlert } from 'react-alert'
 import { acceptFriend } from '@/network/friend/acceptFriend'
+import { refuseFriend } from '@/network/friend/refuseFriend'
 import { MessageType } from '@/enums'
 import MsgStore from '@/mobx/msg'
 import './index.scss'
@@ -29,13 +30,13 @@ function _NotifyItem({ publisherName, info, mid, type }: NotifyItemProps) {
   }
 
   function refuse() {
-    //     type === MessageType.FriendRequestNotify
-    //       ? MsgStore.removeFriendRequest(mid)
-    // <<<<<<< HEAD
-    //       : MsgStore.removeGroupRequest(mid)
-    // =======
-    //       : MsgStore.removeGroupNotify(mid)
-    // >>>>>>> main
+    refuseFriend({id: mid}).then((res) => {
+      if(res.code === 200){
+        MsgStore.removeFriendRequest(mid)
+      }else{
+        alert.show("操作失败")
+      }
+    })
   }
 
   return (
