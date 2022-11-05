@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://api.danmoits.com:3306/KoKoChatting</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="KoKoChatting@api.danmoits.com" uuid="5c8a24fd-2bc0-4691-ab8d-5d19ae9b936d">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://api.danmoits.com:3306/KoKoChatting</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

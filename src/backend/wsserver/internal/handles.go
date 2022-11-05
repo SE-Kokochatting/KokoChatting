@@ -71,5 +71,18 @@ func (handle *textHandle) handle(msg []byte,conn *Conn)error{
 		global.Logger.Debug(string(msg))
 		return nil
 	}
-	return getHandler(websocket.PingMessage).handle(msg,conn)
+	s := &struct{
+		MsgType int `json:"messageType"`
+		Time string
+	}{
+		MsgType: global.PongMessage,
+		Time: pingReq.Time,
+	}
+	bs,err := json.Marshal(s)
+	if err != nil{
+		//
+		global.Logger.Error(string(msg))
+		return nil
+	}
+	return getHandler(websocket.PingMessage).handle(bs,conn)
 }
