@@ -1,9 +1,20 @@
 # KokoChatting
 
-A web chat platform modelled on Telegram.
+一个模仿Telegram的网络聊天平台，可支持在线聊天和离线消息接收。
 
-## Technology used
+## 关键技术
 
-Frontend: React + Mobx + Sass + TypeScript
+前端: React + Mobx + Sass + TypeScript
 
-Backend: Gin + MySQL
+后端: Gin + MySQL + Grom + Websocket + nginx
+
+## 项目成员
+
+| **登录名**              | **姓名** | **分工**                                                     | **贡献**       |
+| ----------------------- | -------- | ------------------------------------------------------------ | -------------- |
+| hyh422                  | 虎琰豪   | ● 项目思维导图和整体架构设计<br>● 实现http协议层所有接口的设计<br>● 实现用户管理以及群组管理的接口和数据库设计<br>● 数据库的运营维护 | 后端30%        |
+| DanmoSAMA               | 崔裕铭   | ● 完成静态页面设计，绘制原型图。<br>● 完成项目工程化配置，包括代码检查、格式化、precommit，路径alias等配置。<br>● 使用React18 + Typescript，完成绝大部分前端页面和组件的开发。<br>● 完成前端项目的部署，配置域名和cdn。 | 前端90%        |
+| aglare-enough<br>zhouandong | 周安东   | ● cicd脚本配置后端的部署<br>● websocket长连接通信模块设计与编写<br>● http 聊天，通知以及消息推送相关接口，数据库结构设计与开发<br> ● 小部分前端页面功能开发 | 后端30%前端10% |
+| lijiamu233              | 李佳穆   | ● 配置七牛云存储作为外链图床，完成图片上传接口。             | 后端10%        |
+| lingwu-hb               | 韩博     | ● jwt中间件实现<br>● 用户登录注册接口、消息拉取接口实现 | 后端30%        |
+
