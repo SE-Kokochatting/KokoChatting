@@ -70,6 +70,8 @@ class MsgState {
     const { data } = await pullMsgOutline({ lastMessageId: 0 })
     const { message } = data
 
+    // console.log(message)
+
     this.init()
     if (!message) return
     // let maxMsgId = 0
@@ -86,7 +88,9 @@ class MsgState {
                 firstMessageId: 100000,
                 id:
                   outlineMsg.groupId === 0
-                    ? outlineMsg.senderId
+                    ? outlineMsg.senderId !== uid
+                      ? outlineMsg.senderId
+                      : outlineMsg.receiverId
                     : outlineMsg.groupId,
                 msgType: msgType,
                 pageNum: 1,
